@@ -8,3 +8,10 @@ body
     word-wrap: break-word;
     word-break: break-all;
 }
+
+.ext-info
+{
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    color: #999;
+}
