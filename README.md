@@ -4,6 +4,17 @@
 
 > ⚠️ 此仓库用于文档、插件和镜像下载、以及issue跟踪
 
+## TLDR版
+
+- Chrome/Edge浏览器插件：[下载](ckc.zip)
+- 自架版云端 Docker 命令（`API Key`为`YouRAPiK1`）:
+
+```bash
+docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+```
+
+
+
 ## 什么是「Check酱」
 
 ![](image/20220521132637.png) 
