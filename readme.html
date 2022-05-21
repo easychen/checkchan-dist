@@ -9,6 +9,7 @@
 <li>自架版云端 Docker 命令（<code class="notranslate">API Key</code>为<code class="notranslate">YouRAPiK1</code>）:</li>
 </ul>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
+<p>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</p>
 <h2>什么是「Check酱」</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521132637.png"><img src="image/20220521132637.png" alt="" style="max-width: 100%;"></a></p>
 <p>Check酱是方糖气球出品的网页内容监测工具，它包含一个Edge/Chrome<strong>浏览器插件</strong>和可以自行架设的<strong>云端</strong>。</p>
@@ -48,7 +49,7 @@
       - <span class="pl-s">TZ=Asia/Chongqing</span></pre></div>
 <p>将其中 <code class="notranslate">&lt;这里写一个你自己想的API_KEY&gt;</code> 换成一个别人不知道的密码（下文称密码C<br>
 ）。注意不要包含<code class="notranslate">$</code>字符，替换完后也不再有两边的尖括号<code class="notranslate">&lt;&gt;</code>。</p>
-<p>在同一目录下运行以下命令：</p>
+<p>保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：</p>
 <div class="highlight highlight-source-shell"><pre>docker-compose up -d</pre></div>
 <blockquote>
 <p>如提示docker服务未安装/找不到/未启动，可在 docker-compose 前加 sudo 再试</p>
@@ -88,3 +89,14 @@
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521150708.png"><img src="image/20220521150708.png" alt="" style="max-width: 100%;"></a></p>
 <p>③ 将复制到的剪贴板的路径填入到「CSS选择器路径」一行后，再次点击「测试」按钮进行测试。</p>
 <p>测试通过后，点击「提交」保存监测点。</p>
+<h3>通过Server酱推送到微信和其他设备</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220521224002.png"><img src="image/20220521224002.png" alt="" style="max-width: 100%;"></a></p>
+<p>在添加和修改监测点时，填入Sendkey即可将消息推送到Server酱。</p>
+<h4>如何获得 SendKey</h4>
+<p>登录<a href="https://sct.ftqq.com" rel="nofollow">Server酱官网</a>，进入「<a href="https://sct.ftqq.com/sendkey" rel="nofollow">Key&amp;API</a>」，点击「复制」按钮即可。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220521224512.png"><img src="image/20220521224512.png" alt="" style="max-width: 100%;"></a></p>
+<h4>如何推送到其他通道</h4>
+<p>登录<a href="https://sct.ftqq.com" rel="nofollow">Server酱官网</a>，进入「<a href="https://sct.ftqq.com/forward" rel="nofollow">通道配置</a>」，选择要推送的通道，并按页面上的说明进行配置。可以将消息推送到「PushDeer」和各种群机器人。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220521224356.png"><img src="image/20220521224356.png" alt="" style="max-width: 100%;"></a></p>
+<p>如果以上通道不能满足你的需要，可以选择「自定义」通道，发送自定义的http请求。此方式可以兼容绝大部分通知接口。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220521225027.png"><img src="image/20220521225027.png" alt="" style="max-width: 100%;"></a></p>

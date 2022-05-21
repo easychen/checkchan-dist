@@ -12,7 +12,7 @@
 ```bash
 docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
-
+特别提醒：`/data`挂载的目录需要写权限
 
 
 ## 什么是「Check酱」
@@ -76,7 +76,7 @@ services:
 将其中 `<这里写一个你自己想的API_KEY>` 换成一个别人不知道的密码（下文称密码C
 ）。注意不要包含`$`字符，替换完后也不再有两边的尖括号`<>`。
 
-在同一目录下运行以下命令：
+保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：
 
 ```bash
 docker-compose up -d
@@ -155,3 +155,25 @@ docker run -e API_KEY=* -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs
 ③ 将复制到的剪贴板的路径填入到「CSS选择器路径」一行后，再次点击「测试」按钮进行测试。
 
 测试通过后，点击「提交」保存监测点。
+
+### 通过Server酱推送到微信和其他设备
+
+![](image/20220521224002.png)  
+
+在添加和修改监测点时，填入Sendkey即可将消息推送到Server酱。
+
+#### 如何获得 SendKey
+
+登录[Server酱官网](https://sct.ftqq.com)，进入「[Key&API](https://sct.ftqq.com/sendkey)」，点击「复制」按钮即可。
+
+![](image/20220521224512.png)  
+
+#### 如何推送到其他通道
+
+登录[Server酱官网](https://sct.ftqq.com)，进入「[通道配置](https://sct.ftqq.com/forward)」，选择要推送的通道，并按页面上的说明进行配置。可以将消息推送到「PushDeer」和各种群机器人。
+
+![](image/20220521224356.png)  
+
+如果以上通道不能满足你的需要，可以选择「自定义」通道，发送自定义的http请求。此方式可以兼容绝大部分通知接口。
+
+![](image/20220521225027.png)  
