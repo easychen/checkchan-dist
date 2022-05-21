@@ -80,7 +80,7 @@ docker-compose up -d
 #### 通过 Docker 启动
 
 ```bash
-docker run -e API_KEY=*123* -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+docker run -e API_KEY=* -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
 
 请将上述命令中的*替换为对应的数据库信息。
