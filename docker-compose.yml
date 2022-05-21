@@ -1,0 +1,15 @@
+version: '2'
+services:
+  api:
+    # build: 
+    #   context: ./
+    #   dockerfile: ./Dockerfile
+    image: ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+    volumes:
+      # - './api:/api'
+      - './data:/data'
+    ports:
+      - '8088:80'
+    environment:
+      - API_KEY=aPiKe1
+      - TZ=Asia/Chongqing
