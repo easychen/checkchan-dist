@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CheckChan</title>
+  <link rel="stylesheet" href="undefined">
+</head>
+<body>
+<h1>
+<a id="user-content-check酱" class="anchor" href="#check%E9%85%B1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check酱</h1>
+<p><strong>监测网页内容变化，并发送异动到微信</strong></p>
+<blockquote>
+<p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> 此仓库用于文档、插件和镜像下载、以及issue跟踪</p>
+</blockquote>
+<h2>
+<a id="user-content-什么是check酱" class="anchor" href="#%E4%BB%80%E4%B9%88%E6%98%AFcheck%E9%85%B1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>什么是「Check酱」</h2>
+<p><a href="image/20220521132637.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521132637.png" alt="" style="max-width:100%;"></a></p>
+<p>Check酱是方糖气球出品的网页内容监测工具，它包含一个Edge/Chrome<strong>浏览器插件</strong>和可以自行架设的<strong>云端</strong>。</p>
+<p>基于浏览器插件，它通过<strong>可视化选择器</strong>理论上可以监控网页上的任意内容（文本）、除了浏览器通知，还可以配合<a href="https://sct.ftqq.com" rel="nofollow">Server酱</a>将异动推送到微信或手机。</p>
+<p><a href="image/20220521134213.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521134213.png" alt="" style="max-width:100%;"></a></p>
+<p>Check酱插件通过后台打开网页的方式进行监测，<strong>完全模拟用户的真实行为</strong>，可以监控需要登录的各种后台网页，并自动延续登录状态。</p>
+<p>除了支持网页内容（Dom）的监测，还支持HTTP状态（通过GET监测）、JSON和RSS方式。</p>
+<p><a href="image/20220521134438.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521134438.png" alt="" style="max-width:100%;"></a></p>
+<p>配合可以自行架设的<strong>云端</strong>，可以将监测任务同步到服务器，这样当浏览器和电脑关掉以后，监测任务依然可以定时运行。</p>
+<p><a href="image/20220521135441.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521135441.png" alt="" style="max-width:100%;"></a></p>
+<h2>
+<a id="user-content-安装" class="anchor" href="#%E5%AE%89%E8%A3%85" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>安装</h2>
+<h3>
+<a id="user-content-插件安装" class="anchor" href="#%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>插件安装</h3>
+<blockquote>
+<p>目前Check酱正在内测，尚未上架Edge商店，只能通过手工方式载入</p>
+</blockquote>
+<p>下载<a href="ckc.zip">插件ZIP包</a>，解压为目录（后文称其为A）。</p>
+<p>打开Edge的插件页面，点击「Load Unpacked」，选择上边解压得到的目录A。</p>
+<p><a href="image/20220521140506.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521140506.png" alt="" style="max-width:100%;"></a></p>
+<p>成功载入的话，就可以看到Check酱界面了。如果失败，通常是因为解压时多了一层目录导致的，可以试试重新选择A目录的下一级目录</p>
+<h3>
+<a id="user-content-自架云端安装" class="anchor" href="#%E8%87%AA%E6%9E%B6%E4%BA%91%E7%AB%AF%E5%AE%89%E8%A3%85" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>自架云端安装</h3>
+<blockquote>
+<p>架设自架版云端需要技术基础，非技术用户建议购买我们的官方版云端（将在内测完成后发布）</p>
+</blockquote>
+<p>为方便安装，自架版云端需要docker环境。如果你没有云服务器，可以看看<a href="https://curl.qcloud.com/VPjlS4gj" rel="nofollow">腾讯云30~50元首单的特价服务器</a>。</p>
+<h4>
+<a id="user-content-通过-docker-compose-启动" class="anchor" href="#%E9%80%9A%E8%BF%87-docker-compose-%E5%90%AF%E5%8A%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>通过 Docker-compose 启动</h4>
+<p>登录服务器（假设其IP为IPB），在要安装的目录下，新建一个 <code>docker-compose.yml</code> 文件，复制张贴下边的内容：</p>
+<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>2<span class="pl-pds">'</span></span>
+<span class="pl-ent">services</span>:
+  <span class="pl-ent">api</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">ccr.ccs.tencentyun.com/ftqq/checkchan:latest</span>
+    <span class="pl-ent">volumes</span>:
+      - <span class="pl-s"><span class="pl-pds">'</span>./:/data<span class="pl-pds">'</span></span>
+    <span class="pl-ent">ports</span>:
+      - <span class="pl-s"><span class="pl-pds">'</span>8088:80<span class="pl-pds">'</span></span>
+    <span class="pl-ent">environment</span>:
+      - <span class="pl-s">API_KEY=&lt;这里写一个你自己想的API_KEY&gt;</span>
+      - <span class="pl-s">TZ=Asia/Chongqing</span></pre></div>
+<p>将其中 <code>&lt;这里写一个你自己想的API_KEY&gt;</code> 换成一个别人不知道的密码（下文称密码C
+）。注意不要包含<code>$</code>字符，替换完后也不再有两边的尖括号<code>&lt;&gt;</code>。</p>
+<p>在同一目录下运行以下命令：</p>
+<div class="highlight highlight-source-shell"><pre>docker-compose up -d</pre></div>
+<blockquote>
+<p>如提示docker服务未安装/找不到/未启动，可在 docker-compose 前加 sudo 再试</p>
+</blockquote>
+<p>等待初始化完成后，访问 <code>http://$BBB:8088?key=$CCC</code>( 将$BBB替换为IP B，$CCC替换为密码C )，看到包含 <code>it works</code> 的提示即为架设成功。</p>
+<p><a href="image/20220521142747.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521142747.png" alt="" style="max-width:100%;"></a></p>
+<h4>
+<a id="user-content-通过-docker-启动" class="anchor" href="#%E9%80%9A%E8%BF%87-docker-%E5%90%AF%E5%8A%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>通过 Docker 启动</h4>
+<div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=<span class="pl-k">*</span> -e TZ=Asia/Chongqing -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
+<p>请将上述命令中的*替换为对应的数据库信息。</p>
+<h3>
+<a id="user-content-将浏览器插件对接云端" class="anchor" href="#%E5%B0%86%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6%E5%AF%B9%E6%8E%A5%E4%BA%91%E7%AB%AF" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>将浏览器插件对接云端</h3>
+<p><a href="image/20220521144137.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521144137.png" alt="" style="max-width:100%;"></a></p>
+<p>点击插件右上方菜单中的<code>自架服务</code>。</p>
+<p>在<code>服务器地址</code>一栏输入 <code>http://$BBB:8088?key=$CCC</code>( 将$BBB替换为IP B，$CCC替换为密码C )；在<code>API_KEY</code>一栏输入密码C。</p>
+<p>点击保存，连接成功后，配置完成。</p>
+<h3>
+<a id="user-content-同步本地任务到云端" class="anchor" href="#%E5%90%8C%E6%AD%A5%E6%9C%AC%E5%9C%B0%E4%BB%BB%E5%8A%A1%E5%88%B0%E4%BA%91%E7%AB%AF" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>同步本地任务到云端</h3>
+<p>配置好云端以后回到列表页，每行最右边会多出来一个「电脑」图标，点击后会变成「云」图标，该任务将改为在云端执行。</p>
+<p><a href="image/20220521144707.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521144707.png" alt="" style="max-width:100%;"></a></p>
+<p>点击右上角 「云+箭头」的按钮，可以主动同步任务到云端。</p>
+<p><a href="image/20220521145106.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521145106.png" alt="" style="max-width:100%;"></a></p>
+<h2>
+<a id="user-content-使用" class="anchor" href="#%E4%BD%BF%E7%94%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>使用</h2>
+<h3>
+<a id="user-content-添加网页监控点" class="anchor" href="#%E6%B7%BB%E5%8A%A0%E7%BD%91%E9%A1%B5%E7%9B%91%E6%8E%A7%E7%82%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>添加网页监控点</h3>
+<p>安装插件后，打开要监控的网页，在网页上点击右键，可以看到「定位监测对象」一项。</p>
+<p><a href="image/20220521134213.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521134213.png" alt="" style="max-width:100%;"></a></p>
+<p>点击后，开始初始化可视化选择器。</p>
+<p><a href="image/20220521145527.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521145527.png" alt="" style="max-width:100%;"></a></p>
+<p>移动鼠标可以看到高亮区域，放到要监控的文字上点击鼠标左键。</p>
+<p><a href="image/20220521145653.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521145653.png" alt="" style="max-width:100%;"></a></p>
+<p>将转向到添加页面。</p>
+<p><a href="image/20220521145825.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521145825.png" alt="" style="max-width:100%;"></a></p>
+<p>可以修改名称、设置监控间隔时间、延迟、最大重试次数。在保存之前，最好点击<code>CSS选择器路径</code>一栏后的<code>测试</code>按钮进行测试。</p>
+<p>如果提示「检测内容为空」，说明存在问题。再次点击进行观察：</p>
+<p>如果发现页面打开后favicon没有出来就关了，可以增加「延迟读取」的秒数；如果打开后还是返回空，那么刚才自动生成的选择器路径可能不正确。</p>
+<p>可以更换为浏览器自动生成的，方法如下：</p>
+<p>① 在要检测的文本上点右键，选择「inspect/审查元素」</p>
+<p><a href="image/20220521150539.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521150539.png" alt="" style="max-width:100%;"></a></p>
+<p>② 这时候会自动打开开发者工具，并自动选中源码中元素的对应行。在高亮的行上点击右键，选择「复制/Copy」→ 「复制选择器/Copy selector」</p>
+<p><a href="image/20220521150708.png" target="_blank" rel="noopener noreferrer"><img src="image/20220521150708.png" alt="" style="max-width:100%;"></a></p>
+<p>③ 将复制到的剪贴板的路径填入到「CSS选择器路径」一行后，再次点击「测试」按钮进行测试。</p>
+<p>测试通过后，点击「提交」保存监测点。</p>
+
+</body>
+</html>
