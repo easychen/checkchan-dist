@@ -20,7 +20,10 @@
 <li>自架版云端 Docker 命令（<code class="notranslate">API Key</code>为<code class="notranslate">YouRAPiK1</code>）:</li>
 </ul>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
-<p>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</p>
+<ul>
+<li>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
+<li>特别提醒2：此镜像为x86架构，暂时未提供arm架构镜像</li>
+</ul>
 <h2>什么是「Check酱」</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521132637.png"><img src="image/20220521132637.png" alt="" style="max-width: 100%;"></a></p>
 <p>Check酱是方糖气球出品的网页内容监测工具，它包含一个Edge/Chrome<strong>浏览器插件</strong>和可以自行架设的<strong>云端</strong>。</p>
