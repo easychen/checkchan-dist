@@ -195,7 +195,7 @@ docker run -e API_KEY=* -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs
 
 点击插件右上方菜单中的`自架服务`。
 
-在`服务器地址`一栏输入 `http://$BBB:8088?key=$CCC`( 将$BBB替换为IP B，$CCC替换为密码C )；在`API_KEY`一栏输入密码C。
+在`服务器地址`一栏输入 `http://$BBB:8088`(这里的URL不用加key参数)；在`API_KEY`一栏输入密码C。
 
 点击保存，连接成功后，配置完成。
 
