@@ -10,7 +10,7 @@
 - 自架版云端 Docker 命令（`API Key`为`YouRAPiK1`）:
 
 ```bash
-docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
 * 特别提醒：`/data`挂载的目录需要写权限
 * 特别提醒2：此镜像为x86架构，暂时未提供arm架构镜像
@@ -164,6 +164,7 @@ services:
       - '8088:80'
     environment:
       - API_KEY=<这里写一个你自己想的API_KEY>
+      - ERROR_IMAGE=NORMAL # NONE,NORMAL,FULL
       - TZ=Asia/Chongqing
 ```
 
