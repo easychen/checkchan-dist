@@ -12,4 +12,5 @@ services:
       - '8088:80'
     environment:
       - API_KEY=aPiKe1
+      - ERROR_IMAGE=NORMAL # NONE,NORMAL,FULL
       - TZ=Asia/Chongqing
