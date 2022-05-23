@@ -18,7 +18,7 @@
 <p>Check酱是方糖气球出品的网页内容监测工具，它包含一个Edge/Chrome<strong>浏览器插件</strong>和可以自行架设的<strong>云端</strong>。</p>
 <p>基于浏览器插件，它通过<strong>可视化选择器</strong>理论上可以监控网页上的任意内容（文本）、除了浏览器通知，还可以配合<a href="https://sct.ftqq.com" rel="nofollow">Server酱</a>将异动推送到微信或手机。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521134213.png"><img src="image/20220521134213.png" alt="" style="max-width: 100%;"></a></p>
-<p>Check酱插件通过后台打开网页的方式进行监测，<strong>完全模拟用户的真实行为</strong>，可以监控需要登录的各种后台网页，并自动延续登录状态。</p>
+<p>Check酱的原理是，通过浏览器插件后台打开网页进行监测，从而<strong>完全模拟用户的真实行为</strong>，可以监控绝大部分复杂的动态网页，需要登录的各种后台页面，并（在绝大多数情况下）自动延续登录态。</p>
 <p>除了支持网页内容（Dom）的监测，还支持HTTP状态（通过GET监测）、JSON和RSS方式。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521134438.png"><img src="image/20220521134438.png" alt="" style="max-width: 100%;"></a></p>
 <p>配合可以自行架设的<strong>云端</strong>，可以将监测任务同步到服务器，这样当浏览器和电脑关掉以后，监测任务依然可以定时运行。</p>
@@ -75,6 +75,18 @@
 </code></pre>
 <p>复制以上字符后，在Check酱浏览器插件界面通过Ctrl+V粘贴，会自动识别并跳转到「添加监测点」界面。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220522113944.png"><img src="image/20220522113944.png" alt="" style="max-width: 100%;"></a></p>
+<h3>监测周期限制</h3>
+<p>有些任务只需要在特定的时间段执行，为了节省资源，我们添加了「监测周期限制」功能。比如某动画每周五上午十点更新，那么我们可以将「监测周期限制」设置如下：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220523213852.png"><img src="image/20220523213852.png" alt="" style="max-width: 100%;"></a></p>
+<p>这样其他时间段就不再启动监测。对于无法预知事件段的任务，使用默认的「每分钟」即可。</p>
+<p>注意在「监测周期限制」之上，还有「监控间隔时间」。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220523214048.png"><img src="image/20220523214048.png" alt="" style="max-width: 100%;"></a></p>
+<p>如果 「监测周期限制」 为每分钟，而「监控间隔时间」为60分钟，那么每分钟都会尝试监测，而一旦监测成功一次，那么下次监测将是60分钟后。</p>
+<p>同时，因为执行监测任务本身也耗费时间，所以「监控间隔时间」为1分钟时，往往每隔一分钟（即每两分钟）才会运行一次任务。</p>
+<h3>日志查看和错误定位</h3>
+<p>为了更清楚的了解定时任务的执行情况，你可以打开「开发者工具」（F12）在 <code class="notranslate">Console</code> 标签页中可以看到任务产生的日志。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220523211235.png"><img src="image/20220523211235.png" alt="" style="max-width: 100%;"></a></p>
+<p>错误信息也会在这里以红色高亮的行显示，遇到Bug时提供日志错误截图可以帮助我们更快的定位到问题。</p>
 <h2>自架云端的安装和使用</h2>
 <p>配合自行架设的服务器，可以将任务同步到云端执行，即使关掉浏览器和电脑后监测任务也会一直运行。</p>
 <h3>安装</h3>
@@ -110,7 +122,7 @@
 <p>请将上述命令中的*替换为对应的数据库信息。</p>
 <h3>将浏览器插件对接云端</h3>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521144137.png"><img src="image/20220521144137.png" alt="" style="max-width: 100%;"></a></p>
-<p>点击插件右上方菜单中的<code class="notranslate">自架服务</code>。</p>
+<p>点击插件右上方菜单中的<code class="notranslate">云端服务</code>。</p>
 <p>在<code>服务器地址</code>一栏输入 <code>http://$BBB:8088</code>(将$BBB替换为IP B，这里的URL不用加key参数)；在<code>API_KEY</code>一栏输入密码C。</p>
 <p>点击保存，连接成功后，配置完成。</p>
 <h3>同步本地任务到云端</h3>
@@ -118,3 +130,12 @@
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521144707.png"><img src="image/20220521144707.png" alt="" style="max-width: 100%;"></a></p>
 <p>点击右上角 「云+箭头」的按钮，可以主动同步任务到云端。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521145106.png"><img src="image/20220521145106.png" alt="" style="max-width: 100%;"></a></p>
+<p>Check酱也会每十分钟自动同步一次。</p>
+<h3>云端错误排查</h3>
+<p>由于服务器内存通常没大家电脑大，所以很多在本地执行OK的任务同步到云端后会因为「延迟读取」秒数太小中途停止而失败。如果遇到类似情况，请尝试增加「延迟读取」。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220523212625.png"><img src="image/20220523212625.png" alt="" style="max-width: 100%;"></a></p>
+<p>如果这样也不行，往往是因为云端无头浏览器显示网页和本地存在差异导致，我们为这种情况生成了最近一次失败的任务的截图，可以在「云端服务」菜单下看到。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220523213104.png"><img src="image/20220523213104.png" alt="" style="max-width: 100%;"></a></p>
+<p>点击「失败截图」按钮即可看到。注意：需要只用最新的镜像，并传递<code class="notranslate">ERROR_IMAGE=NORMAL</code> 环境变量。如果希望截取完整网页的图片，可以传递<code class="notranslate">ERROR_IMAGE=FULL</code>。</p>
+<p>如果任务失败又没有截图，说明该任务不是因为CSS选择器未命中而失败，尝试增加「延迟读取」可能解决。</p>
+<p>这个页面也能看到云端任务日志，这里的日志不包含手动点击「监测」按钮触发的任务。如果没有可以执行的任务（任务是定时触发的），那么日志亦可能为空。</p>
