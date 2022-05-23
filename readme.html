@@ -40,6 +40,9 @@
 <p>点击后，开始初始化可视化选择器。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521145527.png"><img src="image/20220521145527.png" alt="" style="max-width: 100%;"></a></p>
 <p>移动鼠标可以看到高亮区域，放到要监控的文字上点击鼠标左键。</p>
+<blockquote>
+<p>注意，选择区域必须包含文本，否则会返回空。有很多文本是印在图片上的，这种也会返回空。</p>
+</blockquote>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521145653.png"><img src="image/20220521145653.png" alt="" style="max-width: 100%;"></a></p>
 <p>将转向到添加页面。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521145825.png"><img src="image/20220521145825.png" alt="" style="max-width: 100%;"></a></p>
@@ -132,6 +135,13 @@
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521145106.png"><img src="image/20220521145106.png" alt="" style="max-width: 100%;"></a></p>
 <p>Check酱也会每十分钟自动同步一次。</p>
 <h3>云端错误排查</h3>
+<p>以下列举常见的可能原因：</p>
+<ol>
+<li>页面结构每次都会变动：比如一些网站的首页，建议进入分类列表页面选择监控点</li>
+<li>电脑网络和云端网络不同：在浏览器中可以访问的内容，在数据中心可能访问不到</li>
+<li>CDN更新延迟：电脑和云端CDN节点刷新未完成，会造成一边可用一边不可用，等待更新完成后再监控</li>
+<li>浏览器插件改变了网页结构：比如本地通过 AdBlock 过滤了广告，但云端没有，造成结构不同，监测失败</li>
+</ol>
 <p>由于服务器内存通常没大家电脑大，所以很多在本地执行OK的任务同步到云端后会因为「延迟读取」秒数太小中途停止而失败。如果遇到类似情况，请尝试增加「延迟读取」。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220523212625.png"><img src="image/20220523212625.png" alt="" style="max-width: 100%;"></a></p>
 <p>如果这样也不行，往往是因为云端无头浏览器显示网页和本地存在差异导致，我们为这种情况生成了最近一次失败的任务的截图，可以在「云端服务」菜单下看到。</p>
