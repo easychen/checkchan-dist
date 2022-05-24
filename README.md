@@ -14,7 +14,7 @@ docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 80
 ```
 * 特别提醒：`/data`挂载的目录需要写权限
 * 特别提醒2：此镜像为x86架构，暂时未提供arm架构镜像
-
+* 特别提醒3：docker目录下的代码采用GPLV3授权，请在协议下使用
 
 ## 什么是「Check酱」
 

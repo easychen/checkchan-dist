@@ -9,20 +9,21 @@
     <title>Check酱官网</title>
 </head>
 <body>
-    <div class='ext-info'><center>插件最后更新于2022-05-24 18:00:54 Build 20220524175957</center></div><h1>Check酱</h1>
+    <div class='ext-info'><center>插件最后更新于2022-05-24 21:15:57 Build 20220524211519</center></div><h1>Check酱</h1>
 <p><strong>监测网页内容变化，并发送异动到微信</strong></p>
 <blockquote>
 <p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> 此仓库用于文档、插件和镜像下载、以及issue跟踪</p>
 </blockquote>
 <h2>TLDR版</h2>
 <ul>
-<li>Chrome/Edge浏览器插件：<a href="ckc.20220524175957.zip">下载</a></li>
+<li>Chrome/Edge浏览器插件：<a href="ckc.20220524211519.zip">下载</a></li>
 <li>自架版云端 Docker 命令（<code class="notranslate">API Key</code>为<code class="notranslate">YouRAPiK1</code>）:</li>
 </ul>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
 <ul>
 <li>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
 <li>特别提醒2：此镜像为x86架构，暂时未提供arm架构镜像</li>
+<li>特别提醒3：docker目录下的代码采用GPLV3授权，请在协议下使用</li>
 </ul>
 <h2>什么是「Check酱」</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521132637.png"><img src="image/20220521132637.png" alt="" style="max-width: 100%;"></a></p>
@@ -40,7 +41,7 @@
 <blockquote>
 <p>目前Check酱正在内测，尚未上架Edge商店，只能通过手工方式载入</p>
 </blockquote>
-<p>下载<a href="ckc.20220524175957.zip">插件ZIP包</a>，解压为目录（后文称其为A）。</p>
+<p>下载<a href="ckc.20220524211519.zip">插件ZIP包</a>，解压为目录（后文称其为A）。</p>
 <p>打开Edge的插件页面，打开「开发者模式」，点击「Load Unpacked」，选择上边解压得到的目录A。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521140506.png"><img src="image/20220521140506.png" alt="" style="max-width: 100%;"></a></p>
 <p>成功载入的话，就可以看到Check酱界面了。如果失败，通常是因为解压时多了一层目录导致的，可以试试重新选择A目录的下一级目录</p>
