@@ -4,6 +4,7 @@ services:
     # build: 
     #   context: ./
     #   dockerfile: ./Dockerfile
+    restart: always
     image: ccr.ccs.tencentyun.com/ftqq/checkchan:latest
     volumes:
       # - './api:/api'

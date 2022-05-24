@@ -90,6 +90,9 @@
 <p>为了更清楚的了解定时任务的执行情况，你可以打开「开发者工具」（F12）在 <code class="notranslate">Console</code> 标签页中可以看到任务产生的日志。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220523211235.png"><img src="image/20220523211235.png" alt="" style="max-width: 100%;"></a></p>
 <p>错误信息也会在这里以红色高亮的行显示，遇到Bug时提供日志错误截图可以帮助我们更快的定位到问题。</p>
+<h3>更新浏览器插件</h3>
+<p>上架商店后，可以自动升级，在此之前需要手动升级。升级方式为下载zip包解压后覆盖原有文件，再在浏览器的插件管理面板中「reload」一下。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220524171157.png"><img src="image/20220524171157.png" alt="" style="max-width: 100%;"></a></p>
 <h2>自架云端的安装和使用</h2>
 <p>配合自行架设的服务器，可以将任务同步到云端执行，即使关掉浏览器和电脑后监测任务也会一直运行。</p>
 <h3>安装</h3>
@@ -123,6 +126,15 @@
 <h4>通过 Docker 启动</h4>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=<span class="pl-k">*</span> -e TZ=Asia/Chongqing -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
 <p>请将上述命令中的*替换为对应的数据库信息。</p>
+<h4>更新镜像</h4>
+<p>Check酱云端镜像更新后，你可以将正在运行的云端服务升级到最新版。方式如下：</p>
+<p>首先停现有的容器：</p>
+<p>通过 docker-compose 启动的运行：</p>
+<div class="highlight highlight-source-shell"><pre>docker-compose down</pre></div>
+<p>通过 docker 直接启动的运行 <code class="notranslate">docker ps</code> 查询到容器id，通过 <code class="notranslate">docker stop 容器id</code> 停止。</p>
+<p>然后运行 docker pull 拉取最新版：</p>
+<div class="highlight highlight-source-shell"><pre>ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
+<p>完成后再启动服务即可。</p>
 <h3>将浏览器插件对接云端</h3>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521144137.png"><img src="image/20220521144137.png" alt="" style="max-width: 100%;"></a></p>
 <p>点击插件右上方菜单中的<code class="notranslate">云端服务</code>。</p>

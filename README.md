@@ -164,6 +164,12 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 
 错误信息也会在这里以红色高亮的行显示，遇到Bug时提供日志错误截图可以帮助我们更快的定位到问题。
 
+### 更新浏览器插件
+
+上架商店后，可以自动升级，在此之前需要手动升级。升级方式为下载zip包解压后覆盖原有文件，再在浏览器的插件管理面板中「reload」一下。
+
+![](image/20220524171157.png)  
+
 
 ## 自架云端的安装和使用
 
@@ -216,6 +222,28 @@ docker run -e API_KEY=* -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs
 ```
 
 请将上述命令中的*替换为对应的数据库信息。
+
+#### 更新镜像
+
+Check酱云端镜像更新后，你可以将正在运行的云端服务升级到最新版。方式如下：
+
+首先停现有的容器：
+
+通过 docker-compose 启动的运行：
+
+```bash
+docker-compose down
+```
+
+通过 docker 直接启动的运行 `docker ps` 查询到容器id，通过 `docker stop 容器id` 停止。
+
+然后运行 docker pull 拉取最新版：
+
+```bash
+ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+```
+
+完成后再启动服务即可。
 
 ### 将浏览器插件对接云端
 
