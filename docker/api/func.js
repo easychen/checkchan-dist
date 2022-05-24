@@ -203,7 +203,9 @@ async function monitor_dom(url, path, delay , cookies)
     const page = await browser.newPage(); 
     await page.setDefaultNavigationTimeout(delay+1000*5);
     // await page.setDefaultNavigationTimeout(0);
-    await page.setCookie( ...cookies ); 
+    if( isIterable(cookies) )
+        await page.setCookie( ...cookies ); 
+
     await page.evaluateOnNewDocument(() => { HTMLVideoElement.prototype.canPlayType = function () { return 'probably' }; });   
     
     try {
@@ -253,4 +255,12 @@ async function monitor_dom(url, path, delay , cookies)
         return ret;
     }
 }
+
+function isIterable(obj) {
+    // checks for null and undefined
+    if (obj == null) {
+      return false;
+    }
+    return typeof obj[Symbol.iterator] === 'function';
+  }
 

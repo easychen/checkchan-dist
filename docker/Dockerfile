@@ -10,6 +10,7 @@ COPY SourceHanSans.ttf /usr/share/fonts/TTF/SourceHanSans.ttf
 
 # 测试时注释掉下一行
 COPY api /api
+RUN cd /api/ && npm install
 
 COPY init.sh /init.sh
 RUN chmod +x /init.sh
