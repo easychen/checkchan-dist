@@ -2,6 +2,8 @@ const rssParser = require('rss-parser');
 const jsonQuery = require('json-query');
 const timeoutSignal = require("timeout-signal");
 const fetch = require('cross-fetch');
+const FormData = require('form-data');
+const turndown = require('turndown');
 
 const puppeteer = require('puppeteer');
 const path = require("path");
@@ -24,6 +26,12 @@ exports.logstart = () =>
     {
         fs.unlinkSync( log_file );
     }
+}
+
+exports.to_markdown = ( html ) => 
+{
+    const c = new turndown();
+    return c.turndown(html);
 }
 
 logit = ( text ) =>
@@ -114,9 +122,21 @@ exports.get_cookies = () =>
 
 exports.send_notify = async ( title, desp, sendkey)  =>
 {
-    const response = await fetch( 'https://sctapi.ftqq.com/'+sendkey+'.send?title='+encodeURIComponent(title)+'&desp='+ encodeURIComponent(desp) );
-    const data = await response.text();
-    return JSON.parse(data)||data;
+    try {
+        const form = new FormData();
+        form.append( 'title',title ); 
+        form.append( 'desp',desp.substring(0,10000) ); 
+        const response = await fetch( 'https://sctapi.ftqq.com/'+sendkey+'.send', {
+            method: 'POST', 
+            body: form
+        }  );
+
+        const data = await response.text();
+        return JSON.parse(data)||data;
+    } catch (error) {
+        console.log("推送微信通知错误",error);
+        return false;
+    }
 }
 
 exports.monitor_auto = async ( item, cookies ) =>
@@ -141,7 +161,7 @@ exports.monitor_auto = async ( item, cookies ) =>
             case 'dom':
             default:
                 ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||3)*1000, the_cookies );
-                return {status:!!(ret&&ret.text),value:ret.text||"",type:item.type};
+                return {status:!!(ret&&ret.text),value:ret.text||"",type:item.type,html:ret.html||""};
         }
     } catch (error) {
         return {status:false,error,type:item.type};
@@ -176,15 +196,27 @@ async function monitor_rss(url,timeout=10000)
 async function monitor_dom_low(url, path, delay , cookies)
 {
     const response = await fetch( url, { signal: timeoutSignal(delay) } );
-    const html = await response.text();
-    const dom = new JSDOM(html);
-    const ele = dom.window.document.querySelector(path);
-    return {"html":ele?.outerHTML,"text":ele?.textContent?.trim(),"all":html};
+    const all = await response.text();
+    const dom = new JSDOM(all);
+    const ret = dom.window.document.querySelectorAll(path);
+
+    let texts = [];
+    let html = "";
+    for( let item of ret )
+    {
+        item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = new URL(url).origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
+        
+        if( item.textContent ) texts.push(item.textContent?.trim());
+        html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+    }
+
+    return {text:texts.join(" \n "),html,all};
 }
 
 async function monitor_dom(url, path, delay , cookies)
 {
     const first = await monitor_dom_low(url, path, delay , cookies);
+    console.log( "low result" , first.text );
     if( first && first.text ) return first;
     
     let opt = {
@@ -216,10 +248,20 @@ async function monitor_dom(url, path, delay , cookies)
         });
 
         ret = await page.evaluate( (path) => {
-            const ele = window.document.querySelector(path);
-            return {"html":ele?.outerHTML,"text":ele?.innerText?.trim(),"all":window.document.documentElement.innerHTML};
+            let ret = window.document.querySelectorAll(path);
+            if( !ret ) return false;
+            let texts = [];
+            let html = "";
+            for( let item of ret )
+            {
+                item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = window.origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
+                
+                if( item.innerText ) texts.push(item.innerText?.trim());
+                html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+            }
+            return {html,text:texts.join(" \n "),"all":window.document.documentElement.innerHTML};
         },path);
-        const { all, ...ret_short } = ret;
+        const { all,html, ...ret_short } = ret;
         console.log("ret",ret_short);
         // 如果返回值为空，那么截图
         if( !(ret && ret.text) )

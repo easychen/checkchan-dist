@@ -1,6 +1,6 @@
 const fs = require("fs");
 const dayjs = require("dayjs");
-const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit } = require("./func");
+const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown } = require("./func");
 
 const data_file = get_data_dir() + 'data.json';
 const content = fs.readFileSync( data_file );
@@ -54,6 +54,7 @@ for( const item of to_checks )
         // 0:未检测，1:成功但没有变动，2：成功且有异动
         let check_status = 0; 
         let check_content = ""; 
+        let check_html = ""; 
         
         logit("checking..."+item.title, dayjs().format('YYYY-MM-DD HH:mm:ss'));
         
@@ -61,13 +62,15 @@ for( const item of to_checks )
         if( ret && ret.status )
         {
             check_content = ret.value;
+            if( ret.html ) check_html = ret.html;
             check_status = 1;
             
         }
         else
             check_status = -1;
 
-        logit( ret );
+        const {html, ...ret_short} = ret;
+        logit( ret_short );
 
         if( check_status < 0 )
         {
@@ -97,43 +100,52 @@ for( const item of to_checks )
 
             if( item.when == 'change' )
             {
-                if( check_content.trim() == last_content.trim() )can_send_notice = false;
-            }else
-            {
-                if( item.compare_type == 'regex' )
+                logit("变动时发送");
+                if( !last_content || (check_content?.trim() == last_content?.trim()) )
                 {
-                    if( item.regex && !check_content.match( new RegExp(item.regex, 'i') ) )
-                    {
-                        can_send_notice = false;
-                        logit( '通知正则不匹配，不发送异动通知' );
-                    }
+                    logit("内容相同或者旧内容不存在，跳过");
+                    can_send_notice = false;
                 }
-                
-                if( item.compare_type == 'op' )
-                {
-                    let the_value = item.compare_value;
-                                
-                    if( item.compare_value == '*请求返回状态码*' ) the_value = item.code;
-                    
-                    if( item.compare_value == '*上次监测返回值*' ) the_value = last_content;
-                    
-
-                    if( item.compare_op == 'ne' && !(check_content != the_value)) can_send_notice = false;
-
-                    if( item.compare_op == 'eq' && !(check_content == the_value)) can_send_notice = false;
-
-                    if( item.compare_op == 'gt' && !(parseFloat(check_content) > parseFloat(the_value)||0)) can_send_notice = false;
-
-                    if( item.compare_op == 'gte' && !(parseFloat(check_content) >= parseFloat(the_value)||0)) can_send_notice = false;
-
-                    if( item.compare_op == 'lt' && !(parseFloat(check_content) < parseFloat(the_value)||0)) can_send_notice = false;
-
-                    if( item.compare_op == 'lte' && !(parseFloat(check_content) <= parseFloat(the_value)||0)) can_send_notice = false;
-
-                    console.log("op:",check_content,item.compare_op,the_value,can_send_notice);
-
-                } 
             }
+
+            if( item.compare_type == 'regex' )
+            {
+                logit("正则匹配模式");
+                if( item.regex && !check_content.match( new RegExp(item.regex, 'i') ) )
+                {
+                    can_send_notice = false;
+                    logit( '通知正则不匹配，不发送通知' );
+                }
+            }
+            
+            if( item.compare_type == 'op' )
+            {
+                logit("条件比较模式");
+                
+                let the_value = item.compare_value;
+                            
+                if( item.compare_value == '*请求返回状态码*' ) the_value = item.code;
+                
+                if( item.compare_value == '*上次监测返回值*' ) the_value = last_content;
+                
+
+                if( item.compare_op == 'ne' && !(check_content != the_value)) can_send_notice = false;
+
+                if( item.compare_op == 'eq' && !(check_content == the_value)) can_send_notice = false;
+
+                if( item.compare_op == 'gt' && !(parseFloat(check_content) > parseFloat(the_value||0))) can_send_notice = false;
+
+                if( item.compare_op == 'gte' && !(parseFloat(check_content) >= parseFloat(the_value||0))) can_send_notice = false;
+
+                if( item.compare_op == 'lt' && !(parseFloat(check_content) < parseFloat(the_value||0))) can_send_notice = false;
+
+                if( item.compare_op == 'lte' && !(parseFloat(check_content) <= parseFloat(the_value||0))) can_send_notice = false;
+
+                // console.log("op:",check_content,item.compare_op,the_value,can_send_notice);
+
+                logit("op:"+parseFloat(check_content)+' '+item.compare_op+' '+parseFloat(the_value||0)+' '+can_send_notice);
+
+            } 
                 
               
             
@@ -143,7 +155,19 @@ for( const item of to_checks )
             
                 if( item.sendkey )
                 {
-                    await send_notify( '监测点['+item.title+']有新的通知', check_content + (last_content ? ( '←' + last_content) : "") + "\r\n\r\n[去看看]("+item.url+")"  , item.sendkey);  
+                    const title = '监测点['+item.title+']有新通知';
+                                
+                    let desp = check_content?.substring(0,50) + (item.last_content ? ('←' + item.last_content.substring(0,50)):"");
+                    
+                    if( check_html )
+                        desp += "\r\n\r\n" + to_markdown(check_html); 
+                    
+                    // const title = check_content.length > 50 ? '监测点['+item.title+']有新通知' : ( '监测点['+item.title+']有新通知: ' + check_content + (item.last_content ? ('←' + item.last_content):"") );
+
+                    // const desp = check_content.length > 50 ? (check_html ? to_markdown(check_html) : check_content) :  check_content + (item.last_content ? ('←' + item.last_content):"") ;
+                    
+                    
+                    await send_notify( title, desp , item.sendkey);  
                 }
             }
         } 

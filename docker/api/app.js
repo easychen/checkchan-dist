@@ -94,7 +94,7 @@ app.post(`/monitor`, checkApiKey , async (req, res) => {
     const cookies = req.body?.cookies ? JSON.parse(req.body.cookies) : get_cookies();
     if( !item ) return res.json({"code":500,"message":"item格式不正确"});
     const ret = await monitor_auto( item, cookies );
-    console.log( ret );
+    console.log( ret.status, ret.value, ret.type );
     return  res.json(ret);    
     
 });
@@ -103,6 +103,15 @@ app.all(`/log`, checkApiKey , (req, res) => {
     const log_file = get_data_dir()+'/log.txt';
     const log = fs.existsSync( log_file ) ? fs.readFileSync( log_file, 'utf8' ): "";
     res.json({"code":0,"log":log});
+});
+
+app.all(`/checks/download`, checkApiKey , (req, res) => {
+    const data_file = get_data_dir()+'/data.json';
+    const data = fs.existsSync( data_file ) ? fs.readFileSync( data_file, 'utf8' ): false ;
+    if( data )
+        res.json({"code":0,"content":data});
+    else
+        res.json({"code":500,"message":"云端配置文件不存在"});
 });
 
 // Error handler
