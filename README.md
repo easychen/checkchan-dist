@@ -1,6 +1,6 @@
 # Check酱
 
-**监测网页内容变化，并发送异动到微信**
+**Check酱是一个通用网页内容监控工具，可以监测网页内容变化，并发送异动到微信**
 
 ⚠️ docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：
 
@@ -18,7 +18,7 @@
 docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
 * 特别提醒：`/data`挂载的目录需要写权限
-* 特别提醒2：此镜像为x86架构，暂时未提供arm架构镜像
+* 特别提醒2：此镜像为x86架构，arm架构镜像可[拉取源码](https://github.com/easychen/checkchan-dist/tree/main/docker)自行构建
 
 
 

@@ -1,5 +1,5 @@
 <h1>Check酱</h1>
-<p><strong>监测网页内容变化，并发送异动到微信</strong></p>
+<p><strong>Check酱是一个通用网页内容监控工具，可以监测网页内容变化，并发送异动到微信</strong></p>
 <p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：</p>
 <ol>
 <li>不得修改或删除默认对接的Server酱通道。</li>
@@ -14,7 +14,7 @@
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
 <ul>
 <li>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
-<li>特别提醒2：此镜像为x86架构，暂时未提供arm架构镜像</li>
+<li>特别提醒2：此镜像为x86架构，arm架构镜像可<a href="https://github.com/easychen/checkchan-dist/tree/main/docker">拉取源码</a>自行构建</li>
 </ul>
 <h2>什么是「Check酱」</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521132637.png"><img src="image/20220521132637.png" alt="" style="max-width: 100%;"></a></p>
@@ -124,7 +124,7 @@
 <blockquote>
 <p>如提示docker服务未安装/找不到/未启动，可在 docker-compose 前加 sudo 再试</p>
 </blockquote>
-<p>等待初始化完成后，访问 <code>http://$BBB:8088?key=$CCC</code>( 将$BBB替换为IP B，$CCC替换为密码C )，看到包含 <code>it works</code> 的提示即为架设成功。</p>
+<p>等待初始化完成后，访问 <code class="notranslate">http://$BBB:8088?key=$CCC</code>( 将$BBB替换为IP B，$CCC替换为密码C )，看到包含 <code class="notranslate">it works</code> 的提示即为架设成功。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521142747.png"><img src="image/20220521142747.png" alt="" style="max-width: 100%;"></a></p>
 <h4>通过 Docker 启动</h4>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=<span class="pl-k">*</span> -e TZ=Asia/Chongqing -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
@@ -141,7 +141,7 @@
 <h3>将浏览器插件对接云端</h3>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521144137.png"><img src="image/20220521144137.png" alt="" style="max-width: 100%;"></a></p>
 <p>点击插件右上方菜单中的<code class="notranslate">云端服务</code>。</p>
-<p>在<code>服务器地址</code>一栏输入 <code>http://$BBB:8088</code>(将$BBB替换为IP B，这里的URL不用加key参数)；在<code>API_KEY</code>一栏输入密码C。</p>
+<p>在<code class="notranslate">服务器地址</code>一栏输入 <code class="notranslate">http://$BBB:8088</code>(将$BBB替换为IP B，这里的URL不用加key参数)；在<code class="notranslate">API_KEY</code>一栏输入密码C。</p>
 <p>点击保存，连接成功后，配置完成。</p>
 <h3>同步本地任务到云端</h3>
 <p>配置好云端以后回到列表页，每行最右边会多出来一个「电脑」图标，点击后会变成「云」图标，该任务将改为在云端执行。</p>

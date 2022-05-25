@@ -14,7 +14,7 @@ logit("开始载入任务");
 for( const item of to_checks )
 {
     let do_now = false;
-    if( parseInt( item.interval ) < 1 ) item.interval = 10;
+    if( parseInt( item.interval ) < 0 ) item.interval = 0;
 
     // 判断是否应该监测
     if( item.last_time )
@@ -22,6 +22,11 @@ for( const item of to_checks )
         if( item.interval > 0 )
         {
             if(dayjs(item.last_time).add(item.interval,'minutes').isBefore(dayjs())) do_now = true; 
+        }
+
+        if( item.interval == 0 )
+        {
+            do_now = true; 
         }
     }else
     {
