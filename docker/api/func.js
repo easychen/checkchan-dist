@@ -210,7 +210,7 @@ async function monitor_dom_low(url, path, delay , cookies)
         html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
     }
 
-    return {text:texts.join(" \n "),html,all};
+    return {text:texts[0]||"",html,all};
 }
 
 async function monitor_dom(url, path, delay , cookies)
@@ -259,7 +259,7 @@ async function monitor_dom(url, path, delay , cookies)
                 if( item.innerText ) texts.push(item.innerText?.trim());
                 html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
-            return {html,text:texts.join(" \n "),"all":window.document.documentElement.innerHTML};
+            return {html,text:texts[0]||"","all":window.document.documentElement.innerHTML};
         },path);
         const { all,html, ...ret_short } = ret;
         console.log("ret",ret_short);

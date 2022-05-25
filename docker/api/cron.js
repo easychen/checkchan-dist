@@ -157,10 +157,10 @@ for( const item of to_checks )
                 {
                     const title = '监测点['+item.title+']有新通知';
                                 
-                    let desp = check_content?.substring(0,50) + (item.last_content ? ('←' + item.last_content.substring(0,50)):"");
+                    let desp = check_content?.substring(0,50) + (item.last_content && item.when == 'change' ? ('←' + item.last_content.substring(0,50)):"");
                     
                     if( check_html )
-                        desp += "\r\n\r\n" + to_markdown(check_html); 
+                        desp += "\r\n\r\n---\r\n\r\n" + to_markdown(check_html); 
                     
                     // const title = check_content.length > 50 ? '监测点['+item.title+']有新通知' : ( '监测点['+item.title+']有新通知: ' + check_content + (item.last_content ? ('←' + item.last_content):"") );
 
