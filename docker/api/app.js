@@ -18,9 +18,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const image_dir = get_data_dir()+'/image';
 if( !fs.existsSync(image_dir )) fs.mkdirSync(image_dir);
 
-app.use('/image', express.static(image_dir));
-
-
 function checkApiKey (req, res, next) {
     
     if( process.env.API_KEY && process.env.API_KEY != ( req.query.key||req.body.key )) 
@@ -29,6 +26,7 @@ function checkApiKey (req, res, next) {
     next();
 }
 
+app.use('/image', checkApiKey, express.static(image_dir));
 
 app.all(`/`, checkApiKey , (req, res) => {
     let data_write_access = true;
@@ -40,7 +38,7 @@ app.all(`/`, checkApiKey , (req, res) => {
     
     // res.json({"code":0,"message":"it works","version":"1.0","ip":ip.address(),data_write_access});
     // 不再显示IP，以免误导
-    res.json({"code":0,"message":"it works","version":"1.0",data_write_access});
+    res.json({"code":0,"message":"it works","version":"1.1",data_write_access});
 });
 
 app.post(`/checks/upload`, checkApiKey , (req, res) => {

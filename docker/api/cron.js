@@ -1,6 +1,6 @@
 const fs = require("fs");
 const dayjs = require("dayjs");
-const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown } = require("./func");
+const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown, short } = require("./func");
 
 const data_file = get_data_dir() + 'data.json';
 const content = fs.readFileSync( data_file );
@@ -105,6 +105,9 @@ for( const item of to_checks )
                 {
                     logit("内容相同或者旧内容不存在，跳过");
                     can_send_notice = false;
+                }else
+                {
+                    console.log( last_content,check_content );
                 }
             }
 
@@ -157,10 +160,17 @@ for( const item of to_checks )
                 {
                     const title = '监测点['+item.title+']有新通知';
                                 
-                    let desp = check_content?.substring(0,50) + (item.last_content && item.when == 'change' ? ('←' + item.last_content.substring(0,50)):"");
+                    let desp = short(check_content,50) + (last_content && item.when == 'change' ? ('←' + short(last_content,50)):"");
                     
                     if( check_html )
                         desp += "\r\n\r\n---\r\n\r\n" + to_markdown(check_html); 
+                    else
+                    {
+                        if( String(check_content).length > 50 )
+                        {
+                            desp += "\r\n\r\n---\r\n\r\n" + check_content; 
+                        }
+                    }
                     
                     // const title = check_content.length > 50 ? '监测点['+item.title+']有新通知' : ( '监测点['+item.title+']有新通知: ' + check_content + (item.last_content ? ('←' + item.last_content):"") );
 

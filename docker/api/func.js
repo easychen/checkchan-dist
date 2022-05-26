@@ -4,7 +4,6 @@ const timeoutSignal = require("timeout-signal");
 const fetch = require('cross-fetch');
 const FormData = require('form-data');
 const turndown = require('turndown');
-
 const puppeteer = require('puppeteer');
 const path = require("path");
 const fs = require("fs");
@@ -25,6 +24,28 @@ exports.logstart = () =>
     if( fs.existsSync( log_file ) )
     {
         fs.unlinkSync( log_file );
+    }
+}
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+exports.short = short;
+
+function short( maybe_string , len = 0 )
+{
+    if( !maybe_string ) return false;
+    if( isNumeric( maybe_string )) return maybe_string;
+    if (typeof maybe_string === 'string' || maybe_string instanceof String)
+    {
+        if( len < 1 ) return maybe_string;
+        return maybe_string.substring( 0, len );
+    }else
+    {
+        // maybe object
+        if( len < 1 ) return JSON.stringify(maybe_string);
+        return JSON.stringify(maybe_string).substring(0,len);
     }
 }
 
@@ -156,8 +177,11 @@ exports.monitor_auto = async ( item, cookies ) =>
                 return {status:!!(ret&&ret[item.rss_field]),value:ret[item.rss_field]||"",type:item.type};
                 break;
             case 'json':
-                ret = await monitor_json( item.url, item.json_query, (parseInt(item.delay)||3)*1000);
-                return {status:!!(ret&&ret.value),value:ret.value||"",type:item.type};
+                // 特别注意，云端的json监测包含delay参数
+                // console.log(item);
+                ret = await monitor_json( item.url, item.json_query, item.json_header, item.json_data, item.json_data_format, (parseInt(item.delay)||3)*1000, the_cookies );
+                return {status:!!(ret&&ret.value),value:JSON.stringify(ret.value)||"",type:item.type};
+                break;
             case 'dom':
             default:
                 ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||3)*1000, the_cookies );
@@ -175,13 +199,57 @@ async function monitor_get(url,timeout=10000)
     return response.status;
 }
 
-async function monitor_json(url, query, timeout=10000)
+async function monitor_json(url, query, header=false, body_string=false, format = 'form', timeout=10000, cookies=[])
 {
-    const response = await fetch( url, { signal: timeoutSignal(timeout) } );
-    const data = await response.json();
-    const ret = jsonQuery( query ,{data} );
+    try {
+        const body_data = body_string? JSON.parse(body_string||"{}") : false;
+        let body = body_data ? JSON.stringify( body_data ): false;
+        console.log( body_data, body );
 
-    return ret; 
+        if( format == 'form' )
+        {
+            const params = new FormData();
+            if( body_data )
+                Object.keys( body_data ).forEach( item => params.append(item, body_data[item]) );
+            body = params;
+        }
+
+        let headers = header ? (JSON.parse(header) || false) : false;
+        const cookie_string = build_cookie_string(cookies);
+        if( cookie_string )
+        {
+            if( !headers ) headers = {};
+            headers['cookie'] = cookie_string;
+        }
+        const method = body_string ? "POST" : "GET";
+        let opt = {
+            method,
+            credentials: 'include',
+            signal: timeoutSignal(timeout), 
+        } ;
+
+        if( headers ) opt.headers = headers;
+        if( method == 'POST' ) opt.body = body;
+
+        const response = await fetch( url, opt );
+        const data = await response.json();
+        const ret = jsonQuery( query ,{data} );
+        console.log( ret );
+        if( !( ret && ret.value ) )
+        {
+            console.log("save error");
+            const image_dir = get_data_dir()+'/image';
+                
+            if( !fs.existsSync(image_dir) )
+            fs.mkdirSync(image_dir);
+            
+            fs.writeFileSync( image_dir + '/error.json', JSON.stringify(data) );
+        }
+        return ret; 
+    } catch (error) {
+        return false;
+    }
+    
 }
 
 // rssParser
@@ -197,6 +265,10 @@ async function monitor_dom_low(url, path, delay , cookies)
 {
     const response = await fetch( url, { signal: timeoutSignal(delay) } );
     const all = await response.text();
+    if( all.substring(0,2000).toLowerCase().indexOf('utf-8') < 0 ) return  false;
+    // const sniffedEncoding = htmlEncodingSniffer(await response.arrayBuffer());
+    // console.log(sniffedEncoding);
+
     const dom = new JSDOM(all);
     const ret = dom.window.document.querySelectorAll(path);
 
@@ -304,5 +376,15 @@ function isIterable(obj) {
       return false;
     }
     return typeof obj[Symbol.iterator] === 'function';
-  }
+}
+
+function build_cookie_string( cookie_array )
+{
+    let ret = [];
+    for(  const cookie of cookie_array )
+    {
+        if( cookie.name ) ret.push(`${cookie.name}=${cookie.value}`)
+    }
+    return ret.length > 0 ? ret.join('; ') : false;
+}
 

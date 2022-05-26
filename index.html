@@ -9,19 +9,23 @@
     <title>Check酱官网</title>
 </head>
 <body>
-    <div class='ext-info'><center>插件最后更新于2022-05-25 23:42:30 Build 2022.05.25.23.41</center></div><h1>Check酱</h1>
+    <h1>Check酱</h1>
 <p><strong>Check酱是一个通用网页内容监控工具，可以监测网页内容变化，并发送异动到微信</strong></p>
+<p><a target="_blank" rel="noopener noreferrer" href="image/20220526194209.png"><img src="image/20220526194209.png" alt="" style="max-width: 100%;"></a></p>
 <p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：</p>
 <ol>
-<li>不得修改或删除默认对接的Server酱通道。</li>
-<li>不得对接其他消息通道后再次发布。</li>
-<li>满足以上两个条件后，遵从GPLv3协议。</li>
+<li><strong>不得修改或删除</strong>默认对接的Server酱通道。</li>
+<li>不得对接<strong>其他消息通道</strong>后再次发布。</li>
+<li>满足以上两个条件后，遵从<strong>GPLv3</strong>协议。</li>
 </ol>
-<h2>TLDR版</h2>
+<h2>最新版本</h2>
 <ul>
-<li>Chrome/Edge浏览器插件：<a href="ckc.2022.05.25.23.41.zip">下载</a></li>
-<li>自架版云端 Docker 命令（<code class="notranslate">API Key</code>为<code class="notranslate">YouRAPiK1</code>）:</li>
+<li>插件·Chrome/Edge：<a href="ckc.zip">2022.05.26.19.42</a></li>
+<li>自架云端Docker镜像：2022.05.26.19.10</li>
+<li>文档：2022.05.26.19.48</li>
+<li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
+<p>自架云端 Docker 命令（<code class="notranslate">API Key</code>为<code class="notranslate">YouRAPiK1</code>）:</p>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
 <ul>
 <li>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
@@ -43,7 +47,7 @@
 <blockquote>
 <p>目前Check酱正在内测，尚未上架Edge商店，只能通过手工方式载入</p>
 </blockquote>
-<p>下载<a href="ckc.2022.05.25.23.41.zip">插件ZIP包</a>，解压为目录（后文称其为A）。</p>
+<p>下载<a href="ckc.zip">插件ZIP包</a>，解压为目录（后文称其为A）。</p>
 <p>打开Edge的插件页面，打开「开发者模式」，点击「Load Unpacked」，选择上边解压得到的目录A。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521140506.png"><img src="image/20220521140506.png" alt="" style="max-width: 100%;"></a></p>
 <p>成功载入的话，就可以看到Check酱界面了。如果失败，通常是因为解压时多了一层目录导致的，可以试试重新选择A目录的下一级目录</p>
@@ -147,7 +151,7 @@
 <div class="highlight highlight-source-shell"><pre>docker-compose down</pre></div>
 <p>通过 docker 直接启动的运行 <code class="notranslate">docker ps</code> 查询到容器id，通过 <code class="notranslate">docker stop 容器id</code> 停止。</p>
 <p>然后运行 docker pull 拉取最新版：</p>
-<div class="highlight highlight-source-shell"><pre>ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
+<div class="highlight highlight-source-shell"><pre>docker pull ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
 <p>完成后再启动服务即可。</p>
 <h3>将浏览器插件对接云端</h3>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521144137.png"><img src="image/20220521144137.png" alt="" style="max-width: 100%;"></a></p>
@@ -179,4 +183,3 @@
 <p>这个页面也能看到云端任务日志，这里的日志不包含手动点击「监测」按钮触发的任务。如果没有可以执行的任务（任务是定时触发的），那么日志亦可能为空。</p>
 
 </body>
-</html>

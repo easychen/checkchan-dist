@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：[2022.05.26.19.42](ckc.zip)
-- 自架云端Docker镜像：2022.05.26.19.10
-- 文档：2022.05.26.19.48
+- 插件·Chrome/Edge：[{ext-build}](ckc.zip)
+- 自架云端Docker镜像：{img-build}
+- 文档：{doc-build}
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 自架云端 Docker 命令（`API Key`为`YouRAPiK1`）:
