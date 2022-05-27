@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：[2022.05.27.16.22](ckc.zip)
-- 自架云端Docker镜像：2022.05.27.16.18
-- 文档：2022.05.27.16.21
+- 插件·Chrome/Edge：[2022.05.27.19.05](ckc.zip)
+- 自架云端Docker镜像：2022.05.27.19.01
+- 文档：2022.05.27.19.05
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 自架云端 Docker 命令（ 将`API Key`从`YouRAPiK1`替换成`任意你想要的安全密码不要带$`）:

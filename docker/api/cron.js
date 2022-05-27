@@ -82,7 +82,7 @@ for( const item of to_checks )
             if( retry_times >= item.retry )
             {
                 // 发送通知
-                await send_notify( '监测点['+item.title+']多次重试失败', "已暂停执行，请检查登录状态或页面结构变动\r\n\r\n[点此查看]("+item.url+")" , item.sendkey);
+                await send_notify( '监测点['+item.title+']多次重试失败', "已暂停执行，请检查登录状态或页面结构变动\r\n\r\n[点此查看]("+item.url+")" , item.sendkey, item.send_channel||-1);
             }
             check_update_field( item.id, 'retry_times', retry_times+1, json_data );
             
@@ -182,7 +182,7 @@ for( const item of to_checks )
                     // const desp = check_content.length > 50 ? (check_html ? to_markdown(check_html) : check_content) :  check_content + (item.last_content ? ('←' + item.last_content):"") ;
                     
                     
-                    await send_notify( title, desp , item.sendkey);  
+                    await send_notify( title, desp , item.sendkey, item.send_channel || -1);  
                 }
             }
         } 

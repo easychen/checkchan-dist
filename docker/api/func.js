@@ -141,10 +141,11 @@ exports.get_cookies = () =>
     return json_data.cookies;
 }
 
-exports.send_notify = async ( title, desp, sendkey)  =>
+exports.send_notify = async ( title, desp, sendkey, channel = -1)  =>
 {
     try {
         const form = new FormData();
+        if( channel >= 0 ) form.append( 'channel',parseInt(channel));
         form.append( 'title',title ); 
         form.append( 'desp',desp.substring(0,10000) ); 
         const response = await fetch( 'https://sctapi.ftqq.com/'+sendkey+'.send', {
