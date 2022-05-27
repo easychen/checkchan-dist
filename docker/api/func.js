@@ -164,30 +164,31 @@ exports.monitor_auto = async ( item, cookies ) =>
 {
     const domain = new URL( item.url ).host;
     const the_cookies = cookies[domain];
-    
+    console.log("in auto");
     let ret;
     try {
         switch (item.type) {
             case 'get':
-                ret = await monitor_get( item.url, (parseInt(item.delay)||3)*1000 );
+                ret = await monitor_get( item.url, (parseInt(item.delay)||0)*1000 );
                 return {status:!!ret,value:ret||0,type:item.type};
                 break;
             case 'rss':
-                ret = await monitor_rss( item.url, (parseInt(item.delay)||3)*1000 );
+                ret = await monitor_rss( item.url, (parseInt(item.delay)||0)*1000 );
                 return {status:!!(ret&&ret[item.rss_field]),value:ret[item.rss_field]||"",link:ret.link,type:item.type};
                 break;
             case 'json':
                 // 特别注意，云端的json监测包含delay参数
                 // console.log(item);
-                ret = await monitor_json( item.url, item.json_query, item.json_header, item.json_data, item.json_data_format, (parseInt(item.delay)||3)*1000, the_cookies );
+                ret = await monitor_json( item.url, item.json_query, item.json_header, item.json_data, item.json_data_format, (parseInt(item.delay)||0)*1000, the_cookies );
                 return {status:!!(ret&&ret.value),value:JSON.stringify(ret.value)||"",type:item.type};
                 break;
             case 'dom':
             default:
-                ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||3)*1000, the_cookies, item.id );
+                ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||0)*1000, the_cookies, item.id );
                 return {status:!!(ret&&ret.text),value:ret.text||"",type:item.type,html:ret.html||"",link:ret.link||""};
         }
     } catch (error) {
+        console.log(error);
         return {status:false,error,type:item.type};
     }
     
@@ -195,7 +196,7 @@ exports.monitor_auto = async ( item, cookies ) =>
 
 async function monitor_get(url,timeout=10000)
 {
-    const response = await fetch( url, { signal: timeoutSignal(timeout) } );
+    const response = await fetch( url, { signal: timeoutSignal(timeout<1?10000:timeout) } );
     return response.status;
 }
 
@@ -225,7 +226,7 @@ async function monitor_json(url, query, header=false, body_string=false, format 
         let opt = {
             method,
             credentials: 'include',
-            signal: timeoutSignal(timeout), 
+            signal: timeoutSignal(timeout<1?10000:timeout), 
         } ;
 
         if( headers ) opt.headers = headers;
@@ -247,6 +248,7 @@ async function monitor_json(url, query, header=false, body_string=false, format 
         }
         return ret; 
     } catch (error) {
+        console.log( error );
         return false;
     }
     
@@ -263,35 +265,45 @@ async function monitor_rss(url,timeout=10000)
 
 async function monitor_dom_low(url, path, delay , cookies)
 {
-    const response = await fetch( url, { signal: timeoutSignal(delay) } );
-    const all = await response.text();
-    if( all.substring(0,2000).toLowerCase().indexOf('utf-8') < 0 ) return  false;
-    // const sniffedEncoding = htmlEncodingSniffer(await response.arrayBuffer());
-    // console.log(sniffedEncoding);
+    console.log("in low dom");
+    try {
+        const response = await fetch( url, { signal: timeoutSignal(delay<1?10000:delay) } );
+        const all = await response.text();
+        if( all.substring(0,2000).toLowerCase().indexOf('utf-8') < 0 ) return  false;
+        // const sniffedEncoding = htmlEncodingSniffer(await response.arrayBuffer());
+        // console.log(sniffedEncoding);
 
-    const dom = new JSDOM(all);
-    const ret = dom.window.document.querySelectorAll(path);
+        const dom = new JSDOM(all);
+        const ret = dom.window.document.querySelectorAll(path);
 
-    let texts = [];
-    let html = "";
-    for( let item of ret )
-    {
-        item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = new URL(url).origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
-        
-        if( item.textContent ) texts.push(item.textContent?.trim());
-        html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+        let texts = [];
+        let html = "";
+        for( let item of ret )
+        {
+            item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = new URL(url).origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
+            
+            if( item.textContent ) texts.push(item.textContent?.trim());
+            html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+        }
+
+        return {text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"",html,all};
+    } catch (error) {
+        console.log("low dom error",error);
+        return false;
     }
-
-    return {text:texts[0]||"",html,all};
 }
 
 async function monitor_dom(url, path, delay , cookies, id)
 {
-    if( !process.env.SNAP_URL_BASE )
+    console.log("in dom delay = ",delay);
+    if((!process.env.SNAP_URL_BASE) && delay < 1 )
     {
         const first = await monitor_dom_low(url, path, delay , cookies);
         console.log( "low result" , first.text );
         if( first && first.text ) return first;
+    }else
+    {
+        console.log( "jump jsdom" );
     } 
     
     let opt = {
@@ -309,7 +321,7 @@ async function monitor_dom(url, path, delay , cookies, id)
     let ret = false;
     
     const page = await browser.newPage(); 
-    await page.setDefaultNavigationTimeout(delay+1000*5);
+    await page.setDefaultNavigationTimeout(delay+1000*10);
     // await page.setDefaultNavigationTimeout(0);
     if( isIterable(cookies) )
         await page.setCookie( ...cookies ); 
@@ -320,12 +332,18 @@ async function monitor_dom(url, path, delay , cookies, id)
         
         await page.goto(url,{
             waitUntil: 'networkidle2',
-            timeout: delay+1000*5
+            timeout: delay+1000*10
         });
+
+        if( delay > 0 )
+        {
+            await sleep(delay);
+        }
 
         ret = await page.evaluate( (path) => {
             let ret = window.document.querySelectorAll(path);
             if( !ret ) return false;
+            console.log("query fail",path,ret);
             let texts = [];
             let html = "";
             for( let item of ret )
@@ -335,12 +353,44 @@ async function monitor_dom(url, path, delay , cookies, id)
                 if( item.innerText ) texts.push(item.innerText?.trim());
                 html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
-            return {html,text:texts[0]||"","all":window.document.documentElement.innerHTML};
+            return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
         },path);
+        
+        if( !ret )
+        {
+            console.log("sleep",1000*5);
+            await sleep(1000*5);
+            ret = await page.evaluate( (path) => {
+                let ret = window.document.querySelectorAll(path);
+                console.log("query fail again",path,ret);
+                if( !ret ) return false;
+                let texts = [];
+                let html = "";
+                for( let item of ret )
+                {
+                    item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = window.origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
+                    
+                    if( item.innerText ) texts.push(item.innerText?.trim());
+                    html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+                }
+                return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
+            },path);
+            
+        }
         const { all,html, ...ret_short } = ret;
+        
+        
+        
         console.log("ret",ret_short);
         
         const image_dir = get_data_dir()+'/image';
+        
+        if(ret.all)
+        {
+            console.log("save html");
+            fs.writeFileSync( image_dir +'/'+ id +'.html', ret.all );
+        }
+            
             
         // 如果返回值为空，那么保存错误现场
         if( !(ret && ret.text) )
@@ -383,12 +433,7 @@ async function monitor_dom(url, path, delay , cookies, id)
                     ret.link = process.env.SNAP_URL_BASE + '/image/' + id +'.jpg?key='+process.env.API_KEY;
                 } 
             }
-        }
-
-        
-
-        
-        
+        }  
     } catch (error) {
         console.log("error",error);
         
@@ -405,6 +450,12 @@ function isIterable(obj) {
       return false;
     }
     return typeof obj[Symbol.iterator] === 'function';
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
 }
 
 function build_cookie_string( cookie_array )
