@@ -22,7 +22,7 @@
 ```bash
 docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
-* 特别提醒：后文有详细的安装帮助
+* 特别提醒：后文有详细的安装说明
 * 特别提醒1：`/data`挂载的目录需要写权限
 * 特别提醒2：此镜像为x86架构，arm架构镜像可[拉取源码](https://github.com/easychen/checkchan-dist/tree/main/docker)自行构建
 

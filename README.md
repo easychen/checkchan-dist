@@ -14,7 +14,7 @@
 
 - 插件·Chrome/Edge：[2022.05.27.13.00](ckc.zip)
 - 自架云端Docker镜像：2022.05.27.12.33
-- 文档：2022.05.27.13.00
+- 文档：2022.05.27.13.03
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 自架云端 Docker 命令（ 将`API Key`从`YouRAPiK1`替换成`任意你想要的安全密码不要带$`）:
@@ -22,7 +22,7 @@
 ```bash
 docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
-* 特别提醒：后文有详细的安装帮助
+* 特别提醒：后文有详细的安装说明
 * 特别提醒1：`/data`挂载的目录需要写权限
 * 特别提醒2：此镜像为x86架构，arm架构镜像可[拉取源码](https://github.com/easychen/checkchan-dist/tree/main/docker)自行构建
 
