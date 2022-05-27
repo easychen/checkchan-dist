@@ -92,7 +92,7 @@ app.post(`/monitor`, checkApiKey , async (req, res) => {
     const cookies = req.body?.cookies ? JSON.parse(req.body.cookies) : get_cookies();
     if( !item ) return res.json({"code":500,"message":"item格式不正确"});
     const ret = await monitor_auto( item, cookies );
-    console.log( ret.status, ret.value, ret.type );
+    console.log( ret.status, ret.value, ret.type, ret.link );
     return  res.json(ret);    
     
 });

@@ -55,6 +55,7 @@ for( const item of to_checks )
         let check_status = 0; 
         let check_content = ""; 
         let check_html = ""; 
+        let check_link = ""; 
         
         logit("checking..."+item.title, dayjs().format('YYYY-MM-DD HH:mm:ss'));
         
@@ -63,6 +64,7 @@ for( const item of to_checks )
         {
             check_content = ret.value;
             if( ret.html ) check_html = ret.html;
+            if( ret.link ) check_link = ret.link;
             check_status = 1;
             
         }
@@ -161,6 +163,9 @@ for( const item of to_checks )
                     const title = '监测点['+item.title+']有新通知';
                                 
                     let desp = short(check_content,50) + (last_content && item.when == 'change' ? ('←' + short(last_content,50)):"");
+
+                    const link = check_link || item.page || item.url;
+                    desp += "\r\n\r\n [去看看]("+ link +") \r\n\r\n";
                     
                     if( check_html )
                         desp += "\r\n\r\n---\r\n\r\n" + to_markdown(check_html); 

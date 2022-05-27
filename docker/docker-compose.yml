@@ -14,4 +14,6 @@ services:
     environment:
       - API_KEY=aPiKe1
       - ERROR_IMAGE=NORMAL # NONE,NORMAL,FULL
+      - SNAP_URL_BASE=http://... # NONE,NORMAL,FULL
+      - SNAP_FULL=1 # NONE,NORMAL,FULL
       - TZ=Asia/Chongqing

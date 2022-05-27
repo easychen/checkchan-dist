@@ -9,15 +9,16 @@
 </ol>
 <h2>最新版本</h2>
 <ul>
-<li>插件·Chrome/Edge：<a href="ckc.zip">2022.05.26.19.42</a></li>
-<li>自架云端Docker镜像：2022.05.26.19.10</li>
-<li>文档：2022.05.26.19.48</li>
+<li>插件·Chrome/Edge：<a href="ckc.zip">2022.05.27.13.00</a></li>
+<li>自架云端Docker镜像：2022.05.27.12.33</li>
+<li>文档：2022.05.27.13.00</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
-<p>自架云端 Docker 命令（<code class="notranslate">API Key</code>为<code class="notranslate">YouRAPiK1</code>）:</p>
+<p>自架云端 Docker 命令（ 将<code class="notranslate">API Key</code>从<code class="notranslate">YouRAPiK1</code>替换成<code class="notranslate">任意你想要的安全密码不要带$</code>）:</p>
 <div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
 <ul>
-<li>特别提醒：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
+<li>特别提醒：后文有详细的安装帮助</li>
+<li>特别提醒1：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
 <li>特别提醒2：此镜像为x86架构，arm架构镜像可<a href="https://github.com/easychen/checkchan-dist/tree/main/docker">拉取源码</a>自行构建</li>
 </ul>
 <h2>什么是「Check酱」</h2>
@@ -120,6 +121,8 @@
     <span class="pl-ent">environment</span>:
       - <span class="pl-s">API_KEY=&lt;这里写一个你自己想的API_KEY&gt;</span>
       - <span class="pl-s">ERROR_IMAGE=NORMAL </span><span class="pl-c"><span class="pl-c">#</span> NONE,NORMAL,FULL</span>
+      - <span class="pl-s">SNAP_URL_BASE=&lt;开启截图在这里写服务器地址，不开留空&gt; </span><span class="pl-c"><span class="pl-c">#</span>如 http://ip.com/</span>
+      - <span class="pl-s">SNAP_FULL=1 </span><span class="pl-c"><span class="pl-c">#</span>完整网页长图</span>
       - <span class="pl-s">TZ=Asia/Chongqing</span></pre></div>
 <p>将其中 <code class="notranslate">&lt;这里写一个你自己想的API_KEY&gt;</code> 换成一个别人不知道的密码（下文称密码C<br>
 ）。注意不要包含<code class="notranslate">$</code>字符，替换完后也不再有两边的尖括号<code class="notranslate">&lt;&gt;</code>。</p>
@@ -153,6 +156,18 @@
 <p>点击右上角 「云+箭头」的按钮，可以主动同步任务到云端。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521145106.png"><img src="image/20220521145106.png" alt="" style="max-width: 100%;"></a></p>
 <p>Check酱也会每十分钟自动同步一次。</p>
+<h3>云端截图</h3>
+<p>Check酱自架云端支持对网页（dom）类型任务进行截图，可以通过给镜像传递环境变量来开启：</p>
+<ul>
+<li>SNAP_URL_BASE=&lt;开启截图在这里写服务器地址，不开留空&gt; #如 <a href="http://ip.com/" rel="nofollow">http://ip.com/</a></li>
+<li>SNAP_FULL=1 #完整网页长图</li>
+</ul>
+<p>可参考上文的<code class="notranslate">docker-compser.yml</code>。添加环境变量后重启服务即可。</p>
+<p>注意</p>
+<ul>
+<li>截图功能需要较大的内存，部分服务器可能会报错</li>
+<li>云端网络和本地不同，可能会超时失败，请适当增加延时，并将取消完整截图</li>
+</ul>
 <h3>云端任务的安全性</h3>
 <p>Check酱云端任务的原理是将cookie同步到云端，然后用浏览器查看，本质和用户操作一样。但因为出口IP可能是机房和数据中心，频次太高也有被风控的可能。如果将云端部署在家里，则和在家用电脑访问效果一样。</p>
 <h3>云端错误排查</h3>

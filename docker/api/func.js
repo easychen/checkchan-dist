@@ -174,7 +174,7 @@ exports.monitor_auto = async ( item, cookies ) =>
                 break;
             case 'rss':
                 ret = await monitor_rss( item.url, (parseInt(item.delay)||3)*1000 );
-                return {status:!!(ret&&ret[item.rss_field]),value:ret[item.rss_field]||"",type:item.type};
+                return {status:!!(ret&&ret[item.rss_field]),value:ret[item.rss_field]||"",link:ret.link,type:item.type};
                 break;
             case 'json':
                 // 特别注意，云端的json监测包含delay参数
@@ -184,8 +184,8 @@ exports.monitor_auto = async ( item, cookies ) =>
                 break;
             case 'dom':
             default:
-                ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||3)*1000, the_cookies );
-                return {status:!!(ret&&ret.text),value:ret.text||"",type:item.type,html:ret.html||""};
+                ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||3)*1000, the_cookies, item.id );
+                return {status:!!(ret&&ret.text),value:ret.text||"",type:item.type,html:ret.html||"",link:ret.link||""};
         }
     } catch (error) {
         return {status:false,error,type:item.type};
@@ -285,14 +285,18 @@ async function monitor_dom_low(url, path, delay , cookies)
     return {text:texts[0]||"",html,all};
 }
 
-async function monitor_dom(url, path, delay , cookies)
+async function monitor_dom(url, path, delay , cookies, id)
 {
-    const first = await monitor_dom_low(url, path, delay , cookies);
-    console.log( "low result" , first.text );
-    if( first && first.text ) return first;
+    if( !process.env.SNAP_URL_BASE )
+    {
+        const first = await monitor_dom_low(url, path, delay , cookies);
+        console.log( "low result" , first.text );
+        if( first && first.text ) return first;
+    } 
     
     let opt = {
         args: ['--no-sandbox'],
+        defaultViewport: null,
         headless: true, 
     };
 
@@ -335,11 +339,12 @@ async function monitor_dom(url, path, delay , cookies)
         },path);
         const { all,html, ...ret_short } = ret;
         console.log("ret",ret_short);
-        // 如果返回值为空，那么截图
+        
+        const image_dir = get_data_dir()+'/image';
+            
+        // 如果返回值为空，那么保存错误现场
         if( !(ret && ret.text) )
         {
-            const image_dir = get_data_dir()+'/image';
-                
             if( !fs.existsSync(image_dir) )
             fs.mkdirSync(image_dir);
             
@@ -356,7 +361,31 @@ async function monitor_dom(url, path, delay , cookies)
                 await page.screenshot({"path":image_dir+'/error.jpg',"type":"jpeg","captureBeyondViewport":false,"fullPage":process.env.ERROR_IMAGE=='FULL'||false});
             }
            
+        }else
+        {
+            // 如果启用了返回截图功能
+            if( process.env.SNAP_URL_BASE )
+            {
+                if( !fs.existsSync(image_dir) )
+                fs.mkdirSync(image_dir);
+
+                const image_path = `${image_dir}/${id}.jpg`;
+
+                const mobile = puppeteer.devices['iPhone X']
+                await page.emulate(mobile);
+                await page.setViewport({ width:480, height:2000 });
+                
+                await page.screenshot({"path":image_path,"type":"jpeg","captureBeyondViewport":false,"fullPage":process.env.SNAP_FULL||false});
+
+                if( fs.existsSync(image_path) )
+                {
+                    console.log("截图完成");
+                    ret.link = process.env.SNAP_URL_BASE + '/image/' + id +'.jpg?key='+process.env.API_KEY;
+                } 
+            }
         }
+
+        
 
         
         

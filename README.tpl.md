@@ -17,12 +17,13 @@
 - 文档：{doc-build}
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
-自架云端 Docker 命令（`API Key`为`YouRAPiK1`）:
+自架云端 Docker 命令（ 将`API Key`从`YouRAPiK1`替换成`任意你想要的安全密码不要带$`）:
 
 ```bash
 docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ```
-* 特别提醒：`/data`挂载的目录需要写权限
+* 特别提醒：后文有详细的安装帮助
+* 特别提醒1：`/data`挂载的目录需要写权限
 * 特别提醒2：此镜像为x86架构，arm架构镜像可[拉取源码](https://github.com/easychen/checkchan-dist/tree/main/docker)自行构建
 
 
@@ -208,6 +209,8 @@ services:
     environment:
       - API_KEY=<这里写一个你自己想的API_KEY>
       - ERROR_IMAGE=NORMAL # NONE,NORMAL,FULL
+      - SNAP_URL_BASE=<开启截图在这里写服务器地址，不开留空> #如 http://ip.com/
+      - SNAP_FULL=1 #完整网页长图
       - TZ=Asia/Chongqing
 ```
 
@@ -277,6 +280,20 @@ docker pull ccr.ccs.tencentyun.com/ftqq/checkchan:latest
 ![](image/20220521145106.png) 
 
 Check酱也会每十分钟自动同步一次。
+
+### 云端截图
+
+Check酱自架云端支持对网页（dom）类型任务进行截图，可以通过给镜像传递环境变量来开启：
+
+- SNAP_URL_BASE=<开启截图在这里写服务器地址，不开留空> #如 http://ip.com/
+- SNAP_FULL=1 #完整网页长图
+
+可参考上文的`docker-compser.yml`。添加环境变量后重启服务即可。
+
+注意
+
+- 截图功能需要较大的内存，部分服务器可能会报错
+- 云端网络和本地不同，可能会超时失败，请适当增加延时，并将取消完整截图
 
 ### 云端任务的安全性
 
