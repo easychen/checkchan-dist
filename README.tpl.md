@@ -12,8 +12,8 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：[{ext-build}](ckc.zip)
-- 自架云端Docker镜像：{img-build}
+- 插件·Chrome/Edge：{ext-build} [下载](ckc.zip)
+- 自架云端Docker镜像：{img-build} [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
 - 文档：{doc-build}
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 

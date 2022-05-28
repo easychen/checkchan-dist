@@ -39,8 +39,8 @@ function short( maybe_string , len = 0 )
     if( isNumeric( maybe_string )) return maybe_string;
     if (typeof maybe_string === 'string' || maybe_string instanceof String)
     {
-        if( len < 1 ) return maybe_string;
-        return maybe_string.substring( 0, len );
+        if( len < 1 ) return maybe_string.replace(/^"(.+)"$/ig, '\$1');
+        return maybe_string.replace(/^"(.+)"$/ig, '\$1').substring( 0, len );
     }else
     {
         // maybe object
@@ -141,11 +141,12 @@ exports.get_cookies = () =>
     return json_data.cookies;
 }
 
-exports.send_notify = async ( title, desp, sendkey, channel = -1)  =>
+exports.send_notify = async ( title, desp, sendkey, channel = -1, short = false)  =>
 {
     try {
         const form = new FormData();
         if( channel >= 0 ) form.append( 'channel',parseInt(channel));
+        if( short ) form.append( 'short',short ); 
         form.append( 'title',title ); 
         form.append( 'desp',desp.substring(0,10000) ); 
         const response = await fetch( 'https://sctapi.ftqq.com/'+sendkey+'.send', {
@@ -311,6 +312,7 @@ async function monitor_dom(url, path, delay , cookies, id)
         args: ['--no-sandbox'],
         defaultViewport: null,
         headless: true, 
+        timeout:delay+1000*10,
     };
 
     if( process.env.CHROMIUM_PATH ) 

@@ -165,7 +165,9 @@ for( const item of to_checks )
                     let desp = short(check_content,50) + (last_content && item.when == 'change' ? ('←' + short(last_content,50)):"");
 
                     const link = check_link || item.page || item.url;
-                    desp += "\r\n\r\n [去看看]("+ link +") \r\n\r\n";
+                    const short_content = desp;
+
+                    desp += "\r\n\r\n[详情链接]("+ link +") \r\n\r\n";
                     
                     if( check_html )
                         desp += "\r\n\r\n---\r\n\r\n" + to_markdown(check_html); 
@@ -182,7 +184,7 @@ for( const item of to_checks )
                     // const desp = check_content.length > 50 ? (check_html ? to_markdown(check_html) : check_content) :  check_content + (item.last_content ? ('←' + item.last_content):"") ;
                     
                     
-                    await send_notify( title, desp , item.sendkey, item.send_channel || -1);  
+                    await send_notify( title, desp , item.sendkey, item.send_channel || -1, short_content);  
                 }
             }
         } 
