@@ -27,7 +27,11 @@ docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 80
 * 特别提醒1：`/data`挂载的目录需要写权限
 * 特别提醒2：此镜像为x86架构，arm架构镜像可[拉取源码](https://github.com/easychen/checkchan-dist/tree/main/docker)自行构建
 
+## 官方视频教程
 
+[![](image/20220531151537.png)](https://www.bilibili.com/video/BV1K94y1m7tt)
+
+[详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
 
 ## 什么是「Check酱」
 
@@ -48,6 +52,7 @@ Check酱的原理是，通过浏览器插件后台打开网页进行监测，从
 配合可以自行架设的**云端**，可以将监测任务同步到服务器，这样当浏览器和电脑关掉以后，监测任务依然可以定时运行。
 
 ![](image/20220521135441.png)  
+
 
 ## 插件的安装和使用
 

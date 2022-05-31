@@ -1,6 +1,6 @@
 const fs = require("fs");
 const dayjs = require("dayjs");
-const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown, short } = require("./func");
+const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown, short, makeFloat } = require("./func");
 
 const data_file = get_data_dir() + 'data.json';
 const content = fs.readFileSync( data_file );
@@ -138,17 +138,17 @@ for( const item of to_checks )
 
                 if( item.compare_op == 'eq' && !(check_content == the_value)) can_send_notice = false;
 
-                if( item.compare_op == 'gt' && !(parseFloat(check_content) > parseFloat(the_value||0))) can_send_notice = false;
+                if( item.compare_op == 'gt' && !(makeFloat(check_content) > makeFloat(the_value||0))) can_send_notice = false;
 
-                if( item.compare_op == 'gte' && !(parseFloat(check_content) >= parseFloat(the_value||0))) can_send_notice = false;
+                if( item.compare_op == 'gte' && !(makeFloat(check_content) >= makeFloat(the_value||0))) can_send_notice = false;
 
-                if( item.compare_op == 'lt' && !(parseFloat(check_content) < parseFloat(the_value||0))) can_send_notice = false;
+                if( item.compare_op == 'lt' && !(makeFloat(check_content) < makeFloat(the_value||0))) can_send_notice = false;
 
-                if( item.compare_op == 'lte' && !(parseFloat(check_content) <= parseFloat(the_value||0))) can_send_notice = false;
+                if( item.compare_op == 'lte' && !(makeFloat(check_content) <= makeFloat(the_value||0))) can_send_notice = false;
 
                 // console.log("op:",check_content,item.compare_op,the_value,can_send_notice);
 
-                logit("op:"+parseFloat(check_content)+' '+item.compare_op+' '+parseFloat(the_value||0)+' '+can_send_notice);
+                logit("op:"+makeFloat(check_content)+' '+item.compare_op+' '+makeFloat(the_value||0)+' '+can_send_notice);
 
             } 
                 

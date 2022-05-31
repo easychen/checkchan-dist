@@ -31,6 +31,13 @@ function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+function makeFloat( n )
+{
+    return parseFloat(String(n).match(/([0-9.]+)/i)[0]);
+}
+
+exports.makeFloat = makeFloat;
+
 exports.short = short;
 
 function short( maybe_string , len = 0 )
