@@ -1,0 +1,16 @@
+version: '2'
+services:
+  api:
+    # build: 
+    #   context: ./
+    #   dockerfile: ./Dockerfile
+    image: ckc
+    volumes:
+      # - './api:/api'
+      - './data:/data'
+    ports:
+      - '8088:80'
+    environment:
+      - API_KEY=aPiKe1
+      - ERROR_IMAGE=NORMAL # NONE,NORMAL,FULL
+      - TZ=Asia/Chongqing

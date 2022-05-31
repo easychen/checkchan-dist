@@ -1,0 +1,17 @@
+body
+{
+    padding:40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.ext-info
+{
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    color: #999;
+}
