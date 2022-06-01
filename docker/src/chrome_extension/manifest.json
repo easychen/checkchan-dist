@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_appTitle__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "zh_CN",
+  "version": "0.9.0",
+  "icons": {
+      "512": "logo.color.png"
+  },
+  "action": {
+      "default_title": "Check酱"
+  },
+  "permissions": [
+    "cookies","scripting","tabs","notifications","storage", "alarms","contextMenus","webRequest"
+  ],
+  "host_permissions": [
+    "http://*/*","https://*/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline';"
+  },
+  "background": {
+      "service_worker": "start.js"
+  }
+  ,
+  "content_scripts": [{
+      "js": ["dom-inspector.min.js"],
+      "matches": ["http://*/*","https://*/*"]
+  }]
+}
