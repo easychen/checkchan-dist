@@ -14,7 +14,7 @@
 
 - 插件·Chrome/Edge：2022.06.02.00.06 [下载](ckc.zip)
 - Docker镜像(云端+远程桌面二合一)：2022.06.01.23.26 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.02.01.25
+- 文档：2022.06.02.01.26
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 自架云端 Docker 命令（ 将`API Key`从`YouRAPiK1`替换成`任意你想要的安全密码不要带$`）:
