@@ -193,7 +193,7 @@ exports.monitor_auto = async ( item, cookies ) =>
                 break;
             case 'dom':
             default:
-                ret = await monitor_dom( item.url, item.path, (parseInt(item.delay)||0)*1000, the_cookies, item.id );
+                ret = await monitor_dom( item , the_cookies );
                 return {status:!!(ret&&ret.text),value:ret.text||"",type:item.type,html:ret.html||"",link:ret.link||""};
         }
     } catch (error) {
@@ -272,8 +272,9 @@ async function monitor_rss(url,timeout=10000)
     return ret;
 }
 
-async function monitor_dom_low(url, path, delay , cookies)
+async function monitor_dom_low(item, cookies)
 {
+    const { url, path, delay } = item;
     console.log("in low dom");
     try {
         const response = await fetch( url, { signal: timeoutSignal(delay<1?10000:delay) } );
@@ -302,12 +303,15 @@ async function monitor_dom_low(url, path, delay , cookies)
     }
 }
 
-async function monitor_dom(url, path, delay , cookies, id)
+async function monitor_dom(item , cookies)
 {
+    const { url, path, id } = item;
+    const delay = (parseInt(item.delay)||0)*1000;
+
     console.log("in dom delay = ",delay);
-    if((!process.env.SNAP_URL_BASE) && delay < 1 )
+    if((!process.env.SNAP_URL_BASE) && delay < 1 && !item.puppeteer_code && !item.browser_code )
     {
-        const first = await monitor_dom_low(url, path, delay , cookies);
+        const first = await monitor_dom_low( item , cookies);
         console.log( "low result" , first.text );
         if( first && first.text ) return first;
     }else
@@ -336,8 +340,10 @@ async function monitor_dom(url, path, delay , cookies, id)
     if( isIterable(cookies) )
         await page.setCookie( ...cookies ); 
 
-    await page.evaluateOnNewDocument(() => { HTMLVideoElement.prototype.canPlayType = function () { return 'probably' }; });   
-    
+    await page.evaluateOnNewDocument(() => { HTMLVideoElement.prototype.canPlayType = function () { return 'probably' }; });
+
+    const { puppeteer_code, browser_code } = item;
+            
     try {
         
         await page.goto(url,{
@@ -350,7 +356,19 @@ async function monitor_dom(url, path, delay , cookies, id)
             await sleep(delay);
         }
 
-        ret = await page.evaluate( (path) => {
+        if( puppeteer_code )
+        {
+            const hot_code = `(async( browser,page,puppeteer_code  ) =>
+            {
+                ${puppeteer_code}
+            })( browser,page,puppeteer_code  )`;
+            // console.log( hot_code );
+            eval( hot_code );
+            await sleep(1000);
+        } 
+
+        ret = await page.evaluate( (path,browser_code ) => {
+            if( browser_code ) eval( browser_code );
             let ret = window.document.querySelectorAll(path);
             if( !ret ) return false;
             console.log("query fail",path,ret);
@@ -364,7 +382,7 @@ async function monitor_dom(url, path, delay , cookies, id)
                 html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
             return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-        },path);
+        },path,browser_code);
         
         if( !ret )
         {

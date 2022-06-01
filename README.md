@@ -12,10 +12,10 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.05.31.15.26 [下载](ckc.zip)
-- 自架云端Docker镜像：2022.05.31.15.24 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 插件·Chrome/Edge：2022.06.01.13.42 [下载](ckc.zip)
+- 自架云端Docker镜像：2022.06.01.13.38 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
 - 远程桌面版Docker镜像：[Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan-chrome)
-- 文档：2022.05.31.15.26
+- 文档：2022.06.01.13.42
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 自架云端 Docker 命令（ 将`API Key`从`YouRAPiK1`替换成`任意你想要的安全密码不要带$`）:
