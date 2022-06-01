@@ -7,8 +7,8 @@ ENV CHROMIUM_PATH /usr/bin/chromium-browser
 
 USER 0
 
-# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-# RUN sed -i 's/dl-4.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN sed -i 's/dl-4.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk upgrade -U -a \
     && apk add xvfb x11vnc bash tzdata \
