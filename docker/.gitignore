@@ -1,1 +1,4 @@
-data
+data/config/*
+data/user_data/*
+data/app_data/*
+src/chrome_extension/*

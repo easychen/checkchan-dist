@@ -12,7 +12,7 @@ const { JSDOM } = require("jsdom");
 
 get_data_dir = ()=>
 {
-    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/') : '/data/';
+    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/') : '/home/chrome/app_data/';
 }
 
 const log_file = get_data_dir() + 'log.txt';
@@ -322,7 +322,7 @@ async function monitor_dom(item , cookies)
     let opt = {
         args: ['--no-sandbox'],
         defaultViewport: null,
-        headless: true, 
+        headless: false, 
         timeout:delay+1000*10,
     };
 

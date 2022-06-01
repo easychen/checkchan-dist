@@ -13,8 +13,7 @@
 ## 最新版本
 
 - 插件·Chrome/Edge：{ext-build} [下载](ckc.zip)
-- 自架云端Docker镜像：{img-build} [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 远程桌面版Docker镜像：[Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan-chrome)
+- Docker镜像(云端+远程桌面二合一)：{img-build} [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
 - 文档：{doc-build}
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
@@ -337,9 +336,9 @@ Check酱云端任务的原理是将cookie同步到云端，然后用浏览器查
 
 ![](image/20220530010731.png)  
 
-除了自架云端，我们还提供了远程桌面版本。启动此镜像后可以通过VNC连接服务器，像使用本地浏览器一样使用。
+除了自架云端，我们还在镜像中集成了远程桌面模式。它让你可以通过VNC连接服务器，像使用本地浏览器一样使用。
 
-> 此镜像亦依赖Docker运行环境，请自行安装配置
+> 远程桌面版本之前为一个独立镜像，现在已经整合到 easychen/checkchan 中，只是启动时端口、参数有所不同。
 
 ### 创建数据目录
 
@@ -354,7 +353,7 @@ mkdir user_data && chmod -R 755 user_data
 然后运行以下命令启动镜像：
 
 ```bash
-docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PASSWD=123 --cap-add=SYS_ADMIN easychen/checkchan-chrome:latest
+docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PASSWD=123 --cap-add=SYS_ADMIN easychen/checkchan:latest
 ```
 
 此后在镜像的浏览器中进行的操作结果均会保存下来。
@@ -372,10 +371,71 @@ docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PAS
 可以添加环境变量，修改屏幕宽高限制，使其在手机上更好用:
 
 ```bash
-docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 --cap-add=SYS_ADMIN easychen/checkchan-chrome:latest
+docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 --cap-add=SYS_ADMIN easychen/checkchan:latest
 ```
 
 
 ### 特别说明
 
 内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。
+
+### 同时使用云端和远程桌面
+
+新建目录 `data`，并使其可写：
+
+```bash
+mkdir data && chmod 0777 data
+```
+
+然后将以下内容按需调整后保存为 `docker-compose.yml`：
+
+```yml
+version: '3'
+services:
+  chrome:
+    build: ./
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - "./data/config:/home/chrome/config"
+      - "./data/app_data:/home/chrome/app_data"
+      - "./data/user_data:/home/chrome/user_data"
+    environment:
+      - "CKC_PASSWD=123"
+      - "HEADLESS=true"
+      #- "WIN_WIDTH=414"
+      #- "WIN_HEIGHT=896"
+      #- "XVFB_WHD=500x896x16"
+      - "API_KEY=aPiKe1"
+      - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
+      #- "SNAP_URL_BASE=http://..."
+      #- "SNAP_FULL=1"
+      - TZ=Asia/Chongqing
+    ports:
+      - "5900:5900" 
+      - "8080:8080" 
+      - "8081:80"
+```
+
+运行以下命令启动：
+
+```
+docker-compose up -d
+```
+
+服务所在的端口为：
+
+- 云端：8081
+- 远程桌面(VNC): 5900
+- 远程桌面的Web界面(NoVNC): 8088
+
+在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 `http://localhost`，API KEY按上边 YML 中设置的输入即可。
+
+使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 `HEADLESS` 一行注释掉，再重新启动容器即可看到云端监测网页的详细过程。
+
+```yml
+environment:
+  - "CKC_PASSWD=123"
+  #- "HEADLESS=true"
+```
+
