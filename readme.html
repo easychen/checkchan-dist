@@ -11,7 +11,7 @@
 <ul>
 <li>插件·Chrome/Edge：2022.06.02.23.10 <a href="ckc.zip">下载</a></li>
 <li>Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.06.02.23.10</li>
+<li>文档：2022.06.02.23.22</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
 <blockquote>
@@ -158,8 +158,8 @@
 </ul>
 <h4>通过 Docker 启动</h4>
 <p>你也可以将 <code class="notranslate">docker-compose</code> 中的参数传给 docker 来启动：</p>
-<div class="highlight highlight-source-shell"><pre>docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data/config:/home/chrome/config -v <span class="pl-smi">${PWD}</span>/data/app_data:/home/chrome/app_data -v <span class="pl-smi">${PWD}</span>/data/user_data:/home/chrome/user_data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
-<p>请将上述命令中的123替换为你想要设定的密码。</p>
+<div class="highlight highlight-source-shell"><pre>docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e SNAP_URL_BASE=http://localhost:8088  -e CKC_PASSWD=123 -e TZ=Asia/Chongqing easychen/checkchan:latest</pre></div>
+<p>请将上述命令中的123替换为你想要设定的密码、将<code class="notranslate">SNAP_URL_BASE</code>换成服务器的外网IP(如果想通过手机查看截图)。</p>
 <h4>更新镜像</h4>
 <p>Check酱云端镜像更新后，你可以将正在运行的云端服务升级到最新版。方式如下：</p>
 <p>首先停现有的容器：</p>

@@ -261,10 +261,10 @@ docker-compose up -d
 你也可以将 `docker-compose` 中的参数传给 docker 来启动：
 
 ```bash
-docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data/config:/home/chrome/config -v ${PWD}/data/app_data:/home/chrome/app_data -v ${PWD}/data/user_data:/home/chrome/user_data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest
+docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data:/checkchan/data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e SNAP_URL_BASE=http://localhost:8088  -e CKC_PASSWD=123 -e TZ=Asia/Chongqing easychen/checkchan:latest
 ```
 
-请将上述命令中的123替换为你想要设定的密码。
+请将上述命令中的123替换为你想要设定的密码、将`SNAP_URL_BASE`换成服务器的外网IP(如果想通过手机查看截图)。
 
 #### 更新镜像
 
