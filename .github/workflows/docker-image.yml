@@ -22,15 +22,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PUSH_TOKEN }}
       
-#       - name: Docker Setup Buildx
-#         id: buildx
-#         uses: docker/setup-buildx-action@v2.0.0
+      - name: Docker Setup Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2.0.0
       
       - name: Build and push Docker images
         uses: docker/build-push-action@v3.0.0
         with:
           context: ./docker/
-          # platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: easychen/checkchan:latest
           
