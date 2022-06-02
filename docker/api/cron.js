@@ -2,7 +2,7 @@ const fs = require("fs");
 const dayjs = require("dayjs");
 const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown, short, makeFloat } = require("./func");
 
-const data_file = get_data_dir() + 'data.json';
+const data_file = get_data_dir() + '/data.json';
 const content = fs.readFileSync( data_file );
 const json_data = JSON.parse( content );
 

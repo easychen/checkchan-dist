@@ -13,7 +13,7 @@ const { JSDOM } = require("jsdom");
 get_data_dir = ()=>
 {
     // 兼容下旧版目录配置
-    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/') : ( fs.existsSync('/data') ? '/data/' : '/home/chrome/app_data/' ) ;
+    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data') : ( fs.existsSync('/data') ? '/data' : '/home/chrome/app_data' ) ;
 }
 
 const log_file = get_data_dir() + 'log.txt';
@@ -143,7 +143,7 @@ exports.to_time_string = ( date ) =>
 
 exports.get_cookies = () =>
 {
-    const data_file = get_data_dir() + 'data.json';
+    const data_file = get_data_dir() + '/data.json';
     const content = fs.readFileSync( data_file );
     const json_data = JSON.parse( content );
     return json_data.cookies;
