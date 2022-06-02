@@ -3,12 +3,14 @@ FROM zenika/alpine-chrome:with-puppeteer
 ENV NOVNC_TAG="v1.3.0"
 ENV WEBSOCKIFY_TAG="v0.10.0"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-ENV CHROMIUM_PATH /usr/bin/chromium-browser
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROME_PATH=/usr/lib/chromium/
 
 USER 0
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-RUN sed -i 's/dl-4.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# 因为反正要国外网络才能获取到 zenika/alpine-chrome 的 meta，这里替换反而没意义了
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# RUN sed -i 's/dl-4.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk upgrade -U -a \
     && apk add xvfb x11vnc bash tzdata \
@@ -31,16 +33,19 @@ RUN npm install -g pm2
 COPY api /api
 RUN cd /api/ && npm install
 
+
+COPY xvfb.sh /xvfb.sh
 COPY x11vnc.sh /x11vnc.sh
 COPY novnc.sh /novnc.sh
+
 USER chrome
 
 ENV DISPLAY :99
 ENV TZ=Asia/Chongqing
-EXPOSE 5900 80 8080
+
+EXPOSE 5900 80 8080 9222
 
 
 COPY --chown=chrome . ./
-
 RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"] 

@@ -10,7 +10,8 @@ services:
       - "./data/user_data:/home/chrome/user_data"
     environment:
       - "CKC_PASSWD=123"
-      - "HEADLESS=true"
+      - "VDEBUG=OFF"
+      - "VNC=OFF"
       #- "WIN_WIDTH=414"
       #- "WIN_HEIGHT=896"
       #- "XVFB_WHD=500x896x16"

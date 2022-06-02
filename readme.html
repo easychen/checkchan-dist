@@ -10,8 +10,8 @@
 <h2>最新版本</h2>
 <ul>
 <li>插件·Chrome/Edge：2022.06.02.00.06 <a href="ckc.zip">下载</a></li>
-<li>Docker镜像(云端+远程桌面二合一)：2022.06.01.23.26 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.06.02.09.55</li>
+<li>Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
+<li>文档：2022.06.02.16.13</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
 <blockquote>
@@ -116,7 +116,7 @@
 <p>需要docker环境。如果你没有云服务器，可以看看<a href="https://curl.qcloud.com/VPjlS4gj" rel="nofollow">腾讯云30~50元首单的特价服务器</a>。</p>
 <h4>通过 Docker-compose 启动</h4>
 <p>登录服务器（假设其IP为IPB），在要安装的目录下新建目录 <code class="notranslate">data</code>，并使其可写：</p>
-<div class="highlight highlight-source-shell"><pre>mkdir data <span class="pl-k">&amp;&amp;</span> chmod 0777 data</pre></div>
+<div class="highlight highlight-source-shell"><pre>mkdir data <span class="pl-k">&amp;&amp;</span> chmod 0755 data</pre></div>
 <p>新建一个 <code class="notranslate">docker-compose.yml</code> 文件，将下边的内容按提示调整后粘贴保存：</p>
 <div class="highlight highlight-source-yaml"><pre><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>
 <span class="pl-ent">services</span>:
@@ -130,7 +130,8 @@
       - <span class="pl-s"><span class="pl-pds">"</span>./data/user_data:/home/chrome/user_data<span class="pl-pds">"</span></span>
     <span class="pl-ent">environment</span>:
       - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=&lt;这里是远程桌面的密码，写一个你自己想的&gt;<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>HEADLESS=true<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>VDEBUG=OFF<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>VNC=ON<span class="pl-pds">"</span></span>
       <span class="pl-c"><span class="pl-c">#</span>- "WIN_WIDTH=414"</span>
       <span class="pl-c"><span class="pl-c">#</span>- "WIN_HEIGHT=896"</span>
       <span class="pl-c"><span class="pl-c">#</span>- "XVFB_WHD=500x896x16"</span>
@@ -144,6 +145,7 @@
       - <span class="pl-s"><span class="pl-pds">"</span>8080:8080<span class="pl-pds">"</span></span> 
       - <span class="pl-s"><span class="pl-pds">"</span>8088:80<span class="pl-pds">"</span></span></pre></div>
 <p>将其中<code class="notranslate">&lt;这里是远程桌面的密码，写一个你自己想的&gt;</code>和 <code class="notranslate">&lt;这里是云端的API KEY，写一个你自己想的&gt;</code> 换成别人不知道的密码（下文称密码C和D）。注意不要包含<code class="notranslate">$</code>字符，替换完后也不再有两边的尖括号<code class="notranslate">&lt;&gt;</code>。</p>
+<p>如果不希望启动远程桌面，请将 <code class="notranslate">VNC=ON</code> 改为 <code class="notranslate">VNC=OFF</code>。</p>
 <p>保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：</p>
 <div class="highlight highlight-source-shell"><pre>docker-compose up -d</pre></div>
 <blockquote>
@@ -158,7 +160,7 @@
 </ul>
 <h4>通过 Docker 启动</h4>
 <p>你也可以将 <code class="notranslate">docker-compose</code> 中的参数传给 docker 来启动：</p>
-<div class="highlight highlight-source-shell"><pre>docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data/config:/home/chrome/config -v <span class="pl-smi">${PWD}</span>/data/app_data:/home/chrome/app_data -v <span class="pl-smi">${PWD}</span>/data/user_data:/home/chrome/user_data -e API_KEY=123  -e HEADLESS=true -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
+<div class="highlight highlight-source-shell"><pre>docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data/config:/home/chrome/config -v <span class="pl-smi">${PWD}</span>/data/app_data:/home/chrome/app_data -v <span class="pl-smi">${PWD}</span>/data/user_data:/home/chrome/user_data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
 <p>请将上述命令中的123替换为你想要设定的密码。</p>
 <h4>更新镜像</h4>
 <p>Check酱云端镜像更新后，你可以将正在运行的云端服务升级到最新版。方式如下：</p>
@@ -235,7 +237,7 @@
 <h3>特别说明</h3>
 <p>容器日常消耗在 300M~500M。内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。</p>
 <h3>可视化调试</h3>
-<p>使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 <code class="notranslate">HEADLESS</code> 一行注释掉，再重新启动容器即可看到云端监测网页的详细过程。</p>
+<p>使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 <code class="notranslate">VDEBUG</code> 设置为 <code class="notranslate">ON</code>，再重新启动容器即可看到云端监测网页的详细过程。</p>
 <div class="highlight highlight-source-yaml"><pre><span class="pl-ent">environment</span>:
   - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=123<span class="pl-pds">"</span></span>
-  <span class="pl-c"><span class="pl-c">#</span>- "HEADLESS=true"</span></pre></div>
+  - <span class="pl-s"><span class="pl-pds">"</span>VDEBUG=ON<span class="pl-pds">"</span></span></pre></div>

@@ -12,7 +12,8 @@ const { JSDOM } = require("jsdom");
 
 get_data_dir = ()=>
 {
-    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/') : '/home/chrome/app_data/';
+    // 兼容下旧版目录配置
+    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/') : ( fs.existsSync('/data') ? '/data/' : '/home/chrome/app_data/' ) ;
 }
 
 const log_file = get_data_dir() + 'log.txt';
@@ -322,7 +323,7 @@ async function monitor_dom(item , cookies)
     let opt = {
         args: ['--no-sandbox'],
         defaultViewport: null,
-        headless: false, 
+        headless: !(process.env.VDEBUG && process.env.VDEBUG == 'ON'), 
         timeout:delay+1000*10,
     };
 

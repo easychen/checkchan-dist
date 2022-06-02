@@ -13,8 +13,8 @@
 ## 最新版本
 
 - 插件·Chrome/Edge：2022.06.02.00.06 [下载](ckc.zip)
-- Docker镜像(云端+远程桌面二合一)：2022.06.01.23.26 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.02.09.55
+- Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.06.02.16.13
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -202,7 +202,7 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 登录服务器（假设其IP为IPB），在要安装的目录下新建目录 `data`，并使其可写：
 
 ```bash
-mkdir data && chmod 0777 data
+mkdir data && chmod 0755 data
 ```
 
 
@@ -221,7 +221,8 @@ services:
       - "./data/user_data:/home/chrome/user_data"
     environment:
       - "CKC_PASSWD=<这里是远程桌面的密码，写一个你自己想的>"
-      - "HEADLESS=true"
+      - "VDEBUG=OFF"
+      - "VNC=ON"
       #- "WIN_WIDTH=414"
       #- "WIN_HEIGHT=896"
       #- "XVFB_WHD=500x896x16"
@@ -237,6 +238,8 @@ services:
 ```
 
 将其中`<这里是远程桌面的密码，写一个你自己想的>`和 `<这里是云端的API KEY，写一个你自己想的>` 换成别人不知道的密码（下文称密码C和D）。注意不要包含`$`字符，替换完后也不再有两边的尖括号`<>`。
+
+如果不希望启动远程桌面，请将 `VNC=ON` 改为 `VNC=OFF`。
 
 保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：
 
@@ -260,7 +263,7 @@ docker-compose up -d
 你也可以将 `docker-compose` 中的参数传给 docker 来启动：
 
 ```bash
-docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data/config:/home/chrome/config -v ${PWD}/data/app_data:/home/chrome/app_data -v ${PWD}/data/user_data:/home/chrome/user_data -e API_KEY=123  -e HEADLESS=true -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest
+docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data/config:/home/chrome/config -v ${PWD}/data/app_data:/home/chrome/app_data -v ${PWD}/data/user_data:/home/chrome/user_data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest
 ```
 
 请将上述命令中的123替换为你想要设定的密码。
@@ -395,11 +398,11 @@ docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PAS
 
 ### 可视化调试
 
-使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 `HEADLESS` 一行注释掉，再重新启动容器即可看到云端监测网页的详细过程。
+使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 `VDEBUG` 设置为 `ON`，再重新启动容器即可看到云端监测网页的详细过程。
 
 ```yml
 environment:
   - "CKC_PASSWD=123"
-  #- "HEADLESS=true"
+  - "VDEBUG=ON"
 ```
 
