@@ -17,14 +17,7 @@
 - 文档：{doc-build}
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
-自架云端 Docker 命令（ 将`API Key`从`YouRAPiK1`替换成`任意你想要的安全密码不要带$`）:
-
-```bash
-docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
-```
-* 特别提醒：后文有详细的安装说明
-* 特别提醒1：`/data`挂载的目录需要写权限
-* 特别提醒2：此镜像为x86架构，arm架构镜像可[拉取源码](https://github.com/easychen/checkchan-dist/tree/main/docker)自行构建
+> Docker镜像安装命令请参阅后文云端架设一节
 
 ## 官方视频教程
 
@@ -188,9 +181,12 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 ![](image/20220524171157.png)  
 
 
-## 自架云端的安装和使用
+## 镜像的安装和使用
 
-配合自行架设的服务器，可以将任务同步到云端执行，即使关掉浏览器和电脑后监测任务也会一直运行。
+新版镜像已经将云端和远程桌面版本集成，只需一次安装都可以使用。
+
+- 云端：配合自行架设的服务器，可以将任务同步到云端执行，即使关掉浏览器和电脑后监测任务也会一直运行。
+- 远程桌面：在Docker中封装了Chrome浏览器，可以通过VNC和Web界面像在电脑上一样使用。
 
 > ⚠️ 特别说明：因为云端的网络、环境都和本机不同，所以并不保证本机能运行的任务都能在云端运行成功，一些复杂网页和有较多动态效果的网页可能失败。
 
@@ -199,31 +195,48 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 
 > 架设自架版云端需要技术基础，非技术用户建议购买我们的官方版云端（将在内测完成后发布）
 
-为方便安装，自架版云端需要docker环境。如果你没有云服务器，可以看看[腾讯云30~50元首单的特价服务器](https://curl.qcloud.com/VPjlS4gj)。
+需要docker环境。如果你没有云服务器，可以看看[腾讯云30~50元首单的特价服务器](https://curl.qcloud.com/VPjlS4gj)。
 
 #### 通过 Docker-compose 启动
 
-登录服务器（假设其IP为IPB），在要安装的目录下，新建一个 `docker-compose.yml` 文件，复制张贴下边的内容：
+登录服务器（假设其IP为IPB），在要安装的目录下新建目录 `data`，并使其可写：
 
-```yaml
-version: '2'
-services:
-  api:
-    image: ccr.ccs.tencentyun.com/ftqq/checkchan:latest
-    volumes:
-      - './:/data'
-    ports:
-      - '8088:80'
-    environment:
-      - API_KEY=<这里写一个你自己想的API_KEY>
-      - ERROR_IMAGE=NORMAL # NONE,NORMAL,FULL
-      - SNAP_URL_BASE=<开启截图在这里写服务器地址，不开留空> #如 http://ip.com/
-      - SNAP_FULL=1 #完整网页长图
-      - TZ=Asia/Chongqing
+```bash
+mkdir data && chmod 0777 data
 ```
 
-将其中 `<这里写一个你自己想的API_KEY>` 换成一个别人不知道的密码（下文称密码C
-）。注意不要包含`$`字符，替换完后也不再有两边的尖括号`<>`。
+
+新建一个 `docker-compose.yml` 文件，将下边的内容按提示调整后粘贴保存：
+
+```yaml
+version: '3'
+services:
+  chrome:
+    image: easychen/checkchan:latest
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - "./data/config:/home/chrome/config"
+      - "./data/app_data:/home/chrome/app_data"
+      - "./data/user_data:/home/chrome/user_data"
+    environment:
+      - "CKC_PASSWD=<这里是远程桌面的密码，写一个你自己想的>"
+      - "HEADLESS=true"
+      #- "WIN_WIDTH=414"
+      #- "WIN_HEIGHT=896"
+      #- "XVFB_WHD=500x896x16"
+      - "API_KEY=<这里是云端的API KEY，写一个你自己想的>"
+      - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
+      #- "SNAP_URL_BASE==<开启截图在这里写服务器地址，不开留空>..."
+      #- "SNAP_FULL=1"
+      - "TZ=Asia/Chongqing"
+    ports:
+      - "5900:5900" 
+      - "8080:8080" 
+      - "8088:80"
+```
+
+将其中`<这里是远程桌面的密码，写一个你自己想的>`和 `<这里是云端的API KEY，写一个你自己想的>` 换成别人不知道的密码（下文称密码C和D）。注意不要包含`$`字符，替换完后也不再有两边的尖括号`<>`。
 
 保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：
 
@@ -233,17 +246,24 @@ docker-compose up -d
 
 > 如提示docker服务未安装/找不到/未启动，可在 docker-compose 前加 sudo 再试
 
-等待初始化完成后，访问 `http://$BBB:8088?key=$CCC`( 将$BBB替换为IP B，$CCC替换为密码C )，看到包含 `it works` 的提示即为架设成功。
+等待初始化完成后，访问 `http://$BBB:8080`( 将$BBB替换为IP B)，看到 NoVNC Web界面说明容器已经启动。
 
-![](image/20220521142747.png) 
+服务所在的端口为：
+
+- 云端：8088
+- 远程桌面(VNC): 5900
+- 远程桌面的Web界面(NoVNC): 8080
+
 
 #### 通过 Docker 启动
 
+你也可以将 `docker-compose` 中的参数传给 docker 来启动：
+
 ```bash
-docker run -e API_KEY=* -e TZ=Asia/Chongqing -p 8088:80 -v $PWD:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data/config:/home/chrome/config -v ${PWD}/data/app_data:/home/chrome/app_data -v ${PWD}/data/user_data:/home/chrome/user_data -e API_KEY=123  -e HEADLESS=true -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest
 ```
 
-请将上述命令中的*替换为对应的数据库信息。
+请将上述命令中的123替换为你想要设定的密码。
 
 #### 更新镜像
 
@@ -262,10 +282,12 @@ docker-compose down
 然后运行 docker pull 拉取最新版：
 
 ```bash
-docker pull ccr.ccs.tencentyun.com/ftqq/checkchan:latest
+docker pull easychen/checkchan:latest
 ```
 
 完成后再启动服务即可。
+
+## 云端的使用
 
 ### 将浏览器插件对接云端
 
@@ -332,31 +354,18 @@ Check酱云端任务的原理是将cookie同步到云端，然后用浏览器查
 
 这个页面也能看到云端任务日志，这里的日志不包含手动点击「监测」按钮触发的任务。如果没有可以执行的任务（任务是定时触发的），那么日志亦可能为空。
 
-## 远程桌面版
+## 远程桌面版的使用
 
 ![](image/20220530010731.png)  
 
 除了自架云端，我们还在镜像中集成了远程桌面模式。它让你可以通过VNC连接服务器，像使用本地浏览器一样使用。
 
-> 远程桌面版本之前为一个独立镜像，现在已经整合到 easychen/checkchan 中，只是启动时端口、参数有所不同。
+> 远程桌面版本之前为一个独立镜像，现在已经整合到 easychen/checkchan 中，因此你可以直接使用。
 
-### 创建数据目录
+### 通过 Web 界面使用
 
-为了重新启动镜像后，我们在其中的操作数据可以保存，我们需要创建一个数据目录用于存放用户数据。
-
-在当前目录创建 `user_data` 目录: 
-
-```bash
-mkdir user_data && chmod -R 755 user_data
-```
-
-然后运行以下命令启动镜像：
-
-```bash
-docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PASSWD=123 --cap-add=SYS_ADMIN easychen/checkchan:latest
-```
-
-此后在镜像的浏览器中进行的操作结果均会保存下来。
+- Web界面: http:///$BBB:8088
+- 密码: 123 （可自行修改命令调整）
 
 ### 通过 VNC 连接使用
 
@@ -364,6 +373,11 @@ docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PAS
 
 - 连接地址: 架设服务的IP:5900
 - 密码: 123 （可自行修改命令调整）
+
+
+### 连接云端
+
+在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 `http://localhost`，API KEY按上边 YML 中设置的输入即可。
 
 
 ### 移动版
@@ -377,59 +391,9 @@ docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PAS
 
 ### 特别说明
 
-内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。
+容器日常消耗在 300M~500M。内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。
 
-### 同时使用云端和远程桌面
-
-新建目录 `data`，并使其可写：
-
-```bash
-mkdir data && chmod 0777 data
-```
-
-然后将以下内容按需调整后保存为 `docker-compose.yml`：
-
-```yml
-version: '3'
-services:
-  chrome:
-    build: ./
-    cap_add:
-      - SYS_ADMIN
-    volumes:
-      - "./data/config:/home/chrome/config"
-      - "./data/app_data:/home/chrome/app_data"
-      - "./data/user_data:/home/chrome/user_data"
-    environment:
-      - "CKC_PASSWD=123"
-      - "HEADLESS=true"
-      #- "WIN_WIDTH=414"
-      #- "WIN_HEIGHT=896"
-      #- "XVFB_WHD=500x896x16"
-      - "API_KEY=aPiKe1"
-      - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
-      #- "SNAP_URL_BASE=http://..."
-      #- "SNAP_FULL=1"
-      - TZ=Asia/Chongqing
-    ports:
-      - "5900:5900" 
-      - "8080:8080" 
-      - "8081:80"
-```
-
-运行以下命令启动：
-
-```
-docker-compose up -d
-```
-
-服务所在的端口为：
-
-- 云端：8081
-- 远程桌面(VNC): 5900
-- 远程桌面的Web界面(NoVNC): 8088
-
-在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 `http://localhost`，API KEY按上边 YML 中设置的输入即可。
+### 可视化调试
 
 使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 `HEADLESS` 一行注释掉，再重新启动容器即可看到云端监测网页的详细过程。
 

@@ -22,16 +22,12 @@
 <ul>
 <li>插件·Chrome/Edge：2022.06.02.00.06 <a href="ckc.zip">下载</a></li>
 <li>Docker镜像(云端+远程桌面二合一)：2022.06.01.23.26 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.06.02.01.26</li>
+<li>文档：2022.06.02.09.52</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
-<p>自架云端 Docker 命令（ 将<code class="notranslate">API Key</code>从<code class="notranslate">YouRAPiK1</code>替换成<code class="notranslate">任意你想要的安全密码不要带$</code>）:</p>
-<div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=YouRAPiK1 -e TZ=Asia/Chongqing -e ERROR_IMAGE=NORMAL -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
-<ul>
-<li>特别提醒：后文有详细的安装说明</li>
-<li>特别提醒1：<code class="notranslate">/data</code>挂载的目录需要写权限</li>
-<li>特别提醒2：此镜像为x86架构，arm架构镜像可<a href="https://github.com/easychen/checkchan-dist/tree/main/docker">拉取源码</a>自行构建</li>
-</ul>
+<blockquote>
+<p>Docker镜像安装命令请参阅后文云端架设一节</p>
+</blockquote>
 <h2>官方视频教程</h2>
 <p><a href="https://www.bilibili.com/video/BV1K94y1m7tt" rel="nofollow"><img src="image/20220531151537.png" alt="" style="max-width: 100%;"></a></p>
 <p><a href="https://www.bilibili.com/video/BV1K94y1m7tt" rel="nofollow">详细版，近2小时</a></p>
@@ -115,8 +111,12 @@
 <h3>更新浏览器插件</h3>
 <p>上架商店后，可以自动升级，在此之前需要手动升级。升级方式为下载zip包解压后覆盖原有文件，再在浏览器的插件管理面板中「reload」一下。</p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220524171157.png"><img src="image/20220524171157.png" alt="" style="max-width: 100%;"></a></p>
-<h2>自架云端的安装和使用</h2>
-<p>配合自行架设的服务器，可以将任务同步到云端执行，即使关掉浏览器和电脑后监测任务也会一直运行。</p>
+<h2>镜像的安装和使用</h2>
+<p>新版镜像已经将云端和远程桌面版本集成，只需一次安装都可以使用。</p>
+<ul>
+<li>云端：配合自行架设的服务器，可以将任务同步到云端执行，即使关掉浏览器和电脑后监测任务也会一直运行。</li>
+<li>远程桌面：在Docker中封装了Chrome浏览器，可以通过VNC和Web界面像在电脑上一样使用。</li>
+</ul>
 <blockquote>
 <p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> 特别说明：因为云端的网络、环境都和本机不同，所以并不保证本机能运行的任务都能在云端运行成功，一些复杂网页和有较多动态效果的网页可能失败。</p>
 </blockquote>
@@ -124,35 +124,53 @@
 <blockquote>
 <p>架设自架版云端需要技术基础，非技术用户建议购买我们的官方版云端（将在内测完成后发布）</p>
 </blockquote>
-<p>为方便安装，自架版云端需要docker环境。如果你没有云服务器，可以看看<a href="https://curl.qcloud.com/VPjlS4gj" rel="nofollow">腾讯云30~50元首单的特价服务器</a>。</p>
+<p>需要docker环境。如果你没有云服务器，可以看看<a href="https://curl.qcloud.com/VPjlS4gj" rel="nofollow">腾讯云30~50元首单的特价服务器</a>。</p>
 <h4>通过 Docker-compose 启动</h4>
-<p>登录服务器（假设其IP为IPB），在要安装的目录下，新建一个 <code class="notranslate">docker-compose.yml</code> 文件，复制张贴下边的内容：</p>
-<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>2<span class="pl-pds">'</span></span>
+<p>登录服务器（假设其IP为IPB），在要安装的目录下新建目录 <code class="notranslate">data</code>，并使其可写：</p>
+<div class="highlight highlight-source-shell"><pre>mkdir data <span class="pl-k">&amp;&amp;</span> chmod 0777 data</pre></div>
+<p>新建一个 <code class="notranslate">docker-compose.yml</code> 文件，将下边的内容按提示调整后粘贴保存：</p>
+<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>
 <span class="pl-ent">services</span>:
-  <span class="pl-ent">api</span>:
-    <span class="pl-ent">image</span>: <span class="pl-s">ccr.ccs.tencentyun.com/ftqq/checkchan:latest</span>
+  <span class="pl-ent">chrome</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">easychen/checkchan:latest</span>
+    <span class="pl-ent">cap_add</span>:
+      - <span class="pl-s">SYS_ADMIN</span>
     <span class="pl-ent">volumes</span>:
-      - <span class="pl-s"><span class="pl-pds">'</span>./:/data<span class="pl-pds">'</span></span>
-    <span class="pl-ent">ports</span>:
-      - <span class="pl-s"><span class="pl-pds">'</span>8088:80<span class="pl-pds">'</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>./data/config:/home/chrome/config<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>./data/app_data:/home/chrome/app_data<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>./data/user_data:/home/chrome/user_data<span class="pl-pds">"</span></span>
     <span class="pl-ent">environment</span>:
-      - <span class="pl-s">API_KEY=&lt;这里写一个你自己想的API_KEY&gt;</span>
-      - <span class="pl-s">ERROR_IMAGE=NORMAL </span><span class="pl-c"><span class="pl-c">#</span> NONE,NORMAL,FULL</span>
-      - <span class="pl-s">SNAP_URL_BASE=&lt;开启截图在这里写服务器地址，不开留空&gt; </span><span class="pl-c"><span class="pl-c">#</span>如 http://ip.com/</span>
-      - <span class="pl-s">SNAP_FULL=1 </span><span class="pl-c"><span class="pl-c">#</span>完整网页长图</span>
-      - <span class="pl-s">TZ=Asia/Chongqing</span></pre></div>
-<p>将其中 <code class="notranslate">&lt;这里写一个你自己想的API_KEY&gt;</code> 换成一个别人不知道的密码（下文称密码C<br>
-）。注意不要包含<code class="notranslate">$</code>字符，替换完后也不再有两边的尖括号<code class="notranslate">&lt;&gt;</code>。</p>
+      - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=&lt;这里是远程桌面的密码，写一个你自己想的&gt;<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>HEADLESS=true<span class="pl-pds">"</span></span>
+      <span class="pl-c"><span class="pl-c">#</span>- "WIN_WIDTH=414"</span>
+      <span class="pl-c"><span class="pl-c">#</span>- "WIN_HEIGHT=896"</span>
+      <span class="pl-c"><span class="pl-c">#</span>- "XVFB_WHD=500x896x16"</span>
+      - <span class="pl-s"><span class="pl-pds">"</span>API_KEY=&lt;这里是云端的API KEY，写一个你自己想的&gt;<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>ERROR_IMAGE=NORMAL<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> NONE,NORMAL,FULL</span>
+      <span class="pl-c"><span class="pl-c">#</span>- "SNAP_URL_BASE==&lt;开启截图在这里写服务器地址，不开留空&gt;..."</span>
+      <span class="pl-c"><span class="pl-c">#</span>- "SNAP_FULL=1"</span>
+      - <span class="pl-s"><span class="pl-pds">"</span>TZ=Asia/Chongqing<span class="pl-pds">"</span></span>
+    <span class="pl-ent">ports</span>:
+      - <span class="pl-s"><span class="pl-pds">"</span>5900:5900<span class="pl-pds">"</span></span> 
+      - <span class="pl-s"><span class="pl-pds">"</span>8080:8080<span class="pl-pds">"</span></span> 
+      - <span class="pl-s"><span class="pl-pds">"</span>8088:80<span class="pl-pds">"</span></span></pre></div>
+<p>将其中<code class="notranslate">&lt;这里是远程桌面的密码，写一个你自己想的&gt;</code>和 <code class="notranslate">&lt;这里是云端的API KEY，写一个你自己想的&gt;</code> 换成别人不知道的密码（下文称密码C和D）。注意不要包含<code class="notranslate">$</code>字符，替换完后也不再有两边的尖括号<code class="notranslate">&lt;&gt;</code>。</p>
 <p>保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：</p>
 <div class="highlight highlight-source-shell"><pre>docker-compose up -d</pre></div>
 <blockquote>
 <p>如提示docker服务未安装/找不到/未启动，可在 docker-compose 前加 sudo 再试</p>
 </blockquote>
-<p>等待初始化完成后，访问 <code class="notranslate">http://$BBB:8088?key=$CCC</code>( 将$BBB替换为IP B，$CCC替换为密码C )，看到包含 <code class="notranslate">it works</code> 的提示即为架设成功。</p>
-<p><a target="_blank" rel="noopener noreferrer" href="image/20220521142747.png"><img src="image/20220521142747.png" alt="" style="max-width: 100%;"></a></p>
+<p>等待初始化完成后，访问 <code class="notranslate">http://$BBB:8080</code>( 将$BBB替换为IP B)，看到 NoVNC Web界面说明容器已经启动。</p>
+<p>服务所在的端口为：</p>
+<ul>
+<li>云端：8088</li>
+<li>远程桌面(VNC): 5900</li>
+<li>远程桌面的Web界面(NoVNC): 8080</li>
+</ul>
 <h4>通过 Docker 启动</h4>
-<div class="highlight highlight-source-shell"><pre>docker run -e API_KEY=<span class="pl-k">*</span> -e TZ=Asia/Chongqing -p 8088:80 -v <span class="pl-smi">$PWD</span>:/data -d ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
-<p>请将上述命令中的*替换为对应的数据库信息。</p>
+<p>你也可以将 <code class="notranslate">docker-compose</code> 中的参数传给 docker 来启动：</p>
+<div class="highlight highlight-source-shell"><pre>docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data/config:/home/chrome/config -v <span class="pl-smi">${PWD}</span>/data/app_data:/home/chrome/app_data -v <span class="pl-smi">${PWD}</span>/data/user_data:/home/chrome/user_data -e API_KEY=123  -e HEADLESS=true -e CKC_PASSWD=123 -e TZ=Asia/Chongqing --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
+<p>请将上述命令中的123替换为你想要设定的密码。</p>
 <h4>更新镜像</h4>
 <p>Check酱云端镜像更新后，你可以将正在运行的云端服务升级到最新版。方式如下：</p>
 <p>首先停现有的容器：</p>
@@ -160,8 +178,9 @@
 <div class="highlight highlight-source-shell"><pre>docker-compose down</pre></div>
 <p>通过 docker 直接启动的运行 <code class="notranslate">docker ps</code> 查询到容器id，通过 <code class="notranslate">docker stop 容器id</code> 停止。</p>
 <p>然后运行 docker pull 拉取最新版：</p>
-<div class="highlight highlight-source-shell"><pre>docker pull ccr.ccs.tencentyun.com/ftqq/checkchan:latest</pre></div>
+<div class="highlight highlight-source-shell"><pre>docker pull easychen/checkchan:latest</pre></div>
 <p>完成后再启动服务即可。</p>
+<h2>云端的使用</h2>
 <h3>将浏览器插件对接云端</h3>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220521144137.png"><img src="image/20220521144137.png" alt="" style="max-width: 100%;"></a></p>
 <p>点击插件右上方菜单中的<code class="notranslate">云端服务</code>。</p>
@@ -202,69 +221,31 @@
 <p>点击「失败截图」按钮即可看到。注意：需要只用最新的镜像，并传递<code class="notranslate">ERROR_IMAGE=NORMAL</code> 环境变量。如果希望截取完整网页的图片，可以传递<code class="notranslate">ERROR_IMAGE=FULL</code>。</p>
 <p>如果任务失败又没有截图，说明该任务不是因为CSS选择器未命中而失败，尝试增加「延迟读取」可能解决。</p>
 <p>这个页面也能看到云端任务日志，这里的日志不包含手动点击「监测」按钮触发的任务。如果没有可以执行的任务（任务是定时触发的），那么日志亦可能为空。</p>
-<h2>远程桌面版</h2>
+<h2>远程桌面版的使用</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220530010731.png"><img src="image/20220530010731.png" alt="" style="max-width: 100%;"></a></p>
 <p>除了自架云端，我们还在镜像中集成了远程桌面模式。它让你可以通过VNC连接服务器，像使用本地浏览器一样使用。</p>
 <blockquote>
-<p>远程桌面版本之前为一个独立镜像，现在已经整合到 easychen/checkchan 中，只是启动时端口、参数有所不同。</p>
+<p>远程桌面版本之前为一个独立镜像，现在已经整合到 easychen/checkchan 中，因此你可以直接使用。</p>
 </blockquote>
-<h3>创建数据目录</h3>
-<p>为了重新启动镜像后，我们在其中的操作数据可以保存，我们需要创建一个数据目录用于存放用户数据。</p>
-<p>在当前目录创建 <code class="notranslate">user_data</code> 目录:</p>
-<div class="highlight highlight-source-shell"><pre>mkdir user_data <span class="pl-k">&amp;&amp;</span> chmod -R 755 user_data</pre></div>
-<p>然后运行以下命令启动镜像：</p>
-<div class="highlight highlight-source-shell"><pre>docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/user_data:/home/chrome/user_data -e CKC_PASSWD=123 --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
-<p>此后在镜像的浏览器中进行的操作结果均会保存下来。</p>
+<h3>通过 Web 界面使用</h3>
+<ul>
+<li>Web界面: http:///$BBB:8088</li>
+<li>密码: 123 （可自行修改命令调整）</li>
+</ul>
 <h3>通过 VNC 连接使用</h3>
 <p>服务启动后，可以通过 VNC 客户端软件进行连接使用。</p>
 <ul>
 <li>连接地址: 架设服务的IP:5900</li>
 <li>密码: 123 （可自行修改命令调整）</li>
 </ul>
+<h3>连接云端</h3>
+<p>在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 <code class="notranslate">http://localhost</code>，API KEY按上边 YML 中设置的输入即可。</p>
 <h3>移动版</h3>
 <p>可以添加环境变量，修改屏幕宽高限制，使其在手机上更好用:</p>
 <div class="highlight highlight-source-shell"><pre>docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/user_data:/home/chrome/user_data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
 <h3>特别说明</h3>
-<p>内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。</p>
-<h3>同时使用云端和远程桌面</h3>
-<p>新建目录 <code class="notranslate">data</code>，并使其可写：</p>
-<div class="highlight highlight-source-shell"><pre>mkdir data <span class="pl-k">&amp;&amp;</span> chmod 0777 data</pre></div>
-<p>然后将以下内容按需调整后保存为 <code class="notranslate">docker-compose.yml</code>：</p>
-<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>
-<span class="pl-ent">services</span>:
-  <span class="pl-ent">chrome</span>:
-    <span class="pl-ent">build</span>: <span class="pl-s">./</span>
-    <span class="pl-ent">cap_add</span>:
-      - <span class="pl-s">SYS_ADMIN</span>
-    <span class="pl-ent">volumes</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>./data/config:/home/chrome/config<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>./data/app_data:/home/chrome/app_data<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>./data/user_data:/home/chrome/user_data<span class="pl-pds">"</span></span>
-    <span class="pl-ent">environment</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=123<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>HEADLESS=true<span class="pl-pds">"</span></span>
-      <span class="pl-c"><span class="pl-c">#</span>- "WIN_WIDTH=414"</span>
-      <span class="pl-c"><span class="pl-c">#</span>- "WIN_HEIGHT=896"</span>
-      <span class="pl-c"><span class="pl-c">#</span>- "XVFB_WHD=500x896x16"</span>
-      - <span class="pl-s"><span class="pl-pds">"</span>API_KEY=aPiKe1<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>ERROR_IMAGE=NORMAL<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> NONE,NORMAL,FULL</span>
-      <span class="pl-c"><span class="pl-c">#</span>- "SNAP_URL_BASE=http://..."</span>
-      <span class="pl-c"><span class="pl-c">#</span>- "SNAP_FULL=1"</span>
-      - <span class="pl-s">TZ=Asia/Chongqing</span>
-    <span class="pl-ent">ports</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>5900:5900<span class="pl-pds">"</span></span> 
-      - <span class="pl-s"><span class="pl-pds">"</span>8080:8080<span class="pl-pds">"</span></span> 
-      - <span class="pl-s"><span class="pl-pds">"</span>8081:80<span class="pl-pds">"</span></span></pre></div>
-<p>运行以下命令启动：</p>
-<pre class="notranslate"><code class="notranslate">docker-compose up -d
-</code></pre>
-<p>服务所在的端口为：</p>
-<ul>
-<li>云端：8081</li>
-<li>远程桌面(VNC): 5900</li>
-<li>远程桌面的Web界面(NoVNC): 8088</li>
-</ul>
-<p>在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 <code class="notranslate">http://localhost</code>，API KEY按上边 YML 中设置的输入即可。</p>
+<p>容器日常消耗在 300M~500M。内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。</p>
+<h3>可视化调试</h3>
 <p>使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 <code class="notranslate">HEADLESS</code> 一行注释掉，再重新启动容器即可看到云端监测网页的详细过程。</p>
 <div class="highlight highlight-source-yaml"><pre><span class="pl-ent">environment</span>:
   - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=123<span class="pl-pds">"</span></span>
