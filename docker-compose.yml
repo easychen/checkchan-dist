@@ -2,12 +2,8 @@ version: '3'
 services:
   chrome:
     build: ./
-    cap_add:
-      - SYS_ADMIN
     volumes:
-      - "./data/config:/home/chrome/config"
-      - "./data/app_data:/home/chrome/app_data"
-      - "./data/user_data:/home/chrome/user_data"
+      - "./data:/checkchan/data"
     environment:
       - "CKC_PASSWD=123"
       - "VDEBUG=OFF"

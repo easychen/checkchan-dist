@@ -22,7 +22,7 @@
 <ul>
 <li>插件·Chrome/Edge：2022.06.02.23.10 <a href="ckc.zip">下载</a></li>
 <li>Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.06.02.23.22</li>
+<li>文档：2022.06.03.00.15</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
 <blockquote>
@@ -133,8 +133,6 @@
 <span class="pl-ent">services</span>:
   <span class="pl-ent">chrome</span>:
     <span class="pl-ent">image</span>: <span class="pl-s">easychen/checkchan:latest</span>
-    <span class="pl-ent">cap_add</span>:
-      - <span class="pl-s">SYS_ADMIN</span>
     <span class="pl-ent">volumes</span>:
       - <span class="pl-s"><span class="pl-pds">"</span>./data:/checkchan/data<span class="pl-pds">"</span></span>
     <span class="pl-ent">environment</span>:
@@ -242,7 +240,11 @@
 <p>在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 <code class="notranslate">http://localhost</code>，API KEY按上边 YML 中设置的输入即可。</p>
 <h3>移动版</h3>
 <p>可以添加环境变量，修改屏幕宽高限制，使其在手机上更好用:</p>
-<div class="highlight highlight-source-shell"><pre>docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/user_data:/home/chrome/user_data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 --cap-add=SYS_ADMIN easychen/checkchan:latest</pre></div>
+<div class="highlight highlight-source-lisp"><pre>- WIN_WIDTH=<span class="pl-c1">414</span> 
+- WIN_HEIGHT=<span class="pl-c1">896</span> 
+- XVFB_WHD=500x896x16</pre></div>
+<p>一个加到 docker 命令中的例子：</p>
+<div class="highlight highlight-source-shell"><pre>docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 easychen/checkchan:latest</pre></div>
 <h3>特别说明</h3>
 <p>容器日常消耗在 300M~500M。内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。</p>
 <h3>可视化调试</h3>

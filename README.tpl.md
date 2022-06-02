@@ -213,8 +213,6 @@ version: '3'
 services:
   chrome:
     image: easychen/checkchan:latest
-    cap_add:
-      - SYS_ADMIN
     volumes:
       - "./data:/checkchan/data"
     environment:
@@ -385,8 +383,16 @@ Check酱云端任务的原理是将cookie同步到云端，然后用浏览器查
 
 可以添加环境变量，修改屏幕宽高限制，使其在手机上更好用:
 
+```md
+- WIN_WIDTH=414 
+- WIN_HEIGHT=896 
+- XVFB_WHD=500x896x16
+```
+
+一个加到 docker 命令中的例子：
+
 ```bash
-docker run -d -p 5900:5900 -v ${PWD}/user_data:/home/chrome/user_data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 --cap-add=SYS_ADMIN easychen/checkchan:latest
+docker run -d -p 5900:5900 -v ${PWD}/data:/checkchan/data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 easychen/checkchan:latest
 ```
 
 
