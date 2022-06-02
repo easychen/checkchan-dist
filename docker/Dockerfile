@@ -1,4 +1,4 @@
-FROM node:16-alpine3.15
+FROM --platform=$TARGETPLATFORM node:16-alpine3.15
 
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # ENV CHROME_BIN=/usr/bin/chromium-browser
