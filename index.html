@@ -20,9 +20,9 @@
 </ol>
 <h2>最新版本</h2>
 <ul>
-<li>插件·Chrome/Edge：2022.06.02.19.33 <a href="ckc.zip">下载</a></li>
+<li>插件·Chrome/Edge：2022.06.02.23.10 <a href="ckc.zip">下载</a></li>
 <li>Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.06.02.19.33</li>
+<li>文档：2022.06.02.23.10</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 </ul>
 <blockquote>
@@ -136,9 +136,7 @@
     <span class="pl-ent">cap_add</span>:
       - <span class="pl-s">SYS_ADMIN</span>
     <span class="pl-ent">volumes</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>./data/config:/home/chrome/config<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>./data/app_data:/home/chrome/app_data<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>./data/user_data:/home/chrome/user_data<span class="pl-pds">"</span></span>
+      - <span class="pl-s"><span class="pl-pds">"</span>./data:/checkchan/data<span class="pl-pds">"</span></span>
     <span class="pl-ent">environment</span>:
       - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=&lt;这里是远程桌面的密码，写一个你自己想的&gt;<span class="pl-pds">"</span></span>
       - <span class="pl-s"><span class="pl-pds">"</span>VDEBUG=OFF<span class="pl-pds">"</span></span>
@@ -148,7 +146,7 @@
       <span class="pl-c"><span class="pl-c">#</span>- "XVFB_WHD=500x896x16"</span>
       - <span class="pl-s"><span class="pl-pds">"</span>API_KEY=&lt;这里是云端的API KEY，写一个你自己想的&gt;<span class="pl-pds">"</span></span>
       - <span class="pl-s"><span class="pl-pds">"</span>ERROR_IMAGE=NORMAL<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> NONE,NORMAL,FULL</span>
-      <span class="pl-c"><span class="pl-c">#</span>- "SNAP_URL_BASE==&lt;开启截图在这里写服务器地址，不开留空&gt;..."</span>
+      <span class="pl-c"><span class="pl-c">#</span>- "SNAP_URL_BASE=&lt;开启截图在这里写服务器地址（结尾不用加/），不开留空&gt;..."</span>
       <span class="pl-c"><span class="pl-c">#</span>- "SNAP_FULL=1"</span>
       - <span class="pl-s"><span class="pl-pds">"</span>TZ=Asia/Chongqing<span class="pl-pds">"</span></span>
     <span class="pl-ent">ports</span>:

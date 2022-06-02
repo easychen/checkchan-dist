@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.06.02.19.33 [下载](ckc.zip)
+- 插件·Chrome/Edge：2022.06.02.23.10 [下载](ckc.zip)
 - Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.02.19.33
+- 文档：2022.06.02.23.10
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -216,9 +216,7 @@ services:
     cap_add:
       - SYS_ADMIN
     volumes:
-      - "./data/config:/home/chrome/config"
-      - "./data/app_data:/home/chrome/app_data"
-      - "./data/user_data:/home/chrome/user_data"
+      - "./data:/checkchan/data"
     environment:
       - "CKC_PASSWD=<这里是远程桌面的密码，写一个你自己想的>"
       - "VDEBUG=OFF"
@@ -228,7 +226,7 @@ services:
       #- "XVFB_WHD=500x896x16"
       - "API_KEY=<这里是云端的API KEY，写一个你自己想的>"
       - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
-      #- "SNAP_URL_BASE==<开启截图在这里写服务器地址，不开留空>..."
+      #- "SNAP_URL_BASE=<开启截图在这里写服务器地址（结尾不用加/），不开留空>..."
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
     ports:

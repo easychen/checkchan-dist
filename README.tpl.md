@@ -216,9 +216,7 @@ services:
     cap_add:
       - SYS_ADMIN
     volumes:
-      - "./data/config:/home/chrome/config"
-      - "./data/app_data:/home/chrome/app_data"
-      - "./data/user_data:/home/chrome/user_data"
+      - "./data:/checkchan/data"
     environment:
       - "CKC_PASSWD=<这里是远程桌面的密码，写一个你自己想的>"
       - "VDEBUG=OFF"
@@ -228,7 +226,7 @@ services:
       #- "XVFB_WHD=500x896x16"
       - "API_KEY=<这里是云端的API KEY，写一个你自己想的>"
       - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
-      #- "SNAP_URL_BASE==<开启截图在这里写服务器地址，不开留空>..."
+      #- "SNAP_URL_BASE=<开启截图在这里写服务器地址（结尾不用加/），不开留空>..."
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
     ports:

@@ -4,7 +4,7 @@ const timeoutSignal = require("timeout-signal");
 const fetch = require('cross-fetch');
 const FormData = require('form-data');
 const turndown = require('turndown');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const path = require("path");
 const fs = require("fs");
 const dayjs = require("dayjs");
@@ -13,10 +13,12 @@ const { JSDOM } = require("jsdom");
 get_data_dir = ()=>
 {
     // 兼容下旧版目录配置
-    return parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data') : ( fs.existsSync('/data') ? '/data' : '/home/chrome/app_data' ) ;
+    const path = parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data') : ( fs.existsSync('/data') ? '/data' : '/checkchan/data/app_data' ) ;
+    if( !fs.existsSync( path ) ) fs.mkdirSync( path );
+    return path;
 }
 
-const log_file = get_data_dir() + 'log.txt';
+const log_file = get_data_dir() + '/log.txt';
 
 exports.get_data_dir = get_data_dir;
 
@@ -325,6 +327,7 @@ async function monitor_dom(item , cookies)
         defaultViewport: null,
         headless: !(process.env.VDEBUG && process.env.VDEBUG == 'ON'), 
         timeout:delay+1000*10,
+        executablePath:process.env.CHROME_BIN||"/usr/bin/chromium-browser",
     };
 
     if( process.env.CHROMIUM_PATH ) 
