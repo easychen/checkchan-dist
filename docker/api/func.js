@@ -9,13 +9,14 @@ const path = require("path");
 const fs = require("fs");
 const dayjs = require("dayjs");
 const { JSDOM } = require("jsdom");
+const spawnAsync = require('@expo/spawn-async');
 
 get_data_dir = ()=>
 {
     // 兼容下旧版目录配置
-    const path = parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data') : ( fs.existsSync('/data') ? '/data' : '/checkchan/data/app_data' ) ;
-    if( !fs.existsSync( path ) ) fs.mkdirSync( path );
-    return path;
+    const dir_path = parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/app_data') : ( fs.existsSync('/data') ? '/data' : '/checkchan/data/app_data' ) ;
+    if( !fs.existsSync( dir_path ) ) fs.mkdirSync( dir_path );
+    return dir_path;
 }
 
 const log_file = get_data_dir() + '/log.txt';
@@ -194,6 +195,10 @@ exports.monitor_auto = async ( item, cookies ) =>
                 ret = await monitor_json( item.url, item.json_query, item.json_header, item.json_data, item.json_data_format, (parseInt(item.delay)||0)*1000, the_cookies );
                 return {status:!!(ret&&ret.value),value:JSON.stringify(ret.value)||"",type:item.type};
                 break;
+            case 'shell':
+                ret = await monitor_shell( item , the_cookies );
+                return {status:!!(ret&&ret.status),value:ret.value||"",type:item.type};
+                break;
             case 'dom':
             default:
                 ret = await monitor_dom( item , the_cookies );
@@ -304,6 +309,56 @@ async function monitor_dom_low(item, cookies)
         console.log("low dom error",error);
         return false;
     }
+}
+
+async function monitor_shell(item, cookies)
+{
+    const { url, path, id, shell_type, shell_cookie_name, shell_code } = item;
+    let command = 'node';
+    let ext = 'js';
+    switch( shell_type )
+    {
+        case 'php':
+            command = 'php';
+            ext = 'php';
+            break;
+        case 'javascript':
+            command = 'node';
+            ext = 'js';
+            break;
+        case 'typescript':
+            command = 'ts-node';
+            ext = 'ts';
+            break;
+        case 'python':
+            command = 'python3';
+            ext = 'py';
+            break;
+        case 'bash':
+        default:
+            command = 'bash';
+            ext = 'sh';
+            break;
+    }
+
+    const shell_file = get_data_dir() + '/' + id + '.' + ext; 
+    fs.writeFileSync( shell_file, shell_code );
+
+    const cookie_name = item.shell_cookie_name || "COOKIE";
+    const cookie_string = build_cookie_string(cookies)||"";
+
+    const result = await spawnAsync( command, [shell_file], {
+        env: {
+            'URL':url,
+            [cookie_name]:cookie_string,
+        }
+    } );
+    const { stdout, stderr, status } = result;
+    if( stderr ) console.log( stderr );
+
+    return {status:status==0,value:stdout};
+
+    
 }
 
 async function monitor_dom(item , cookies)
@@ -493,6 +548,7 @@ function sleep(ms) {
 function build_cookie_string( cookie_array )
 {
     let ret = [];
+    if( !Array.isArray(cookie_array) ) return false;
     for(  const cookie of cookie_array )
     {
         if( cookie.name ) ret.push(`${cookie.name}=${cookie.value}`)

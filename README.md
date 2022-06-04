@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.06.02.23.10 [下载](ckc.zip)
-- Docker镜像(云端+远程桌面二合一)：2022.06.02.15.53 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.03.00.15
+- 插件·Chrome/Edge：2022.06.04.15.57 [下载](ckc.zip)
+- Docker镜像(云端+远程桌面二合一)：2022.06.04.15.28 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.06.04.15.57
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -196,6 +196,7 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 > 架设自架版云端需要技术基础，非技术用户建议购买我们的官方版云端（将在内测完成后发布）
 
 需要docker环境。如果你没有云服务器，可以看看[腾讯云30~50元首单的特价服务器](https://curl.qcloud.com/VPjlS4gj)。
+
 
 #### 通过 Docker-compose 启动
 

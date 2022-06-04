@@ -82,7 +82,7 @@ for( const item of to_checks )
             if( retry_times >= item.retry )
             {
                 // 发送通知
-                await send_notify( '监测点['+item.title+']多次重试失败', "已暂停执行，请检查登录状态或页面结构变动\r\n\r\n[点此查看]("+item.url+")" , item.sendkey, item.send_channel||-1);
+                await send_notify( '监测点['+item.title+']多次重试失败', "已暂停执行，请检查登录状态或页面结构变动。点击任务的监测按钮可以解除暂停\r\n\r\n[点此查看]("+item.url+")" , item.sendkey, item.send_channel||-1);
             }
             check_update_field( item.id, 'retry_times', retry_times+1, json_data );
             
@@ -103,9 +103,9 @@ for( const item of to_checks )
             if( item.when == 'change' )
             {
                 logit("变动时发送");
-                if( !last_content || (check_content?.trim() == last_content?.trim()) )
+                if( !last_content || (short(check_content).trim() == short(last_content).trim()) )
                 {
-                    logit("内容相同或者旧内容不存在，跳过");
+                    console.log("内容相同或者旧内容不存在，跳过");
                     can_send_notice = false;
                 }else
                 {

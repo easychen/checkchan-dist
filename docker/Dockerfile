@@ -1,4 +1,4 @@
-FROM node:16-alpine3.15
+FROM --platform=$TARGETPLATFORM node:16-alpine3.15
 
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # ENV CHROME_BIN=/usr/bin/chromium-browser
@@ -16,7 +16,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositorie
     && echo "http://dl-cdn.alpinelinux.org/alpine/v3.12/main" >> /etc/apk/repositories 
 
 
-RUN apk upgrade -U -a && apk add --no-cache chromium xvfb x11vnc bash tzdata git python3 libstdc++ harfbuzz nss freetype ttf-freefont  font-noto-emoji
+RUN apk upgrade -U -a && apk add --no-cache chromium xvfb x11vnc bash tzdata git python3 libstdc++ harfbuzz nss freetype ttf-freefont  font-noto-emoji php
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV CHROME_BIN=/usr/bin/chromium-browser
@@ -36,7 +36,7 @@ RUN sed -i "/wait ${proxy_pid}/i if [ -n \"\$VNC_PASSWORD\" ]; then sed -i \"s/W
 RUN sed -i "/wait ${proxy_pid}/i if [ -n \"\$VIEW_ONLY\" ]; then sed -i \"s/UI.rfb.viewOnly = UI.getSetting('view_only');/UI.rfb.viewOnly = \$VIEW_ONLY;/\" /checkchan/noVNC/app/ui.js; fi" /checkchan/noVNC/utils/novnc_proxy
 RUN sed -i -- "s/ps -p/ps -o pid | grep/g"  /checkchan/noVNC/utils/novnc_proxy
 
-RUN npm install -g pm2
+RUN npm install -g pm2 ts-node typescript '@types/node' 
 
 COPY api /checkchan/api
 RUN cd /checkchan/api/ && npm install
