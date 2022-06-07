@@ -25,6 +25,8 @@ ENV NOVNC_TAG="v1.3.0"
 ENV WEBSOCKIFY_TAG="v0.10.0"
 
 WORKDIR /checkchan
+RUN mkdir /checkchan/data
+# 让挂丢了目录的同学也可以体验下
 
 RUN git config --global advice.detachedHead false && \
     git clone https://github.com/novnc/noVNC --branch ${NOVNC_TAG} /checkchan/noVNC && \
@@ -36,7 +38,7 @@ RUN sed -i "/wait ${proxy_pid}/i if [ -n \"\$VNC_PASSWORD\" ]; then sed -i \"s/W
 RUN sed -i "/wait ${proxy_pid}/i if [ -n \"\$VIEW_ONLY\" ]; then sed -i \"s/UI.rfb.viewOnly = UI.getSetting('view_only');/UI.rfb.viewOnly = \$VIEW_ONLY;/\" /checkchan/noVNC/app/ui.js; fi" /checkchan/noVNC/utils/novnc_proxy
 RUN sed -i -- "s/ps -p/ps -o pid | grep/g"  /checkchan/noVNC/utils/novnc_proxy
 
-RUN npm install -g pm2 ts-node typescript '@types/node' 
+RUN npm install -g pm2 ts-node typescript '@types/node' nodemon
 
 COPY api /checkchan/api
 RUN cd /checkchan/api/ && npm install

@@ -1,0 +1,25 @@
+version: '3'
+services:
+  chrome:
+    build:
+      context: ./
+      dockerfile: "Dockerfile.dev"
+    volumes:
+      - "./api:/checkchan/api"
+      - "./data:/checkchan/data"
+    environment:
+      - "CKC_PASSWD=123"
+      - "VDEBUG=OFF"
+      - "VNC=OFF"
+      #- "WIN_WIDTH=414"
+      #- "WIN_HEIGHT=896"
+      #- "XVFB_WHD=500x896x16"
+      - "API_KEY=aPiKe1"
+      - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
+      #- "SNAP_URL_BASE=http://..."
+      #- "SNAP_FULL=1"
+      - TZ=Asia/Chongqing
+    ports:
+      - "5900:5900" 
+      - "8080:8080" 
+      - "8088:80" 

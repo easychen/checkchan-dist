@@ -13,6 +13,11 @@ then
     pm2 start /checkchan/extension/extension.js --no-daemon
 
 else
-    node /checkchan/api/app.js
+    if [ "${DEV:=0}" == 1 ]
+        nodemon /checkchan/api/app.js
+    then
+        node /checkchan/api/app.js
+    fi
+    
 fi
 

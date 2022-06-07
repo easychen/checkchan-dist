@@ -11,7 +11,7 @@
       "default_title": "Check酱"
   },
   "permissions": [
-    "cookies","scripting","tabs","notifications","storage", "alarms","contextMenus","webRequest"
+    "cookies","scripting","tabs","notifications","storage", "alarms","contextMenus","debugger"
   ],
   "host_permissions": [
     "http://*/*","https://*/*"

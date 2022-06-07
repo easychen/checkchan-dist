@@ -290,8 +290,10 @@ async function monitor_dom_low(item, cookies)
         if( all.substring(0,2000).toLowerCase().indexOf('utf-8') < 0 ) return  false;
         // const sniffedEncoding = htmlEncodingSniffer(await response.arrayBuffer());
         // console.log(sniffedEncoding);
-
-        const dom = new JSDOM(all);
+        let opt = {};
+        if( item.ua ) opt['userAgent'] = item.ua;
+        const dom = new JSDOM(all,opt);
+        
         const ret = dom.window.document.querySelectorAll(path);
 
         let texts = [];
@@ -385,6 +387,13 @@ async function monitor_dom(item , cookies)
         executablePath:process.env.CHROME_BIN||"/usr/bin/chromium-browser",
     };
 
+    if( item.ua )
+    {
+        opt.args.push( `--user-agent=${item.ua}` );
+    }
+
+    // console.log( opt );
+
     if( process.env.CHROMIUM_PATH ) 
         opt['executablePath'] = process.env.CHROMIUM_PATH;
 
@@ -394,6 +403,7 @@ async function monitor_dom(item , cookies)
     let ret = false;
     
     const page = await browser.newPage(); 
+    if( item.ua ) await page.setUserAgent( item.ua );
     await page.setDefaultNavigationTimeout(delay+1000*10);
     // await page.setDefaultNavigationTimeout(0);
     if( isIterable(cookies) )
