@@ -98,44 +98,39 @@ exports.cron_check = ( cron, now = null )=>
         let dline = dinfo[i].trim();
         if( cline != "*" )
         {
-            if( cline.indexOf(',') >= 0 )
+            const cpart = cline.indexOf(',') >= 0 ? cline.split(','):[cline];
+            
+            if( cline.indexOf('-') >= 0 )
             {
-                const cpart = cline.split(',');
-                if( cline.indexOf('-') >= 0 )
+                // citem 全部用int，其他地方用string
+                let citem = [];
+                for( let cp of cpart )
                 {
-                    // citem 全部用int，其他地方用string
-                    let citem = [];
-                    for( let cp of cpart )
+                    // console.log(cp);
+                    if( cp.indexOf('-') >= 0 )
                     {
-                        // console.log(cp);
-                        if( cp.indexOf('-') >= 0 )
-                        {
-                            const cpinfo = cp.split('-');
-                            // console.log( cpinfo );
-                            cp = range(  parseInt(cpinfo[0]),parseInt(cpinfo[1]),1 );
-                            citem = citem.concat( cp );
-                        }else
-                        {
-                            citem.push( parseInt(cp) );
-                        }
+                        const cpinfo = cp.split('-');
+                        // console.log( cpinfo );
+                        cp = range(  parseInt(cpinfo[0]),parseInt(cpinfo[1]),1 );
+                        citem = citem.concat( cp );
+                    }else
+                    {
+                        citem.push( parseInt(cp) );
                     }
-                    if( !citem.includes(parseInt(dline)) ) ret = false;
-                    console.log( citem );
-                    
-                }else
-                {
-                    if( !cpart.includes(dline) ) ret = false;
                 }
+                if( !citem.includes(parseInt(dline)) ) ret = false;
+                console.log( citem );
                 
             }else
             {
-                if( cline != dline ) ret = false;
+                if( !cpart.includes(dline) ) ret = false;
             }
         }
 
-        console.log( cline, dline, ret );
+        // console.log( cline, dline, ret );
         
     }
+    if( ret && cron != "* * * * *" ) console.log("当前时间"+dinfo.join('-')+"cron "+cron);
     return ret;
 }
 
