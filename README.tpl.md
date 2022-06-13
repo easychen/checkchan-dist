@@ -25,6 +25,7 @@
 
 [详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
 
+
 ## 什么是「Check酱」
 
 ![](image/20220521132637.png) 
@@ -264,6 +265,12 @@ docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data:/checkchan/dat
 ```
 
 请将上述命令中的123替换为你想要设定的密码、将`SNAP_URL_BASE`换成服务器的外网IP(如果想通过手机查看截图)。
+
+#### 群晖安装
+
+只有**支持Docker的群晖型号**才能安装Check酱，除了可以直接通过命令行安装，也可以参考[GUI安装教程](https://docs.qq.com/doc/DWm56dVN2UUVibk1C)。
+
+`Volume` 和环境变量可以参考以上的docker/compose设定。
 
 #### 更新镜像
 

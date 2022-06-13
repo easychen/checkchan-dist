@@ -10,6 +10,7 @@ const fs = require("fs");
 const dayjs = require("dayjs");
 const { JSDOM } = require("jsdom");
 const spawnAsync = require('@expo/spawn-async');
+const ip = require('ip');
 
 get_data_dir = ()=>
 {
@@ -154,7 +155,7 @@ exports.send_notify = async ( title, desp, sendkey, channel = -1, short = false)
         if( channel >= 0 ) form.append( 'channel',parseInt(channel));
         if( short ) form.append( 'short',short ); 
         form.append( 'title',title ); 
-        form.append( 'desp',desp.substring(0,10000) ); 
+        form.append( 'desp',desp.substring(0,10000) + "\r\n\r\n" + "来自云端@"+ ip.address() ); 
         const response = await fetch( 'https://sctapi.ftqq.com/'+sendkey+'.send', {
             method: 'POST', 
             body: form

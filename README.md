@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.06.09.14.30 [下载](ckc.zip)
-- Docker镜像(云端+远程桌面二合一)：2022.06.09.14.04 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.09.14.30
+- 插件·Chrome/Edge：2022.06.13.21.12 [下载](ckc.zip)
+- Docker镜像(云端+远程桌面二合一)：2022.06.09.23.52 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.06.13.21.12
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -24,6 +24,7 @@
 [![](image/20220531151537.png)](https://www.bilibili.com/video/BV1K94y1m7tt)
 
 [详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
+
 
 ## 什么是「Check酱」
 
@@ -264,6 +265,12 @@ docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v ${PWD}/data:/checkchan/dat
 ```
 
 请将上述命令中的123替换为你想要设定的密码、将`SNAP_URL_BASE`换成服务器的外网IP(如果想通过手机查看截图)。
+
+#### 群晖安装
+
+只有**支持Docker的群晖型号**才能安装Check酱，除了可以直接通过命令行安装，也可以参考[GUI安装教程](https://docs.qq.com/doc/DWm56dVN2UUVibk1C)。
+
+`Volume` 和环境变量可以参考以上的docker/compose设定。
 
 #### 更新镜像
 
