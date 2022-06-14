@@ -349,6 +349,7 @@ async function monitor_shell(item, cookies)
         env: {
             'URL':url,
             [cookie_name]:cookie_string,
+            ...process.env,
         }
     } );
     const { stdout, stderr, status } = result;
