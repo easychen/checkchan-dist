@@ -119,12 +119,14 @@ exports.cron_check = ( cron, now = null )=>
                         citem.push( parseInt(cp) );
                     }
                 }
-                if( !citem.includes(parseInt(dline)) ) ret = false;
-                console.log( citem );
+                // if( !citem.includes(parseInt(dline)) ) ret = false;
+                if(!part_check( citem, parseInt(dline), cline )) ret = false;
+                console.log( i, citem, cron );
                 
             }else
             {
-                if( !cpart.includes(dline) ) ret = false;
+                // if( !cpart.includes(dline) ) ret = false;
+                if(!part_check( cpart, parseInt(dline), cline )) ret = false;
             }
         }
 
@@ -133,6 +135,23 @@ exports.cron_check = ( cron, now = null )=>
     }
     if( ret && cron != "* * * * *" ) console.log("当前时间"+dinfo.join('-')+"cron "+cron);
     return ret;
+}
+
+function part_check( items, item, string )
+{
+    // console.log( items );
+    const reginfo = string.match(/\/([1-9][0-9]*)/);
+    const number_items = items.map( i => parseInt( i ) );
+    if( !reginfo )
+    {
+        return number_items.includes( parseInt(item) );
+    }
+    else
+    {
+        const n = parseInt( reginfo[1] );
+        const only_items = number_items.filter( item => (item - number_items[0]) % n == 0 );   
+        return only_items.includes( parseInt(item) );
+    }
 }
 
 exports.to_time_string = ( date ) =>
