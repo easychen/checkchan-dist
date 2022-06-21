@@ -14,7 +14,7 @@
 
 - 插件·Chrome/Edge：2022.06.15.10.05 [下载](ckc.zip)
 - Docker镜像(云端+远程桌面二合一)：2022.06.15.03.19 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.15.10.05
+- 文档：2022.06.21.11.38
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -371,7 +371,7 @@ Check酱云端任务的原理是将cookie同步到云端，然后用浏览器查
 
 ### 通过 Web 界面使用
 
-- Web界面: http:///$BBB:8088
+- Web界面: http:///$BBB:8080
 - 密码: 123 （可自行修改命令调整）
 
 ### 通过 VNC 连接使用
