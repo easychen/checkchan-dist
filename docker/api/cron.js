@@ -63,6 +63,11 @@ for( const item of to_checks )
         if( ret && ret.status )
         {
             check_content = ret.value;
+            
+            // 添加正则替换
+            if( item.replace_from_regex && item.replace_from_regex ) check_content = check_content.replace( new RegExp(item.replace_from_regex), item.replace_to_regex );
+
+
             if( ret.html ) check_html = ret.html;
             if( ret.link ) check_link = ret.link;
             check_status = 1;
