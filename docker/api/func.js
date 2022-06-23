@@ -11,11 +11,18 @@ const dayjs = require("dayjs");
 const { JSDOM } = require("jsdom");
 const spawnAsync = require('@expo/spawn-async');
 const ip = require('ip');
+const {Base64} = require('js-base64');
 
 get_data_dir = ()=>
 {
     // 兼容下旧版目录配置
     const dir_path = parseInt(process.env.DEV) > 0 ? path.join( __dirname, '/../data/app_data') : ( fs.existsSync('/data') ? '/data' : '/checkchan/data/app_data' ) ;
+    if( !fs.existsSync( dir_path ) ) fs.mkdirSync( dir_path );
+    return dir_path;
+}
+
+get_shell_dir = ()=> {
+    const dir_path = path.join(get_data_dir(),'shell');
     if( !fs.existsSync( dir_path ) ) fs.mkdirSync( dir_path );
     return dir_path;
 }
@@ -358,8 +365,8 @@ async function monitor_shell(item, cookies)
             break;
     }
 
-    const shell_file = get_data_dir() + '/' + id + '.' + ext; 
-    fs.writeFileSync( shell_file, shell_code );
+    const shell_file = get_shell_dir() + '/' + id + '.' + ext; 
+    fs.writeFileSync( shell_file, Base64.decode(shell_code) || shell_code );
 
     const cookie_name = item.shell_cookie_name || "COOKIE";
     const cookie_string = build_cookie_string(cookies)||"";

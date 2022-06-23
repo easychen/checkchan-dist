@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.06.22.00.43 [下载](ckc.zip)
-- Docker镜像(云端+远程桌面二合一)：2022.06.21.23.57 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.22.00.42
+- 插件·Chrome/Edge：2022.06.23.22.43 [下载](ckc.zip)
+- Docker镜像(云端+远程桌面二合一)：2022.06.23.22.08 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.06.23.22.43
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
