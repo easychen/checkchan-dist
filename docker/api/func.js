@@ -174,6 +174,37 @@ exports.get_cookies = () =>
     return json_data.cookies;
 }
 
+exports.do_webhook = async( id, url, value, html, link ) =>
+{
+    // 因为webhook的内容更多，所以不能放到 show_notice 里边处理，这里单独处理
+    if( process.env.WEBHOOK_URL )
+    {
+        // make post
+        const form = new FormData();
+        form.append( 'id', id );
+        form.append( 'url', url );
+        form.append( 'value',value );
+        form.append( 'html',html );
+        form.append( 'link',link );
+
+        try {
+            const response = await fetch( process.env.WEBHOOK_URL , {
+                method: 'POST', 
+                body: form
+            } );
+    
+            const ret = await response.text();
+            console.log( "wehbook response", ret );
+            return ret;
+
+        } catch (error) {
+            console.log( "fetch log error", error );
+            return false;
+        }
+        
+    }
+}
+
 exports.send_notify = async ( title, desp, sendkey, channel = -1, short = false)  =>
 {
     try {

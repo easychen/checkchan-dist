@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.06.23.22.43 [下载](ckc.zip)
-- Docker镜像(云端+远程桌面二合一)：2022.06.23.22.08 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.23.23.05
+- 插件·Chrome/Edge：2022.06.26.14.42 [下载](ckc.zip)
+- Docker镜像(云端+远程桌面二合一)：2022.06.26.14.22 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.06.26.14.42
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -229,6 +229,7 @@ services:
       #- "SNAP_URL_BASE=<开启截图在这里写服务器地址（结尾不用加/），不开留空>..."
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
+      # - WEBHOOK_URL=http://... # 云端 Webhook地址，不需要则不用设置
     ports:
       - "5900:5900" 
       - "8080:8080" 

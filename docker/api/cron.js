@@ -1,6 +1,6 @@
 const fs = require("fs");
 const dayjs = require("dayjs");
-const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown, short, makeFloat } = require("./func");
+const { monitor_auto, send_notify, get_data_dir, cron_check, logstart, logit, to_markdown, short, makeFloat, do_webhook } = require("./func");
 
 const data_file = get_data_dir() + '/data.json';
 const content = fs.readFileSync( data_file );
@@ -162,6 +162,8 @@ for( const item of to_checks )
             if( can_send_notice )
             {
                 logit( '已发送通知' );
+
+                await do_webhook( item.id, item.url, check_content, check_html, check_link || item.page || item.url );
             
                 if( item.sendkey )
                 {

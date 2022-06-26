@@ -229,6 +229,7 @@ services:
       #- "SNAP_URL_BASE=<开启截图在这里写服务器地址（结尾不用加/），不开留空>..."
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
+      # - WEBHOOK_URL=http://... # 云端 Webhook地址，不需要则不用设置
     ports:
       - "5900:5900" 
       - "8080:8080" 
