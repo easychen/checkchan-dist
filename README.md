@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.06.26.14.42 [下载](ckc.zip)
+- 插件·Chrome/Edge：2022.06.26.14.42 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
 - Docker镜像(云端+远程桌面二合一)：2022.06.26.14.22 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.26.14.42
+- 文档：2022.06.26.14.49
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
@@ -55,7 +55,7 @@ Check酱的原理是，通过浏览器插件后台打开网页进行监测，从
 
 > 目前Check酱正在内测，尚未上架Edge商店，只能通过手工方式载入
 
-下载[插件ZIP包](ckc.zip)，解压为目录（后文称其为A）。
+下载[插件ZIP包](ckc.zip)([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))，解压为目录（后文称其为A）。
 
 打开Edge的插件页面，打开「开发者模式」，点击「Load Unpacked」，选择上边解压得到的目录A。
 
