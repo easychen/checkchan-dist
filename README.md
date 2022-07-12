@@ -14,7 +14,7 @@
 
 - 插件·Chrome/Edge：2022.06.26.14.42 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
 - Docker镜像(云端+远程桌面二合一)：2022.06.26.14.22 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.06.26.14.49
+- 文档：2022.07.12.13.37
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 
 > Docker镜像安装命令请参阅后文云端架设一节
