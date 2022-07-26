@@ -7,8 +7,35 @@ async function show_inspector( tabid,inspector )
     inspector = new DomInspector({
         maxZIndex: 9999,
         onClick: async (path) => {
-            const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href);
-            console.log( url );
+            
+            var getFavicon = function(){
+                var favicon = undefined;
+                var nodeList = document.getElementsByTagName("link");
+                for (var i = 0; i < nodeList.length; i++)
+                {
+                    if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
+                    {
+                        favicon = nodeList[i].getAttribute("href");
+                    }
+                }
+                return favicon;        
+            }
+
+            let icon_url = getFavicon() || "/favicon.ico";
+            if( icon_url.substring(0,4) != 'http' )
+            {
+                if( icon_url.substring(0,2) == '//' )
+                {
+                    icon_url = window.location.protocol + icon_url;
+                }else
+                {
+                    if( icon_url.substring(0,1) != '/' ) icon_url = window.origin+ '/' + icon_url;
+                    else icon_url = window.origin + icon_url;
+                }
+            }
+            
+            const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href)+'&icon='+encodeURIComponent(icon_url);
+
             // 这里是 content script 同等权限，发送消息来调整网页
             const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":tabid},);
             console.log( "ret" , ret, inspector );
@@ -25,7 +52,7 @@ async function show_inspector( tabid,inspector )
 }
 
 // javascript-obfuscator:disable
-async function ck_get_content( path,delay=3000 )
+async function ck_get_content( path,delay=3000, ignore_path = "" )
 {
     function sleep(ms) {
         return new Promise((resolve) => {
@@ -48,8 +75,11 @@ async function ck_get_content( path,delay=3000 )
         });
     }
 
-    function dom_mul_select( path )
+    function dom_mul_select( path, ignore_path = "" )
     {
+        if( ignore_path )
+            window.document.querySelectorAll( ignore_path ).forEach( item => item.remove() );
+        
         let ret = window.document.querySelectorAll(path);
         if( !ret ) return false;
         let texts = [];
@@ -67,7 +97,7 @@ async function ck_get_content( path,delay=3000 )
     // await sleep(delay);
     await dom_ready();
     if( delay > 0 ) await sleep(delay);
-    const ret = dom_mul_select(path);
+    const ret = dom_mul_select(path,ignore_path);
     // 直接提取
     if( ret )
     {
@@ -77,7 +107,7 @@ async function ck_get_content( path,delay=3000 )
     {
         // 失败的话，先延迟再尝试一次
         await sleep(3000);
-        const ret2 = dom_mul_select(path);
+        const ret2 = dom_mul_select(path,ignore_path);
         if( ret2  )
         {
             return ret2;
@@ -86,7 +116,7 @@ async function ck_get_content( path,delay=3000 )
         {
             await sleep(3000);
             // 再来一次
-            const ret3 = dom_mul_select(path);
+            const ret3 = dom_mul_select(path,ignore_path);
             if( ret3  ) return ret;
         }
         
@@ -108,8 +138,11 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
             // 必须用update，直接给属性赋值没有用
             // 如果已经打开了窗口，重用窗口
             const [tab] = await chrome.tabs.query({ title:"Check酱" });
-            // 否则创建一个信息的
-            const tab2 = await chrome.tabs.get(request.tabid);
+            // 否则创建一个新的
+            const current_tab = await chrome.tabs.query({ active: true, currentWindow: true });
+            const tabid = request.tabid || current_tab[0].id;
+            
+            const tab2 = await chrome.tabs.get(tabid);
             console.log(tab2);
 
             const that_tab = tab || tab2;
@@ -152,7 +185,7 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
             {
                     target: {tabId: tab.id},
                     function: ck_get_content,
-                    args: [request.path,request.delay]
+                    args: [request.path,request.delay,request.ignore_path]
             });
             //  console.log( r );
            

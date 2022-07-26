@@ -335,7 +335,7 @@ async function monitor_rss(url,timeout=10000)
 
 async function monitor_dom_low(item, cookies)
 {
-    const { url, path, delay } = item;
+    const { url, path, delay, ignore_path } = item;
     console.log("in low dom");
     try {
         const response = await fetch( url, { signal: timeoutSignal(delay<1?10000:delay) } );
@@ -346,7 +346,7 @@ async function monitor_dom_low(item, cookies)
         let opt = {};
         if( item.ua ) opt['userAgent'] = item.ua;
         const dom = new JSDOM(all,opt);
-        
+        if( ignore_path ) dom.window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
         const ret = dom.window.document.querySelectorAll(path);
 
         let texts = [];
@@ -419,7 +419,7 @@ async function monitor_shell(item, cookies)
 
 async function monitor_dom(item , cookies)
 {
-    const { url, path, id } = item;
+    const { url, path, id, ignore_path } = item;
     const delay = (parseInt(item.delay)||0)*1000;
 
     console.log("in dom delay = ",delay);
@@ -492,6 +492,7 @@ async function monitor_dom(item , cookies)
 
         ret = await page.evaluate( (path,browser_code ) => {
             if( browser_code ) eval( browser_code );
+            if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
             let ret = window.document.querySelectorAll(path);
             if( !ret ) return false;
             console.log("query fail",path,ret);
@@ -511,7 +512,9 @@ async function monitor_dom(item , cookies)
         {
             console.log("sleep",1000*5);
             await sleep(1000*5);
-            ret = await page.evaluate( (path) => {
+            ret = await page.evaluate( (path,browser_code) => {
+                if( browser_code ) eval( browser_code );
+                if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
                 let ret = window.document.querySelectorAll(path);
                 console.log("query fail again",path,ret);
                 if( !ret ) return false;
@@ -525,7 +528,7 @@ async function monitor_dom(item , cookies)
                     html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
                 }
                 return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-            },path);
+            },path,browser_code);
             
         }
         const { all,html, ...ret_short } = ret;
