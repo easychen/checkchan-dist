@@ -20,7 +20,8 @@
     "extension_pages": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline';"
   },
   "background": {
-      "service_worker": "start.js"
+      "service_worker": "start.js",
+      "type": "module"
   }
   ,
   "content_scripts": [{

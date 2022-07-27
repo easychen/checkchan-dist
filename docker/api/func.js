@@ -490,7 +490,7 @@ async function monitor_dom(item , cookies)
             await sleep(1000);
         } 
 
-        ret = await page.evaluate( (path,browser_code ) => {
+        ret = await page.evaluate( (path,browser_code,ignore_path ) => {
             if( browser_code ) eval( browser_code );
             if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
             let ret = window.document.querySelectorAll(path);
@@ -506,13 +506,13 @@ async function monitor_dom(item , cookies)
                 html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
             return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-        },path,browser_code);
+        },path,browser_code,ignore_path);
         
         if( !ret )
         {
             console.log("sleep",1000*5);
             await sleep(1000*5);
-            ret = await page.evaluate( (path,browser_code) => {
+            ret = await page.evaluate( (path,browser_code,ignore_path) => {
                 if( browser_code ) eval( browser_code );
                 if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
                 let ret = window.document.querySelectorAll(path);
@@ -528,7 +528,7 @@ async function monitor_dom(item , cookies)
                     html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
                 }
                 return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-            },path,browser_code);
+            },path,browser_code,ignore_path);
             
         }
         const { all,html, ...ret_short } = ret;

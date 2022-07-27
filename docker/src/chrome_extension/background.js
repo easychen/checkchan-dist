@@ -1,3 +1,5 @@
+// import html2canvas from './html2canvas.esm.js';
+
 
 let inspector = {};
 console.log( "load bg.js" );
@@ -75,7 +77,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
         });
     }
 
-    function dom_mul_select( path, ignore_path = "" )
+    async function dom_mul_select( path, ignore_path = "" )
     {
         if( ignore_path )
             window.document.querySelectorAll( ignore_path ).forEach( item => item.remove() );
@@ -97,7 +99,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
     // await sleep(delay);
     await dom_ready();
     if( delay > 0 ) await sleep(delay);
-    const ret = dom_mul_select(path,ignore_path);
+    const ret = await dom_mul_select(path,ignore_path);
     // 直接提取
     if( ret )
     {
@@ -107,7 +109,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
     {
         // 失败的话，先延迟再尝试一次
         await sleep(3000);
-        const ret2 = dom_mul_select(path,ignore_path);
+        const ret2 = await dom_mul_select(path,ignore_path);
         if( ret2  )
         {
             return ret2;
@@ -116,7 +118,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
         {
             await sleep(3000);
             // 再来一次
-            const ret3 = dom_mul_select(path,ignore_path);
+            const ret3 = await dom_mul_select(path,ignore_path);
             if( ret3  ) return ret;
         }
         
