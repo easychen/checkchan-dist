@@ -1,3 +1,17 @@
+# 教程
+
+| 📼 新版使用 | 📼 完全教程 |
+| --- | --- | 
+| [① 新版使用·B站·20分钟](https://www.bilibili.com/video/BV1vT411E7JV) | [② 完全教程·B站·近2小时](https://www.bilibili.com/video/BV1K94y1m7tt) | 
+
+# RSS
+
+> Check酱支持订阅RSS内容。配合[RSS Hub](https://github.com/DIYgod/RSSHub)可以监测上千内容源。
+
+| 推荐RSS源 | 浏览器自动发现插件 |
+| --- | --- | 
+| [RssHub官网🪜](https://docs.rsshub.app/) | RSSHub浏览器插件Check酱整合版[ GitHub下载🪜](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/tag/main) |
+
 # 电商
 
 ## ![](https://www.jd.com/favicon.ico) 京东·监测价格

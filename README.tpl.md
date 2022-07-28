@@ -16,6 +16,7 @@
 - Docker镜像(云端+远程桌面二合一)：{img-build} [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
 - 文档：{doc-build}
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
+- 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
 > Docker镜像安装命令请参阅后文云端架设一节
 
