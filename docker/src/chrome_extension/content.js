@@ -16,7 +16,8 @@ async function insert_content( host, url, pathname )
 {
     if( host === 'item.jd.com' )
     {
-        const id = pathname.match(/\/(\d+).html/)[1];
+        const reg = /\/(\d+).html/;
+        const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
         const path = `.price.J-p-${id}`;
@@ -25,7 +26,8 @@ async function insert_content( host, url, pathname )
 
     if( host === 'www.amazon.cn' )
     {
-        const id = pathname.match(/\/dp\/(.+?)$/)[1];
+        const reg = /\/dp\/(.+?)$/;
+        const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
         const path = `#corePriceDisplay_desktop_feature_div  span.a-offscreen`;
@@ -52,7 +54,8 @@ async function insert_content( host, url, pathname )
 
     if( host === 'www.douyin.com' )
     {
-        const id = pathname.match(/\/user\/(.+)/)[1];
+        const reg = /\/user\/(.+)/;
+        const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
         const path = "div#root > div > div:nth-of-type(2) > div > div > div:nth-of-type(4) > div > div > div > span";
@@ -75,7 +78,8 @@ async function insert_content( host, url, pathname )
     // https://m.weibo.cn/profile/5048301588
     if( host === 'm.weibo.cn' )
     {
-        const id = pathname.match(/\/profile\/(.+)/)[1];
+        const reg = /\/profile\/(.+)/;
+        const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
         const path = ".wb-item:nth-of-type(1)";
@@ -99,7 +103,8 @@ async function insert_content( host, url, pathname )
 
     if( host === 'space.bilibili.com' )
     {
-        const id = pathname.match(/\/(.+)\/video/)[1];
+        const reg = /\/(.+)\/video/;
+        const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
         const path = "div#submit-video-list > ul:nth-of-type(2) > li:nth-of-type(1)";
@@ -122,7 +127,8 @@ async function insert_content( host, url, pathname )
     // .ep-list-wrapper .ep-item:last-child
     if( host === 'www.bilibili.com' )
     {
-        const id = pathname.match(/bangumi\/play\/(.+)/)[1];
+        const reg = /bangumi\/play\/(.+)/;
+        const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
         const path = ".ep-list-wrapper .ep-item:last-child";

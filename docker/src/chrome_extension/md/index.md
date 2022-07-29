@@ -8,9 +8,9 @@
 
 > Check酱支持订阅RSS内容。配合[RSS Hub](https://github.com/DIYgod/RSSHub)可以监测上千内容源。
 
-| 推荐RSS源 | 浏览器自动发现插件 |
-| --- | --- | 
-| [RssHub官网🪜](https://docs.rsshub.app/) | RSSHub浏览器插件Check酱整合版[ GitHub下载🪜](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/tag/main) |
+| 推荐RSS源 | 浏览器自动发现插件 | 视频教程 |
+| --- | --- | --- | 
+| [RssHub官网🪜](https://docs.rsshub.app/) | RSSHub浏览器插件Check酱整合版[ GitHub下载🪜](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/tag/main) | [B站·Check酱+RSSHub使用教程](https://www.bilibili.com/video/BV1JY4y1P71b) |
 
 # 电商
 
