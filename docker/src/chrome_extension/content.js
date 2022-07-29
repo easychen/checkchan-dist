@@ -49,7 +49,7 @@ async function insert_content( host, url, pathname )
             const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
         }
         // document.querySelector(".gzh-box2").appendChild( button );
-        document.body.appendChild( button );
+        document.body?.appendChild( button );
     }
 
     if( host === 'www.douyin.com' )
@@ -71,7 +71,7 @@ async function insert_content( host, url, pathname )
             const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
         }
         // document.querySelector("div#root > div > div:nth-of-type(2) > div > div > div:nth-of-type(4) > div > div").appendChild( button );
-        document.body.appendChild( button );
+        document.body?.appendChild( button );
 
     }
 
@@ -97,7 +97,7 @@ async function insert_content( host, url, pathname )
         }
         // await sleep(1000);
         // document.querySelector(".prf-handle.m-box").appendChild( button );
-        document.body.appendChild( button );
+        document.body?.appendChild( button );
 
     }
 
@@ -120,7 +120,7 @@ async function insert_content( host, url, pathname )
 
             const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
         }
-        document.body.appendChild( button );
+        document.body?.appendChild( button );
 
     }
 
@@ -144,7 +144,7 @@ async function insert_content( host, url, pathname )
 
             const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
         }
-        document.body.appendChild( button );
+        document.body?.appendChild( button );
 
     }
 
@@ -173,7 +173,7 @@ function zcn_insert_button(path)
         const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
     }
     // document.querySelector("#corePriceDisplay_desktop_feature_div .a-price").appendChild( button );
-    document.body.appendChild( button );
+    document.body?.appendChild( button );
 }
 
 
@@ -191,7 +191,7 @@ function jd_insert_button(path)
         const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
     }
     // document.querySelector(".p-price").appendChild( button );
-    document.body.appendChild( button );
+    document.body?.appendChild( button );
 }
 
 function sleep(ms) {
