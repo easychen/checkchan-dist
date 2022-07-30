@@ -124,6 +124,30 @@ async function insert_content( host, url, pathname )
 
     }
 
+    // message.bilibili.com
+    if( host === 'message.bilibili.com' )
+    {
+        const reg = /#\/(reply)/;
+        const id = Array.isArray(url.match(reg)) ? url.match(reg)[1]:null;
+        console.log( "id", id );
+        if( !id ) return false;
+        const path = "div#link-message-container > div > div:nth-of-type(2) > div:nth-of-type(2) > div > div > div > div > div > div .center-box";
+        const ignore_path = "div#link-message-container > div > div:nth-of-type(2) > div:nth-of-type(2) > div > div > div > div > div > div .action-field, div#link-message-container > div > div:nth-of-type(2) > div:nth-of-type(2) > div > div > div > div > div > div textarea";
+        const button = document.createElement("button");
+        button.innerHTML = "监测最新回复";
+        button.style = button_base_style+"padding:5px;";
+        button.onclick = async()=>{
+            
+            const icon_url = "https://www.bilibili.com/favicon.ico";
+            
+            const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href)+'&icon='+encodeURIComponent(icon_url)+'&ignore_path='+encodeURIComponent(ignore_path);
+
+            const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
+        }
+        document.body?.appendChild( button );
+
+    }
+
     // .ep-list-wrapper .ep-item:last-child
     if( host === 'www.bilibili.com' )
     {

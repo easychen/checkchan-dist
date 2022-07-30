@@ -41,6 +41,15 @@ app.all(`/`, checkApiKey , (req, res) => {
     res.json({"code":0,"message":"it works","version":"1.1",data_write_access});
 });
 
+app.post( `/rss/upload`, checkApiKey, (req, res) => {
+    if( req.body.rss ) {
+        let rss = req.body.rss;
+        let rss_file = image_dir+'/rss.xml';
+        fs.writeFileSync(rss_file,rss);
+        res.json({"code":0,"message":"保存成功"});
+    }
+});
+
 app.post(`/checks/upload`, checkApiKey , (req, res) => {
     const data = { checks: JSON.parse(req.body.checks)||[], cookies: JSON.parse(req.body.cookies) ||{} };
     const data_file = get_data_dir()+'/data.json';
