@@ -306,7 +306,7 @@ async function monitor_json(url, query, header=false, body_string=false, format 
         const data = await response.json();
         const ret = jsonQuery( query ,{data} );
         console.log( ret );
-        if( !( ret && ret.value ) )
+        if( !( ret ) )
         {
             console.log("save error");
             const image_dir = get_data_dir()+'/image';
@@ -335,7 +335,7 @@ async function monitor_rss(url,timeout=10000)
 
 async function monitor_dom_low(item, cookies)
 {
-    const { url, path, delay, ignore_path } = item;
+    const { url, path, delay, ignore_path,click_path,scroll_down } = item;
     console.log("in low dom");
     try {
         const response = await fetch( url, { signal: timeoutSignal(delay<1?10000:delay) } );
@@ -346,7 +346,24 @@ async function monitor_dom_low(item, cookies)
         let opt = {};
         if( item.ua ) opt['userAgent'] = item.ua;
         const dom = new JSDOM(all,opt);
+        
+        if( click_path )
+        {
+            const click_dom = dom.window.document.querySelector(click_path);
+            if( click_dom )
+            {
+                const evt = new Event('click', { bubbles: false, cancelable: false, composed: false });
+                click_dom.dispatchEvent(evt);
+            }
+        }
+
+        if( scroll_down && parseInt(scroll_down) > 0 )
+        {
+            dom.window.scrollTo(0,dom.window.document.body.scrollHeight);
+        }
+        
         if( ignore_path ) dom.window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
+
         const ret = dom.window.document.querySelectorAll(path);
 
         let texts = [];
@@ -419,7 +436,7 @@ async function monitor_shell(item, cookies)
 
 async function monitor_dom(item , cookies)
 {
-    const { url, path, id, ignore_path } = item;
+    const { url, path, id, ignore_path,click_path,scroll_down } = item;
     const delay = (parseInt(item.delay)||0)*1000;
 
     console.log("in dom delay = ",delay);
@@ -490,8 +507,34 @@ async function monitor_dom(item , cookies)
             await sleep(1000);
         } 
 
-        ret = await page.evaluate( (path,browser_code,ignore_path ) => {
+        ret = await page.evaluate( (path,browser_code,ignore_path,click_path,scroll_down ) => {
+            
+            / 滚动的页面底部
+            if( scroll_down && parseInt(scroll_down) > 0 )
+            {
+                window.scrollTo(0,document.body.scrollHeight);
+                await sleep(5000);
+            }
+
+            // 点击特定区域
+            if( click_path )
+            {
+                const click_path_items = click_path.split(",");
+                for( let item of click_path_items )
+                {
+                    const click_item = window.document.querySelector(item);
+                    if( click_item )
+                    {
+                        click_item.click();
+                        await sleep(1000);
+                    }
+                }
+            }
+
+            /
+            
             if( browser_code ) eval( browser_code );
+            
             if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
             let ret = window.document.querySelectorAll(path);
             if( !ret ) return false;
@@ -506,14 +549,38 @@ async function monitor_dom(item , cookies)
                 html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
             return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-        },path,browser_code,ignore_path);
+        },path,browser_code,ignore_path,click_path,scroll_down);
         
         if( !ret )
         {
             console.log("sleep",1000*5);
             await sleep(1000*5);
-            ret = await page.evaluate( (path,browser_code,ignore_path) => {
+            ret = await page.evaluate( (path,browser_code,ignore_path,click_path,scroll_down) => {
+                // 滚动的页面底部
+                if( scroll_down && parseInt(scroll_down) > 0 )
+                {
+                    window.scrollTo(0,document.body.scrollHeight);
+                    await sleep(5000);
+                }
+
+                // 点击特定区域
+                if( click_path )
+                {
+                    const click_path_items = click_path.split(",");
+                    for( let item of click_path_items )
+                    {
+                        const click_item = window.document.querySelector(item);
+                        if( click_item )
+                        {
+                            click_item.click();
+                            await sleep(1000);
+                        }
+                    }
+                }
+
+                
                 if( browser_code ) eval( browser_code );
+                
                 if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
                 let ret = window.document.querySelectorAll(path);
                 console.log("query fail again",path,ret);
@@ -528,7 +595,7 @@ async function monitor_dom(item , cookies)
                     html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
                 }
                 return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-            },path,browser_code,ignore_path);
+            },path,browser_code,ignore_path,click_path,scroll_down);
             
         }
         const { all,html, ...ret_short } = ret;

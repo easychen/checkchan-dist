@@ -54,7 +54,7 @@ async function show_inspector( tabid,inspector )
 }
 
 // javascript-obfuscator:disable
-async function ck_get_content( path,delay=3000, ignore_path = "" )
+async function ck_get_content( path,delay=3000, ignore_path = "",click_path = "",scroll_down="0" )
 {
     function sleep(ms) {
         return new Promise((resolve) => {
@@ -77,8 +77,32 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
         });
     }
 
-    async function dom_mul_select( path, ignore_path = "" )
+    async function dom_mul_select( path, ignore_path = "",click_path = "",scroll_down="0" )
     {
+        // 滚动到页面底部
+        if( scroll_down && parseInt(scroll_down) > 0 )
+        {
+            window.scrollTo(0,document.body.scrollHeight);
+            await sleep(5000);
+        }
+
+        // 点击特定区域
+        if( click_path )
+        {
+            const click_path_items = click_path.split(",");
+            for( let item of click_path_items )
+            {
+                const click_item = window.document.querySelector(item);
+                if( click_item )
+                {
+                    click_item.click();
+                    await sleep(1000);
+                }
+            }
+        }
+
+        
+        
         if( ignore_path )
             window.document.querySelectorAll( ignore_path ).forEach( item => item.remove() );
         
@@ -99,7 +123,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
     // await sleep(delay);
     await dom_ready();
     if( delay > 0 ) await sleep(delay);
-    const ret = await dom_mul_select(path,ignore_path);
+    const ret = await dom_mul_select(path,ignore_path,click_path,scroll_down);
     // 直接提取
     if( ret )
     {
@@ -109,7 +133,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
     {
         // 失败的话，先延迟再尝试一次
         await sleep(3000);
-        const ret2 = await dom_mul_select(path,ignore_path);
+        const ret2 = await dom_mul_select(path,ignore_path,click_path,scroll_down);
         if( ret2  )
         {
             return ret2;
@@ -118,7 +142,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "" )
         {
             await sleep(3000);
             // 再来一次
-            const ret3 = await dom_mul_select(path,ignore_path);
+            const ret3 = await dom_mul_select(path,ignore_path,click_path,scroll_down);
             if( ret3  ) return ret;
         }
         
@@ -187,7 +211,7 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
             {
                     target: {tabId: tab.id},
                     function: ck_get_content,
-                    args: [request.path,request.delay,request.ignore_path]
+                    args: [request.path,request.delay,request.ignore_path,request.click_path,request.scroll_down]
             });
             //  console.log( r );
            
