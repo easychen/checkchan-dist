@@ -513,7 +513,7 @@ async function monitor_dom(item , cookies)
             await sleep(1000);
         } 
 
-        ret = await page.evaluate( (path,browser_code,ignore_path,click_path,scroll_down ) => {
+        ret = await page.evaluate( async (path,browser_code,ignore_path,click_path,scroll_down ) => {
             
             // 滚动的页面底部
             if( scroll_down && parseInt(scroll_down) > 0 )
@@ -560,7 +560,7 @@ async function monitor_dom(item , cookies)
         {
             console.log("sleep",1000*5);
             await sleep(1000*5);
-            ret = await page.evaluate( (path,browser_code,ignore_path,click_path,scroll_down) => {
+            ret = await page.evaluate( async (path,browser_code,ignore_path,click_path,scroll_down) => {
                 // 滚动的页面底部
                 if( scroll_down && parseInt(scroll_down) > 0 )
                 {
