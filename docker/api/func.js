@@ -463,6 +463,12 @@ async function monitor_dom(item , cookies)
         opt.args.push( `--user-agent=${item.ua}` );
     }
 
+    // 支持proxy
+    if( process.env.PROXY_SERVER )
+    {
+        opt.args.push( `--proxy-server=${process.env.PROXY_SERVER}` );    
+    }
+
     // console.log( opt );
 
     if( process.env.CHROMIUM_PATH ) 
@@ -509,7 +515,7 @@ async function monitor_dom(item , cookies)
 
         ret = await page.evaluate( (path,browser_code,ignore_path,click_path,scroll_down ) => {
             
-            / 滚动的页面底部
+            // 滚动的页面底部
             if( scroll_down && parseInt(scroll_down) > 0 )
             {
                 window.scrollTo(0,document.body.scrollHeight);
@@ -531,7 +537,6 @@ async function monitor_dom(item , cookies)
                 }
             }
 
-            /
             
             if( browser_code ) eval( browser_code );
             

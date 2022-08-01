@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.07.31.20.30 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
-- Docker镜像(云端+远程桌面二合一)：2022.07.31.20.10 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.07.31.20.30
+- 插件·Chrome/Edge：2022.08.01.14.29 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- Docker镜像(云端+远程桌面二合一)：2022.08.01.14.10 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.08.01.14.29
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
@@ -230,7 +230,8 @@ services:
       #- "SNAP_URL_BASE=<开启截图在这里写服务器地址（结尾不用加/），不开留空>..."
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
-      # - WEBHOOK_URL=http://... # 云端 Webhook地址，不需要则不用设置
+      # - "WEBHOOK_URL=http://..." # 云端 Webhook地址，不需要则不用设置
+      # - "PROXY_SERVER=http://proxy.ip:port" # 代理服务器地址，目前仅DOM监测支持代理
     ports:
       - "5900:5900" 
       - "8080:8080" 
