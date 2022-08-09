@@ -174,7 +174,7 @@ exports.get_cookies = () =>
     return json_data.cookies;
 }
 
-exports.do_webhook = async( id, url, value, html, link ) =>
+exports.do_webhook = async( id, url, value, html, link, data ) =>
 {
     // 因为webhook的内容更多，所以不能放到 show_notice 里边处理，这里单独处理
     if( process.env.WEBHOOK_URL )
@@ -186,6 +186,7 @@ exports.do_webhook = async( id, url, value, html, link ) =>
         form.append( 'value',value );
         form.append( 'html',html );
         form.append( 'link',link );
+        form.append( 'data',data );
 
         try {
             const response = await fetch( process.env.WEBHOOK_URL , {
@@ -335,7 +336,7 @@ async function monitor_rss(url,timeout=10000)
 
 async function monitor_dom_low(item, cookies)
 {
-    const { url, path, delay, ignore_path,click_path,scroll_down } = item;
+    const { url, path, delay, ignore_path,click_path,data_path,scroll_down } = item;
     console.log("in low dom");
     try {
         const response = await fetch( url, { signal: timeoutSignal(delay<1?10000:delay) } );
@@ -436,7 +437,7 @@ async function monitor_shell(item, cookies)
 
 async function monitor_dom(item , cookies)
 {
-    const { url, path, id, ignore_path,click_path,scroll_down } = item;
+    const { url, path, id, ignore_path,click_path,data_path,scroll_down } = item;
     const delay = (parseInt(item.delay)||0)*1000;
 
     console.log("in dom delay = ",delay);
@@ -513,7 +514,7 @@ async function monitor_dom(item , cookies)
             await sleep(1000);
         } 
 
-        ret = await page.evaluate( async (path,browser_code,ignore_path,click_path,scroll_down ) => {
+        ret = await page.evaluate( async (path,browser_code,ignore_path,click_path,data_path,scroll_down ) => {
             
             // 滚动的页面底部
             if( scroll_down && parseInt(scroll_down) > 0 )
@@ -554,13 +555,13 @@ async function monitor_dom(item , cookies)
                 html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
             return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-        },path,browser_code,ignore_path,click_path,scroll_down);
+        },path,browser_code,ignore_path,click_path,data_path,scroll_down);
         
         if( !ret )
         {
             console.log("sleep",1000*5);
             await sleep(1000*5);
-            ret = await page.evaluate( async (path,browser_code,ignore_path,click_path,scroll_down) => {
+            ret = await page.evaluate( async (path,browser_code,ignore_path,click_path,data_path,scroll_down) => {
                 // 滚动的页面底部
                 if( scroll_down && parseInt(scroll_down) > 0 )
                 {
@@ -600,7 +601,7 @@ async function monitor_dom(item , cookies)
                     html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
                 }
                 return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
-            },path,browser_code,ignore_path,click_path,scroll_down);
+            },path,browser_code,ignore_path,click_path,data_path,scroll_down);
             
         }
         const { all,html, ...ret_short } = ret;

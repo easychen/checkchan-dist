@@ -10,39 +10,46 @@ async function show_inspector( tabid,inspector )
         maxZIndex: 9999,
         onClick: async (path) => {
             
-            var getFavicon = function(){
-                var favicon = undefined;
-                var nodeList = document.getElementsByTagName("link");
-                for (var i = 0; i < nodeList.length; i++)
-                {
-                    if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
+            if( window.confirm( "选择器为"+path+"，是否转向到任务添加页面？" ) )
+            {
+                var getFavicon = function(){
+                    var favicon = undefined;
+                    var nodeList = document.getElementsByTagName("link");
+                    for (var i = 0; i < nodeList.length; i++)
                     {
-                        favicon = nodeList[i].getAttribute("href");
+                        if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
+                        {
+                            favicon = nodeList[i].getAttribute("href");
+                        }
+                    }
+                    return favicon;        
+                }
+    
+                let icon_url = getFavicon() || "/favicon.ico";
+                if( icon_url.substring(0,4) != 'http' )
+                {
+                    if( icon_url.substring(0,2) == '//' )
+                    {
+                        icon_url = window.location.protocol + icon_url;
+                    }else
+                    {
+                        if( icon_url.substring(0,1) != '/' ) icon_url = window.origin+ '/' + icon_url;
+                        else icon_url = window.origin + icon_url;
                     }
                 }
-                return favicon;        
-            }
-
-            let icon_url = getFavicon() || "/favicon.ico";
-            if( icon_url.substring(0,4) != 'http' )
+                
+                const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href)+'&icon='+encodeURIComponent(icon_url);
+    
+                
+    
+                // 这里是 content script 同等权限，发送消息来调整网页
+                const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":tabid},);
+                console.log( "ret" , ret, inspector );
+                // 因为给元素注入了onclick，这里还是要reload才行
+            }else
             {
-                if( icon_url.substring(0,2) == '//' )
-                {
-                    icon_url = window.location.protocol + icon_url;
-                }else
-                {
-                    if( icon_url.substring(0,1) != '/' ) icon_url = window.origin+ '/' + icon_url;
-                    else icon_url = window.origin + icon_url;
-                }
+                window.location.reload();    
             }
-            
-            const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href)+'&icon='+encodeURIComponent(icon_url);
-
-            // 这里是 content script 同等权限，发送消息来调整网页
-            const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":tabid},);
-            console.log( "ret" , ret, inspector );
-            // 因为给元素注入了onclick，这里还是要reload才行
-            window.location.reload();
         }
     });
     inspector.enable();
@@ -54,7 +61,7 @@ async function show_inspector( tabid,inspector )
 }
 
 // javascript-obfuscator:disable
-async function ck_get_content( path,delay=3000, ignore_path = "",click_path = "",scroll_down="0" )
+async function ck_get_content( path,delay=3000, ignore_path = "",click_path = "",data_path="",scroll_down="0" )
 {
     function sleep(ms) {
         return new Promise((resolve) => {
@@ -77,7 +84,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
         });
     }
 
-    async function dom_mul_select( path, ignore_path = "",click_path = "",scroll_down="0" )
+    async function dom_mul_select( path, ignore_path = "",click_path = "",data_path="",scroll_down="0" )
     {
         // 滚动到页面底部
         if( scroll_down && parseInt(scroll_down) > 0 )
@@ -113,17 +120,36 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
         for( let item of ret )
         {
             item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = window.origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
+
+            item.querySelectorAll("[href]").forEach( item => { if( item.href.substr(0,4) != 'http' ) { item.href = window.origin +( item.href.substr(0,1) == '/' ? item.href : '/'+ item.href  )   } } );
             
             if( item.innerText ) texts.push(item.innerText?.trim());
             html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
         }
-        return {text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"",html};
+
+        let data_ret = "";
+        if( data_path )
+        {
+            const data_path_items = data_path.split(",");
+            for( let item of data_path_items )
+            {
+                const data_items = window.document.querySelectorAll(item);
+                for( let data_item of data_items ){
+                    if( data_item )
+                    {
+                        data_ret += data_item.outerHTML ? data_item.outerHTML+"<br/>" : "";
+                    }
+                }
+                
+            }
+        }
+        return {text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"",html,"data":data_ret};
     }
     
     // await sleep(delay);
     await dom_ready();
     if( delay > 0 ) await sleep(delay);
-    const ret = await dom_mul_select(path,ignore_path,click_path,scroll_down);
+    const ret = await dom_mul_select(path,ignore_path,click_path,data_path,scroll_down);
     // 直接提取
     if( ret )
     {
@@ -133,7 +159,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
     {
         // 失败的话，先延迟再尝试一次
         await sleep(3000);
-        const ret2 = await dom_mul_select(path,ignore_path,click_path,scroll_down);
+        const ret2 = await dom_mul_select(path,ignore_path,click_path,data_path,scroll_down);
         if( ret2  )
         {
             return ret2;
@@ -142,7 +168,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
         {
             await sleep(3000);
             // 再来一次
-            const ret3 = await dom_mul_select(path,ignore_path,click_path,scroll_down);
+            const ret3 = await dom_mul_select(path,ignore_path,click_path,data_path,scroll_down);
             if( ret3  ) return ret;
         }
         
@@ -211,7 +237,7 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
             {
                     target: {tabId: tab.id},
                     function: ck_get_content,
-                    args: [request.path,request.delay,request.ignore_path,request.click_path,request.scroll_down]
+                    args: [request.path,request.delay,request.ignore_path,request.click_path,request.data_path,request.scroll_down]
             });
             //  console.log( r );
            
