@@ -66,7 +66,7 @@ for( const item of to_checks )
             check_content = ret.value;
             
             // 添加正则替换
-            if( item.replace_from_regex && item.replace_to_regex ) check_content = check_content.replace( new RegExp(item.replace_from_regex), item.replace_to_regex );
+            if( item.replace_from_regex && item.replace_to_regex ) check_content = check_content.replace( new RegExp(item.replace_from_regex,'img'), item.replace_to_regex );
 
 
             if( ret.html ) check_html = ret.html;
@@ -123,7 +123,7 @@ for( const item of to_checks )
             if( item.compare_type == 'regex' )
             {
                 logit("正则匹配模式");
-                if( item.regex && !check_content.match( new RegExp(item.regex, 'i') ) )
+                if( item.regex && !check_content.match( new RegExp(item.regex, 'img') ) )
                 {
                     can_send_notice = false;
                     logit( '通知正则不匹配，不发送通知' );
