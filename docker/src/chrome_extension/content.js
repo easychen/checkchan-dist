@@ -36,7 +36,7 @@ async function insert_content( host, url, pathname )
 
     if( host === 'weixin.sogou.com' && pathname === '/weixin' )
     {
-        const path = ".news-box ul li dl:nth-child(3) > dd > a:nth-child(1)";
+        const path = "dd > a:nth-child(1)";
         const button = document.createElement("button");
         button.innerHTML = "监测最新文章";
         button.style = button_base_style+"margin-top:10px;margin-bottom:10px;";

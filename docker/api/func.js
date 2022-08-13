@@ -365,12 +365,15 @@ async function monitor_dom_low(item, cookies)
         
         if( ignore_path ) dom.window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
 
-        const ret = dom.window.document.querySelectorAll(path);
+        const path_info = path.split("@");
+        let ret = dom.window.document.querySelectorAll(path_info[0]);
+        if( path_info[1] ) ret = [ret[path_info[1]]];
 
         let texts = [];
         let html = "";
         for( let item of ret )
         {
+            if( !item ) continue;
             item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = new URL(url).origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
             
             if( item.textContent ) texts.push(item.textContent?.trim());
@@ -542,7 +545,11 @@ async function monitor_dom(item , cookies)
             if( browser_code ) eval( browser_code );
             
             if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
-            let ret = window.document.querySelectorAll(path);
+            
+            const path_info = path.split("@");
+            let ret = window.document.querySelectorAll(path_info[0]);
+            if( path_info[1] ) ret = [ret[path_info[1]]];
+
             if( !ret ) return false;
             console.log("query fail",path,ret);
             let texts = [];
@@ -588,7 +595,11 @@ async function monitor_dom(item , cookies)
                 if( browser_code ) eval( browser_code );
                 
                 if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
-                let ret = window.document.querySelectorAll(path);
+                
+                const path_info = path.split("@");
+                let ret = window.document.querySelectorAll(path_info[0]);
+                if( path_info[1] ) ret = [ret[path_info[1]]];
+
                 console.log("query fail again",path,ret);
                 if( !ret ) return false;
                 let texts = [];

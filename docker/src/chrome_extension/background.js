@@ -113,7 +113,12 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
         if( ignore_path )
             window.document.querySelectorAll( ignore_path ).forEach( item => item.remove() );
         
-        let ret = window.document.querySelectorAll(path);
+        // path 扩展语法 selector@1,selector
+        const path_info = path.split("@");
+        let ret = window.document.querySelectorAll(path_info[0]);
+        if( path_info[1] ) ret = [ret[path_info[1]]];
+
+        
         if( !ret ) return false;
         let texts = [];
         let html = "";

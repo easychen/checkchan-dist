@@ -19,7 +19,10 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/main" > /etc/apk/repositori
     && echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/community" >> /etc/apk/repositories
 
 
-RUN apk upgrade -U -a && apk add --no-cache chromium xvfb x11vnc bash tzdata git python3 libstdc++ harfbuzz nss freetype ttf-freefont  font-noto-emoji php
+RUN apk upgrade -U -a && apk add --no-cache chromium xvfb x11vnc bash tzdata git python3 py3-pip libstdc++ harfbuzz nss freetype ttf-freefont  font-noto-emoji php php-phar php-mbstring php-openssl curl
+
+RUN curl -s https://getcomposer.org/installer | php
+RUN alias composer='php composer.phar'
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV CHROME_BIN=/usr/bin/chromium-browser
