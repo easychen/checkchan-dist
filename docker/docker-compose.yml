@@ -15,7 +15,8 @@ services:
       - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
       #- "SNAP_URL_BASE=http://..."
       #- "SNAP_FULL=1"
-      - TZ=Asia/Chongqing
+      # - "WEBHOOK_URL=http://..." # 云端 Webhook地址，不需要则不用设置
+      - "TZ=Asia/Chongqing"
     ports:
       - "5900:5900" 
       - "8080:8080" 

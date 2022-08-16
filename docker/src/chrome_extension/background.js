@@ -222,7 +222,7 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
     if (request.action === "fetch")
     {
         (async () =>{
-            const tab = await chrome.tabs.create({"url":request.url,"active":false,"pinned":true});
+            const tab = await chrome.tabs.create({"url":request.url,"active":request.tab_activity=='front',"pinned":true});
 
             // console.log("request",request);
             if( request.ua )

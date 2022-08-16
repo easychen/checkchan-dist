@@ -9,9 +9,9 @@
 </ol>
 <h2>最新版本</h2>
 <ul>
-<li>插件·Chrome/Edge：2022.08.16.14.33 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
-<li>Docker镜像(云端+远程桌面二合一)：2022.08.16.13.58 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.08.16.14.33</li>
+<li>插件·Chrome/Edge：2022.08.16.16.52 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
+<li>Docker镜像(云端+远程桌面二合一)：2022.08.16.16.42 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
+<li>文档：2022.08.16.16.52</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 <li>生态：RSSHub浏览器插件整合版（<a href="https://github.com/easychen/RSSHub-Radar-with-checkchan">源码</a> | <a href="https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip">下载</a>）</li>
 </ul>
@@ -138,7 +138,6 @@
       <span class="pl-c"><span class="pl-c">#</span>- "SNAP_FULL=1"</span>
       - <span class="pl-s"><span class="pl-pds">"</span>TZ=Asia/Chongqing<span class="pl-pds">"</span></span>
       <span class="pl-c"><span class="pl-c">#</span> - "WEBHOOK_URL=http://..." # 云端 Webhook地址，不需要则不用设置</span>
-      <span class="pl-c"><span class="pl-c">#</span> - "PROXY_SERVER=http://proxy.ip:port" # 代理服务器地址，目前仅DOM监测支持代理</span>
     <span class="pl-ent">ports</span>:
       - <span class="pl-s"><span class="pl-pds">"</span>5900:5900<span class="pl-pds">"</span></span> 
       - <span class="pl-s"><span class="pl-pds">"</span>8080:8080<span class="pl-pds">"</span></span> 
@@ -196,6 +195,12 @@
 <ul>
 <li>截图功能需要较大的内存，部分服务器可能会报错</li>
 <li>云端网络和本地不同，可能会超时失败，请适当增加延时，并将取消完整截图</li>
+</ul>
+<h3>RSS上行接口</h3>
+<p>Check酱自架云端内置了动态页面RSS上行用的接口：</p>
+<ul>
+<li>RSS上行地址为： <code class="notranslate">http://$ip:$port/rss/upload?key=$api_key</code></li>
+<li>RSS Feed地址为：<code class="notranslate">http://$ip:$port/image/rss.xml?key=$api_key</code></li>
 </ul>
 <h3>云端任务的安全性</h3>
 <p>Check酱云端任务的原理是将cookie同步到云端，然后用浏览器查看，本质和用户操作一样。但因为出口IP可能是机房和数据中心，频次太高也有被风控的可能。如果将云端部署在家里，则和在家用电脑访问效果一样。</p>

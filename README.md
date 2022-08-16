@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.08.16.14.33 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
-- Docker镜像(云端+远程桌面二合一)：2022.08.16.13.58 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.08.16.14.33
+- 插件·Chrome/Edge：2022.08.16.16.52 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- Docker镜像(云端+远程桌面二合一)：2022.08.16.16.42 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.08.16.16.52
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
@@ -231,7 +231,6 @@ services:
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
       # - "WEBHOOK_URL=http://..." # 云端 Webhook地址，不需要则不用设置
-      # - "PROXY_SERVER=http://proxy.ip:port" # 代理服务器地址，目前仅DOM监测支持代理
     ports:
       - "5900:5900" 
       - "8080:8080" 
@@ -334,6 +333,13 @@ Check酱自架云端支持对网页（dom）类型任务进行截图，可以通
 
 - 截图功能需要较大的内存，部分服务器可能会报错
 - 云端网络和本地不同，可能会超时失败，请适当增加延时，并将取消完整截图
+
+### RSS上行接口
+
+Check酱自架云端内置了动态页面RSS上行用的接口：
+
+- RSS上行地址为： `http://$ip:$port/rss/upload?key=$api_key`
+- RSS Feed地址为：`http://$ip:$port/image/rss.xml?key=$api_key`
 
 ### 云端任务的安全性
 
