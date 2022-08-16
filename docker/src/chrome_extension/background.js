@@ -492,7 +492,7 @@ async function get_cookie_by_checks( checks )
             for( const cookie of cookies )
             {
                 // console.log( "cookie", cookie, domain, domain.indexOf(cookie.domain) );
-                if( domain.indexOf(cookie.domain) >= 0 )
+                if( cookie.domain?.indexOf(domain) >= 0 || domain.indexOf(cookie.domain) >= 0 )
                 {
                     ret_cookies[domain].push( cookie );
                 }
