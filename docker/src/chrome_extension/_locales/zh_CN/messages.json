@@ -3,7 +3,7 @@
         "message": "Check酱"
     },
     "appDesc": {
-        "message": "监控页面变动，并发送异动到微信。 Build.2022.08.17.13.51",
+        "message": "监控页面变动，并发送异动到微信。 Build.2022.08.17.20.32",
         "description":"亦支持http status、json和rss监测。配合自架云端，关电脑后也能运行。"
     }
   }

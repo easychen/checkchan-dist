@@ -50,6 +50,36 @@ app.post( `/rss/upload`, checkApiKey, (req, res) => {
     }
 });
 
+app.post( `/cookie/sync`, checkApiKey, (req, res) => {
+    if( req.body.direction && req.body.direction == 'down' ) {
+        // 下行cookie
+        const user_name = req.body.password || "own";
+        let cookies_file = `${image_dir}/cookies.${user_name}.base64.txt`;
+        const cookies_64 = fs.readFileSync(cookies_file, 'utf8');
+        res.json({"code":0,"data":cookies_64});
+    }else
+    {
+        // 上行cookie
+        if( req.body.cookies_base64 )
+        {
+            let cookies_base64 = req.body.cookies_base64;
+            const user_name = req.body.password || "own";
+            let cookies_file = `${image_dir}/cookies.${user_name}.base64.txt`;
+            fs.writeFileSync(cookies_file,cookies_base64);
+            res.json({"code":0,"message":"保存成功"});
+        }else
+        {
+            res.json({"code":-1,"message":"cookie参数不能为空"});
+        }
+
+
+        // let cookies = Buffer.from(req.body.cookies_base64,'base64').toString();
+        
+    }
+    
+    // res.json(req.body);
+});
+
 app.post(`/checks/upload`, checkApiKey , (req, res) => {
     const data = { checks: JSON.parse(req.body.checks)||[], cookies: JSON.parse(req.body.cookies) ||{} };
     const data_file = get_data_dir()+'/data.json';

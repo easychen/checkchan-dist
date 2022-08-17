@@ -1,5 +1,5 @@
 // import html2canvas from './html2canvas.esm.js';
-
+import { Base64 } from './base64.mjs';
 
 let inspector = {};
 console.log( "load bg.js" );
@@ -283,6 +283,12 @@ chrome.runtime.onInstalled.addListener(function (details)
         periodInMinutes: 1
     });
 
+    chrome.alarms.create('cookie_sync', 
+    {
+        when: Date.now(),
+        periodInMinutes: 1
+    });
+
     // chrome.alarms.create('auto_sync', 
     // {
     //     when: Date.now(),
@@ -292,7 +298,7 @@ chrome.runtime.onInstalled.addListener(function (details)
     chrome.alarms.create('bg_cookie_sync', 
     {
         when: Date.now(),
-        periodInMinutes: 61
+        periodInMinutes: 11
     });
 
     console.log("create alarms");
@@ -405,6 +411,95 @@ function sleep(ms) {
 
 chrome.alarms.onAlarm.addListener( async a =>
 {
+    if( a.name == 'cookie_sync' )
+    {
+        const settings = await kv_load('settings');
+        
+        // 如果没有配置上行URL，则不同步cookie
+        if( !settings._settings_cookie_sync_url ) return false;
+        
+        // 每分钟检查，如果没有到设置的时间，则不同步cookie
+        const interval = settings._settings_cookie_sync_interval || 5;
+        const minute = new Date().getMinutes();
+        if( minute % interval != 0 ) return false;
+
+        if( settings._settings_cookie_sync_direction == 'up' )
+        {
+            // 获得cookie
+            const checks = await load_data('checks');
+            const cookies = await get_cookie_by_checks( checks ) || [];
+
+            // 引入base64 和 aes 库
+            let cookie_string = Base64.encode(JSON.stringify(cookies));
+            
+            console.log("cookie_string", cookie_string);
+            const form = new FormData();
+            form.append( 'cookies_base64',cookie_string );
+            form.append( 'direction', settings._settings_cookie_sync_direction );
+            form.append( 'password', settings._settings_cookie_sync_password );
+            try {
+                const response = await fetch( settings._settings_cookie_sync_url, {
+                    method: 'POST', 
+                    body: form
+                } );
+
+                const ret = await response.json();
+                console.log( "ret", ret );
+                return ret;
+                
+            } catch (error) {
+                console.log("请求服务器失败。"+error);
+                return false;
+            }
+        }else
+        {
+            // Cookie 下行
+            const form = new FormData();
+            form.append( 'direction', settings._settings_cookie_sync_direction );
+            form.append( 'password', settings._settings_cookie_sync_password );
+            try {
+                const response = await fetch( settings._settings_cookie_sync_url, {
+                    method: 'POST', 
+                    body: form
+                } );
+
+                const ret = await response.json();
+                if( ret.code == 0 && ret.data )
+                {
+                    const cookies = JSON.parse(Base64.decode(ret.data));
+                    // set cookies to browser
+                    for( let domain in cookies )
+                    {
+                        // console.log( "domain" , cookies[domain] );
+                        if( Array.isArray(cookies[domain]) )
+                        {
+                            for( let cookie of cookies[domain] )
+                            {
+                                let newcookie = {};
+                                ['name','value','domain','path','secure','httpOnly','sameSite'].forEach( key => {
+                                    newcookie[key] = cookie[key];
+                                } );
+                                newcookie.url = buildUrl(cookie.secure, cookie.domain, cookie.path);
+                                // console.log(newcookie);
+                                chrome.cookies.set(newcookie, (e)=>{console.log(e)});
+                            }
+                        }
+                    }
+                }
+                // console.log( "ret", ret );
+                return ret;
+
+                
+                
+            } catch (error) {
+                console.log("请求服务器失败。"+error);
+                return false;
+            }
+        }
+        
+        
+    }
+    
     if( a.name == 'bg_cookie_sync' )
     {
         console.log( 'bg_cookie_sync' );
@@ -481,9 +576,15 @@ async function get_cookie_by_checks( checks )
         for( const item of checks )
         {
             // console.log( "item", item );
-            const domain = new URL( item.url ).host;
-            if( !domains.includes( domain ) )
-                domains.push( domain );
+            if( !item.url ) continue;
+            try {
+                const domain = new URL( item.url ).host;
+                if( !domains.includes( domain ) )
+                    domains.push( domain );
+            } catch (error) {
+                
+            }
+            
         }
         // console.log( domains );
         for( const domain of domains )
@@ -545,3 +646,10 @@ async function save_data( data, key = 'checks')
     const ret = chrome?.storage ? await storage_set( key, JSON.stringify(data) )  : window.localStorage.setItem( key, JSON.stringify(data) );
     return ret;
 }
+
+function buildUrl(secure, domain, path) {
+    if (domain.startsWith('.')) {
+      domain = domain.substr(1);
+    }
+    return `http${secure ? 's' : ''}://${domain}${path}`;
+  }
