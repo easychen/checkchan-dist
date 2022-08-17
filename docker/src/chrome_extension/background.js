@@ -432,7 +432,7 @@ chrome.alarms.onAlarm.addListener( async a =>
             // 引入base64 和 aes 库
             let cookie_string = Base64.encode(JSON.stringify(cookies));
             
-            console.log("cookie_string", cookie_string);
+            // console.log("cookie_string", cookie_string);
             const form = new FormData();
             form.append( 'cookies_base64',cookie_string );
             form.append( 'direction', settings._settings_cookie_sync_direction );

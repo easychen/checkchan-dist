@@ -10,7 +10,7 @@ services:
     environment:
       - "CKC_PASSWD=123"
       - "VDEBUG=OFF"
-      - "VNC=OFF"
+      - "VNC=ON"
       #- "WIN_WIDTH=414"
       #- "WIN_HEIGHT=896"
       #- "XVFB_WHD=500x896x16"
@@ -18,7 +18,7 @@ services:
       - "ERROR_IMAGE=NORMAL" # NONE,NORMAL,FULL
       #- "SNAP_URL_BASE=http://..."
       #- "SNAP_FULL=1"
-      - TZ=Asia/Chongqing
+      - "TZ=Asia/Chongqing"
       # - WEBHOOK_URL=https://4meapp.sinaapp.com/req.php
     ports:
       - "5900:5900" 

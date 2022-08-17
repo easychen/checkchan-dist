@@ -13,10 +13,12 @@ FROM --platform=$TARGETPLATFORM node:16-alpine3.15
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories \
     && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
     && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/v3.12/main" >> /etc/apk/repositories 
+    && echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/main" >> /etc/apk/repositories 
 
+# RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/main" > /etc/apk/repositories \
+#     && echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/community" >> /etc/apk/repositories
 
-RUN apk upgrade -U -a && apk add --no-cache chromium xvfb x11vnc bash tzdata git python3 libstdc++ harfbuzz nss freetype ttf-freefont  font-noto-emoji php
+RUN apk upgrade -U -a && apk add --no-cache chromium  xvfb x11vnc bash tzdata git python3 py3-pip libstdc++ harfbuzz nss freetype ttf-freefont  font-noto-emoji php php-phar php-mbstring php-openssl curl
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV CHROME_BIN=/usr/bin/chromium-browser
