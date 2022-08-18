@@ -168,6 +168,12 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 
 同时，因为执行监测任务本身也耗费时间，所以「监控间隔时间」为1分钟时，往往每隔一分钟（即每两分钟）才会运行一次任务。
 
+### Selector 扩展语法
+
+最新的版本支持了一个Selector扩展语法：由于底层通过 `document.querySelectorAll` 实现，因此会返回匹配的全部元素于一个数组。当这些元素属于同一个父节点我们可以用 `:nth-of-type(1)` 或者 `:nth-child(1)`来指定数组中的某一项。
+
+但如果这些元素不属于同一个父节点，那么以上方法会失效。这里添加了一个 selector@n 的语法，让我们可以从 Selector 返回的数组中指定某一个元素。如 `.booklist .item@0` 将返回  `document.querySelectorAll(.booklist .item)[0]` 。
+
 ### 日志查看和错误定位
 
 为了更清楚的了解定时任务的执行情况，你可以打开「开发者工具」（F12）在 `Console` 标签页中可以看到任务产生的日志。
@@ -340,6 +346,17 @@ Check酱自架云端内置了动态页面RSS上行用的接口：
 
 - RSS上行地址为： `http://$ip:$port/rss/upload?key=$api_key`
 - RSS Feed地址为：`http://$ip:$port/image/rss.xml?key=$api_key`
+
+### 多浏览器Cookie同步接口
+
+Check酱自架云端内置了Cookie同步用的接口：
+
+![](image/20220818011127.png)  
+
+- Cookie同步URL为： `http://$ip:$port/cookie/sync?key=$api_key`
+- 配对密码： 自行设定，同步Cookie的两个浏览器中必须一致
+- 同步方向： 一个发送一个接收，一般电脑上的发送、服务器上远程桌面里的接收
+- 同步频率：发送或者接收间隔时间
 
 ### 云端任务的安全性
 

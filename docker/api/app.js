@@ -9,7 +9,7 @@ const cors = require('cors');
 app.use(cors());
 
 var multer = require('multer');
-var forms = multer();
+var forms = multer({limits: { fieldSize: 100 * 1024 * 1024 }});
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
 app.use(forms.array()); 

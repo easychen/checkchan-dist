@@ -427,7 +427,7 @@ chrome.alarms.onAlarm.addListener( async a =>
         {
             // 获得cookie
             const checks = await load_data('checks');
-            const cookies = await get_cookie_by_checks( checks ) || [];
+            const cookies = (settings._settings_cookie_sync_range == 'all'? await get_all_cookie_indexed_by_domain() : await get_cookie_by_checks( checks )) || [];
 
             // 引入base64 和 aes 库
             let cookie_string = Base64.encode(JSON.stringify(cookies));
@@ -481,7 +481,9 @@ chrome.alarms.onAlarm.addListener( async a =>
                                 } );
                                 newcookie.url = buildUrl(cookie.secure, cookie.domain, cookie.path);
                                 // console.log(newcookie);
-                                chrome.cookies.set(newcookie, (e)=>{console.log(e)});
+                                chrome.cookies.set(newcookie, (e)=>{
+                                    // console.log(e)
+                                });
                             }
                         }
                     }
@@ -565,6 +567,19 @@ async function kv_load( key = 'settings' )
     return opt;
 }
 
+async function get_all_cookie_indexed_by_domain()
+{
+    let cookies = {};
+    const all_cookies = await chrome.cookies.getAll({});
+    for( const cookie of all_cookies )
+    {
+        if( !cookies[cookie.domain] )
+            cookies[cookie.domain] = [];
+        cookies[cookie.domain].push(cookie);
+    }
+    return cookies;
+}
+
 async function get_cookie_by_checks( checks )
 {
     let ret_cookies = {};
@@ -573,6 +588,8 @@ async function get_cookie_by_checks( checks )
     {
         const cookies = await chrome.cookies.getAll({});
         let domains = [];
+        
+        
         for( const item of checks )
         {
             // console.log( "item", item );
