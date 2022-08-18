@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.08.18.13.42 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- 插件·Chrome/Edge：2022.08.18.15.31 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
 - Docker镜像(云端+远程桌面二合一)：2022.08.18.13.32 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.08.18.13.42
+- 文档：2022.08.18.15.31
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
@@ -204,6 +204,12 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 > 架设自架版云端需要技术基础，非技术用户建议购买我们的官方版云端（将在内测完成后发布）
 
 需要docker环境。如果你没有云服务器，可以看看[腾讯云30~50元首单的特价服务器](https://curl.qcloud.com/VPjlS4gj)。
+
+#### 一键安装命令
+
+[点此进入工具界面](https://install.ftqq.com/config/checkchan)
+
+![](image/20220818153012.png)  
 
 
 #### 通过 Docker-compose 启动

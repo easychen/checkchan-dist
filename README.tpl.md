@@ -205,6 +205,12 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 
 需要docker环境。如果你没有云服务器，可以看看[腾讯云30~50元首单的特价服务器](https://curl.qcloud.com/VPjlS4gj)。
 
+#### 一键安装命令
+
+[点此进入工具界面](https://install.ftqq.com/config/checkchan)
+
+![](image/20220818153012.png)  
+
 
 #### 通过 Docker-compose 启动
 
