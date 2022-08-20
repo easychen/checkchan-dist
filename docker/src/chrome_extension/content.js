@@ -58,7 +58,7 @@ async function insert_content( host, url, pathname )
         const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
-        const path = "div#root > div > div:nth-of-type(2) > div > div > div:nth-of-type(4) > div > div > div > span";
+        const path = "[data-e2e='user-detail'] > div:nth-of-type(1) >  div:nth-of-type(2) >  div:nth-of-type(1) span:nth-of-type(2)";
         const button = document.createElement("button");
         button.innerHTML = "监测作品总数";
         button.style = button_base_style+"padding:5px;padding-left:10px;padding-right:10px;";
