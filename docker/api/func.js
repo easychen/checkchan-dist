@@ -366,7 +366,8 @@ async function monitor_dom_low(item, cookies)
         if( ignore_path ) dom.window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
 
         const path_info = path.split("@");
-        let ret = dom.window.document.querySelectorAll(path_info[0]);
+        const selector_info = path_info[0].split("%");
+        let ret = dom.window.document.querySelectorAll(selector_info[0]);
         if( path_info[1] ) ret = [ret[path_info[1]]];
 
         let texts = [];
@@ -374,10 +375,21 @@ async function monitor_dom_low(item, cookies)
         for( let item of ret )
         {
             if( !item ) continue;
-            item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = new URL(url).origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
             
-            if( item.textContent ) texts.push(item.textContent?.trim());
-            html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+            ['src','href'].forEach( field => {
+                
+                item.querySelectorAll("["+field+"]").forEach( item => { if( item.field.substr(0,4) != 'http' ) { item.field = new URL(url).origin +( item.field.substr(0,1) == '/' ? item.field : '/'+ item.field  )   } } );
+
+                if( item[field] )
+                {
+                    if( item[field].substr(0,4) != 'http' ) { item[field] = new URL(url).origin +( item[field].substr(0,1) == '/' ? item[field] : '/'+ item[field]  )   } 
+                };
+            } );
+            
+            const field = selector_info[1] ? selector_info[1] : "textContent";
+            if( item[field] ) texts.push(item[field]?.trim());
+            if( field == 'textContent' )
+                html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
         }
 
         return {text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"",html,all};
@@ -547,7 +559,8 @@ async function monitor_dom(item , cookies)
             if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
             
             const path_info = path.split("@");
-            let ret = window.document.querySelectorAll(path_info[0]);
+            const selector_info = path_info[0].split("%");
+            let ret = window.document.querySelectorAll(selector_info[0]);
             if( path_info[1] ) ret = [ret[path_info[1]]];
 
             if( !ret ) return false;
@@ -558,8 +571,9 @@ async function monitor_dom(item , cookies)
             {
                 item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = window.origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
                 
-                if( item.innerText ) texts.push(item.innerText?.trim());
-                html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+                const field = selector_info[1] ? selector_info[1] : "innerText";
+                if( item[field] ) texts.push(item[field]?.trim());
+                if( field == 'innerText' ) html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
             }
             return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
         },path,browser_code,ignore_path,click_path,data_path,scroll_down);
@@ -597,7 +611,8 @@ async function monitor_dom(item , cookies)
                 if( ignore_path ) window.document.querySelectorAll(ignore_path).forEach( item => item.remove() );
                 
                 const path_info = path.split("@");
-                let ret = window.document.querySelectorAll(path_info[0]);
+                const selector_info = path_info[0].split("%");
+                let ret = window.document.querySelectorAll(selector_info[0]);
                 if( path_info[1] ) ret = [ret[path_info[1]]];
 
                 console.log("query fail again",path,ret);
@@ -608,8 +623,10 @@ async function monitor_dom(item , cookies)
                 {
                     item.querySelectorAll("[src]").forEach( item => { if( item.src.substr(0,4) != 'http' ) { item.src = window.origin +( item.src.substr(0,1) == '/' ? item.src : '/'+ item.src  )   } } );
                     
-                    if( item.innerText ) texts.push(item.innerText?.trim());
-                    html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+                    const field = selector_info[1] ? selector_info[1] : "innerText";
+                    if( item[field] ) texts.push(item[field]?.trim());
+                    if( field == 'innerText' ) html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+
                 }
                 return {html,text:path.indexOf(",") >= 0 ? texts.join("\n") :texts[0]||"","all":window.document.documentElement.innerHTML};
             },path,browser_code,ignore_path,click_path,data_path,scroll_down);

@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.08.23.13.11 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
-- Docker镜像(云端+远程桌面二合一)：2022.08.23.12.59 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.08.23.13.11
+- 插件·Chrome/Edge：2022.08.25.14.08 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- Docker镜像(云端+远程桌面二合一)：2022.08.25.13.48 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.08.25.14.08
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
@@ -170,9 +170,16 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 
 ### Selector 扩展语法
 
+#### 通过@指定数组元素
+
 最新的版本支持了一个Selector扩展语法：由于底层通过 `document.querySelectorAll` 实现，因此会返回匹配的全部元素于一个数组。当这些元素属于同一个父节点我们可以用 `:nth-of-type(1)` 或者 `:nth-child(1)`来指定数组中的某一项。
 
 但如果这些元素不属于同一个父节点，那么以上方法会失效。这里添加了一个 selector@n 的语法，让我们可以从 Selector 返回的数组中指定某一个元素。如 `.booklist .item@0` 将返回  `document.querySelectorAll(.booklist .item)[0]` 。
+
+#### 通过%获得元素属性
+
+Selector的最下一级返回一个元素，但有时候我们需要监测这个元素的某个属性值。比如监测一个链接的`href`。为了解决这个问题，我们扩展了 selector 语法，让用户可以通过 element%attribute 的方式来获取元素的某个属性值。如：`article#post-180 > div > div > p > a%href`。当 `%` 和 `@` 同时使用时， `%` 应紧跟元素后，如：`article#post-180 > div > div > p > a%href@0`。
+
 
 ### 日志查看和错误定位
 

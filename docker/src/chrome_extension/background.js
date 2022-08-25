@@ -115,7 +115,8 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
         
         // path 扩展语法 selector@1,selector
         const path_info = path.split("@");
-        let ret = window.document.querySelectorAll(path_info[0]);
+        const selector_info = path_info[0].split("%");
+        let ret = window.document.querySelectorAll(selector_info[0]);
         if( path_info[1] ) ret = [ret[path_info[1]]];
 
         
@@ -128,8 +129,10 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
 
             item.querySelectorAll("[href]").forEach( item => { if( item.href.substr(0,4) != 'http' ) { item.href = window.origin +( item.href.substr(0,1) == '/' ? item.href : '/'+ item.href  )   } } );
             
-            if( item.innerText ) texts.push(item.innerText?.trim());
-            html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
+            const field = selector_info[1] ? selector_info[1] : "innerText";
+            if( item[field] ) texts.push(item[field]?.trim());
+            if( field == 'innerText' )
+                html += item.outerHTML ? item.outerHTML + "<br/>" : ""; 
         }
 
         let data_ret = "";
