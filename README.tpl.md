@@ -250,6 +250,7 @@ services:
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
       # - "WEBHOOK_URL=http://..." # 云端 Webhook地址，不需要则不用设置
+      # - "WEBHOOK_FORMAT=json" # 云端 Webhook POST 编码，默认是 Form
     ports:
       - "5900:5900" 
       - "8080:8080" 

@@ -12,9 +12,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.08.25.14.08 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
-- Docker镜像(云端+远程桌面二合一)：2022.08.25.13.48 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.08.25.14.08
+- 插件·Chrome/Edge：2022.08.28.21.07 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- Docker镜像(云端+远程桌面二合一)：2022.08.28.20.50 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
+- 文档：2022.08.28.21.07
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
@@ -250,6 +250,7 @@ services:
       #- "SNAP_FULL=1"
       - "TZ=Asia/Chongqing"
       # - "WEBHOOK_URL=http://..." # 云端 Webhook地址，不需要则不用设置
+      # - "WEBHOOK_FORMAT=json" # 云端 Webhook POST 编码，默认是 Form
     ports:
       - "5900:5900" 
       - "8080:8080" 

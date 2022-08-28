@@ -188,10 +188,12 @@ exports.do_webhook = async( id, url, value, html, link, data ) =>
         form.append( 'link',link );
         form.append( 'data',data );
 
+        const json = JSON.stringify( { id, url, value, html, link, data } );
+
         try {
             const response = await fetch( process.env.WEBHOOK_URL , {
                 method: 'POST', 
-                body: form
+                body: (process.env.WEBHOOK_FORMAT && process.env.WEBHOOK_FORMAT.toLowerCase() == 'json') ? json : form
             } );
     
             const ret = await response.text();
