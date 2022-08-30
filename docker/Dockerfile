@@ -35,8 +35,10 @@ RUN mkdir /checkchan/data
 # 让挂丢了目录的同学也可以体验下
 
 RUN git config --global advice.detachedHead false && \
-    git clone https://github.com/novnc/noVNC --branch ${NOVNC_TAG} /checkchan/noVNC && \
+    git clone  https://github.com/novnc/noVNC --branch ${NOVNC_TAG} /checkchan/noVNC && \
     git clone https://github.com/novnc/websockify --branch ${WEBSOCKIFY_TAG} /checkchan/noVNC/utils/websockify
+
+RUN rm -rf /checkchan/noVNC/.git && rm -rf /checkchan/noVNC/utils/websockify/.git
 
 RUN cp /checkchan/noVNC/vnc.html /checkchan/noVNC/index.html
 RUN sed -i "/wait ${proxy_pid}/i if [ -n \"\$AUTOCONNECT\" ]; then sed -i \"s/'autoconnect', false/'autoconnect', '\$AUTOCONNECT'/\" /checkchan/noVNC/app/ui.js; fi" /checkchan/noVNC/utils/novnc_proxy
