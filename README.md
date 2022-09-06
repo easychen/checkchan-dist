@@ -4,6 +4,22 @@
 
 ![](image/20220526194209.png)  
 
+## 商店安装
+
+|微软Edge|谷歌Chrome|
+|-|-|
+|[![](image/20220906224637.png)](https://microsoftedge.microsoft.com/addons/detail/check%E9%85%B1/almpackhamocjhnlbhdbcnlbfidnadji)  |[![](image/20220906224612.png)](https://chrome.google.com/webstore/detail/check%E9%85%B1/deomglgnplnflcbljmehpafdnhdklcep)  |
+
+点以上图标进入商店页面或者直接在商店搜索「Check酱」即可
+
+## 官方视频教程
+
+[![](image/20220531151537.png)](https://www.bilibili.com/video/BV1K94y1m7tt)
+
+[详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
+
+## 开源声明
+
 ⚠️ 浏览器插件不开源，docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：
 
 1. **不得修改或删除**默认对接的Server酱通道。
@@ -12,19 +28,13 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.08.30.14.13 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- 插件·Chrome/Edge：2022.09.06.22.57 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
 - Docker镜像(云端+远程桌面二合一)：2022.08.30.13.38 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.08.30.14.13
+- 文档：2022.09.06.22.57
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
 > Docker镜像安装命令请参阅后文云端架设一节
-
-## 官方视频教程
-
-[![](image/20220531151537.png)](https://www.bilibili.com/video/BV1K94y1m7tt)
-
-[详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
 
 
 ## 什么是「Check酱」

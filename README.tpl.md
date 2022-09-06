@@ -4,6 +4,22 @@
 
 ![](image/20220526194209.png)  
 
+## 商店安装
+
+|微软Edge|谷歌Chrome|
+|-|-|
+|[![](image/20220906224637.png)](https://microsoftedge.microsoft.com/addons/detail/check%E9%85%B1/almpackhamocjhnlbhdbcnlbfidnadji)  |[![](image/20220906224612.png)](https://chrome.google.com/webstore/detail/check%E9%85%B1/deomglgnplnflcbljmehpafdnhdklcep)  |
+
+点以上图标进入商店页面或者直接在商店搜索「Check酱」即可
+
+## 官方视频教程
+
+[![](image/20220531151537.png)](https://www.bilibili.com/video/BV1K94y1m7tt)
+
+[详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
+
+## 开源声明
+
 ⚠️ 浏览器插件不开源，docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：
 
 1. **不得修改或删除**默认对接的Server酱通道。
@@ -19,12 +35,6 @@
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 
 > Docker镜像安装命令请参阅后文云端架设一节
-
-## 官方视频教程
-
-[![](image/20220531151537.png)](https://www.bilibili.com/video/BV1K94y1m7tt)
-
-[详细版，近2小时](https://www.bilibili.com/video/BV1K94y1m7tt)
 
 
 ## 什么是「Check酱」
