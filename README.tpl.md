@@ -186,6 +186,8 @@ checkchan://title=Server%E9%85%B1%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99%E7%8A%B6%E
 
 但如果这些元素不属于同一个父节点，那么以上方法会失效。这里添加了一个 selector@n 的语法，让我们可以从 Selector 返回的数组中指定某一个元素。如 `.booklist .item@0` 将返回  `document.querySelectorAll(.booklist .item)[0]` 。
 
+> @语法除了使用在DOM selector上，还可以用来指定 RSS 监测结果。默认情况下，RSS 将返回整个Feed的第一篇文章，你可以用过在 Feed url 后边添加 @1 ，将其指定为监测第二篇文章（依然是从0开始计数）。
+
 #### 通过%获得元素属性
 
 Selector的最下一级返回一个元素，但有时候我们需要监测这个元素的某个属性值。比如监测一个链接的`href`。为了解决这个问题，我们扩展了 selector 语法，让用户可以通过 element%attribute 的方式来获取元素的某个属性值。如：`article#post-180 > div > div > p > a%href`。当 `%` 和 `@` 同时使用时， `%` 应紧跟元素后，如：`article#post-180 > div > div > p > a%href@0`。

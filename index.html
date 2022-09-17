@@ -40,9 +40,9 @@
 </ol>
 <h2>最新版本</h2>
 <ul>
-<li>插件·Chrome/Edge：2022.09.06.22.57 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
-<li>Docker镜像(云端+远程桌面二合一)：2022.08.30.13.38 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.09.06.22.57</li>
+<li>插件·Chrome/Edge：2022.09.17.21.32 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
+<li>Docker镜像(云端+远程桌面二合一)：2022.09.17.19.58 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
+<li>文档：2022.09.17.21.32</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 <li>生态：RSSHub浏览器插件整合版（<a href="https://github.com/easychen/RSSHub-Radar-with-checkchan">源码</a> | <a href="https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip">下载</a>）</li>
 </ul>
@@ -126,6 +126,9 @@
 <h4>通过@指定数组元素</h4>
 <p>最新的版本支持了一个Selector扩展语法：由于底层通过 <code class="notranslate">document.querySelectorAll</code> 实现，因此会返回匹配的全部元素于一个数组。当这些元素属于同一个父节点我们可以用 <code class="notranslate">:nth-of-type(1)</code> 或者 <code class="notranslate">:nth-child(1)</code>来指定数组中的某一项。</p>
 <p>但如果这些元素不属于同一个父节点，那么以上方法会失效。这里添加了一个 selector@n 的语法，让我们可以从 Selector 返回的数组中指定某一个元素。如 <code class="notranslate">.booklist .item@0</code> 将返回  <code class="notranslate">document.querySelectorAll(.booklist .item)[0]</code> 。</p>
+<blockquote>
+<p>@语法除了使用在DOM selector上，还可以用来指定 RSS 监测结果。默认情况下，RSS 将返回整个Feed的第一篇文章，你可以用过在 Feed url 后边添加 <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/1/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/1">@1</a> ，将其指定为监测第二篇文章（依然是从0开始计数）。</p>
+</blockquote>
 <h4>通过%获得元素属性</h4>
 <p>Selector的最下一级返回一个元素，但有时候我们需要监测这个元素的某个属性值。比如监测一个链接的<code class="notranslate">href</code>。为了解决这个问题，我们扩展了 selector 语法，让用户可以通过 element%attribute 的方式来获取元素的某个属性值。如：<code class="notranslate">article#post-180 &gt; div &gt; div &gt; p &gt; a%href</code>。当 <code class="notranslate">%</code> 和 <code class="notranslate">@</code> 同时使用时， <code class="notranslate">%</code> 应紧跟元素后，如：<code class="notranslate">article#post-180 &gt; div &gt; div &gt; p &gt; a%href@0</code>。</p>
 <h3>日志查看和错误定位</h3>

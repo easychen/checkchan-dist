@@ -243,7 +243,8 @@ exports.monitor_auto = async ( item, cookies ) =>
                 break;
             case 'rss':
                 ret = await monitor_rss( item.url, (parseInt(item.delay)||0)*1000 );
-                return {status:!!(ret&&ret[item.rss_field]),value:ret[item.rss_field]||"",link:ret.link,type:item.type};
+                if( ret && ret['content'] ) ret['description'] = ret['content'];
+                return {status:!!(ret&&ret[item.rss_field]),value:ret[item.rss_field]||"",html:ret['content']||"",link:ret.link,type:item.type};
                 break;
             case 'json':
                 // 特别注意，云端的json监测包含delay参数
@@ -269,7 +270,7 @@ exports.monitor_auto = async ( item, cookies ) =>
 
 async function monitor_get(url,timeout=10000)
 {
-    const response = await fetch( url, { signal: timeoutSignal(timeout<1?10000:timeout) } );
+    const response = await fetch( compile_url(url), { signal: timeoutSignal(timeout<1?10000:timeout) } );
     return response.status;
 }
 
@@ -305,7 +306,7 @@ async function monitor_json(url, query, header=false, body_string=false, format 
         if( headers ) opt.headers = headers;
         if( method == 'POST' ) opt.body = body;
 
-        const response = await fetch( url, opt );
+        const response = await fetch( compile_url(url), opt );
         const data = await response.json();
         const ret = jsonQuery( query ,{data} );
         console.log( ret );
@@ -330,9 +331,23 @@ async function monitor_json(url, query, header=false, body_string=false, format 
 // rssParser
 async function monitor_rss(url,timeout=10000)
 {
+    let index = 0;
+    let feed = compile_url(url);
+    let all = true;
+    let m;
+
+    if( ( m = /^(http(s)*:\/\/.+)@([0-9]+)$/is.exec(url)) !== null )
+    {
+        index = parseInt(m[3]);
+        feed = m[1];
+        all = false;
+    }
+    
     const parser = new rssParser({ timeout });
-    const site = await parser.parseURL( url );
-    const ret = site.items[0]||false;
+    const site = await parser.parseURL( feed );
+    const ret = site.items[index];
+    if( all ) ret.content = site.items.map( item => item.content ).join("\r\n<hr/>\r\n");
+    
     return ret;
 }
 
@@ -380,11 +395,11 @@ async function monitor_dom_low(item, cookies)
             
             ['src','href'].forEach( field => {
                 
-                item.querySelectorAll("["+field+"]").forEach( item => { if( item.field.substr(0,4) != 'http' ) { item.field = new URL(url).origin +( item.field.substr(0,1) == '/' ? item.field : '/'+ item.field  )   } } );
+                item.querySelectorAll("["+field+"]").forEach( item => { if( item[field]?.substr(0,4) != 'http' ) { item[field] = new URL(url).origin +( item[field]?.substr(0,1) == '/' ? item[field] : '/'+ item[field]  )   } } );
 
                 if( item[field] )
                 {
-                    if( item[field].substr(0,4) != 'http' ) { item[field] = new URL(url).origin +( item[field].substr(0,1) == '/' ? item[field] : '/'+ item[field]  )   } 
+                    if( item[field]?.substr(0,4) != 'http' ) { item[field] = new URL(url).origin +( item[field]?.substr(0,1) == '/' ? item[field] : '/'+ item[field]  )   } 
                 };
             } );
             
@@ -439,7 +454,7 @@ async function monitor_shell(item, cookies)
 
     const result = await spawnAsync( command, [shell_file], {
         env: {
-            'URL':url,
+            'URL':compile_url(url),
             [cookie_name]:cookie_string,
             ...process.env,
         }
@@ -454,7 +469,8 @@ async function monitor_shell(item, cookies)
 
 async function monitor_dom(item , cookies)
 {
-    const { url, path, id, ignore_path,click_path,data_path,scroll_down } = item;
+    const { path, id, ignore_path,click_path,data_path,scroll_down } = item;
+    const url = compile_url(item.url);
     const delay = (parseInt(item.delay)||0)*1000;
 
     console.log("in dom delay = ",delay);
@@ -724,5 +740,19 @@ function build_cookie_string( cookie_array )
         if( cookie.name ) ret.push(`${cookie.name}=${cookie.value}`)
     }
     return ret.length > 0 ? ret.join('; ') : false;
+}
+
+function compile_url( url )
+{
+    // replace date in url 
+    // {$_CKC_DATE}
+    const values = {};
+    values['date'] = dayjs().format('DD');
+    values['year'] = dayjs().format('YYYY');
+    values['month'] = dayjs().format('MM');
+    values['hour'] = dayjs().format('HH');
+    values['minute'] = dayjs().format('mm');
+    values['day_7'] = dayjs().subtract(7,'day').format('YYYY-MM-DD');
+    return url.replace( /\{\$_CKC_(.+?)}/isg, (m, g1,) => values[g1.toLowerCase()] || g1 );
 }
 
