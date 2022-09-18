@@ -28,9 +28,9 @@
 
 ## 最新版本
 
-- 插件·Chrome/Edge：2022.09.17.21.32 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
+- 插件·Chrome/Edge：2022.09.18.12.00 [下载](ckc.zip) ([Github下载地址，无需注册](https://github.com/easychen/checkchan-dist/raw/master/ckc.zip))
 - Docker镜像(云端+远程桌面二合一)：2022.09.17.19.58 [Docker Hub](https://hub.docker.com/repository/docker/easychen/checkchan)
-- 文档：2022.09.17.21.32
+- 文档：2022.09.18.12.00
 - 更新日志：[GitHub](https://github.com/easychen/checkchan-dist/commits/main)
 - 生态：RSSHub浏览器插件整合版（[源码](https://github.com/easychen/RSSHub-Radar-with-checkchan) | [下载](https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip)）
 

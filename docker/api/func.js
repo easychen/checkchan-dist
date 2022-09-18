@@ -346,7 +346,7 @@ async function monitor_rss(url,timeout=10000)
     const parser = new rssParser({ timeout });
     const site = await parser.parseURL( feed );
     const ret = site.items[index];
-    if( all ) ret.content = site.items.map( item => item.content ).join("\r\n<hr/>\r\n");
+    if( all ) ret.content = site.items.map( item => item.content ).join("\r\n<hr/><br/>\r\n");
     
     return ret;
 }
