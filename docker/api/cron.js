@@ -164,7 +164,7 @@ for( const item of to_checks )
             {
                 logit( '已发送通知' );
 
-                await do_webhook( item.id, item.url, check_content, check_html, check_link || item.page || item.url, check_data );
+                await do_webhook( item.id, item.url, check_content, check_html, check_link || item.page || item.url, check_data, item.title );
             
                 if( item.sendkey )
                 {

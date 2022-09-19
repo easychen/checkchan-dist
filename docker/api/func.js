@@ -174,7 +174,7 @@ exports.get_cookies = () =>
     return json_data.cookies;
 }
 
-exports.do_webhook = async( id, url, value, html, link, data ) =>
+exports.do_webhook = async( id, url, value, html, link, data,title ) =>
 {
     // 因为webhook的内容更多，所以不能放到 show_notice 里边处理，这里单独处理
     if( process.env.WEBHOOK_URL )
@@ -187,8 +187,9 @@ exports.do_webhook = async( id, url, value, html, link, data ) =>
         form.append( 'html',html );
         form.append( 'link',link );
         form.append( 'data',data );
+        form.append( 'title',title );
 
-        const json = JSON.stringify( { id, url, value, html, link, data } );
+        const json = JSON.stringify( { id, url, value, html, link, data, title } );
 
         try {
             const response = await fetch( process.env.WEBHOOK_URL , {
