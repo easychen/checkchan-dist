@@ -44,7 +44,8 @@ RUN npm install -g pm2 ts-node typescript '@types/node' nodemon
 
 # COPY api /checkchan/api
 # RUN cd /checkchan/api/ && npm install
-RUN echo '* * * * * /usr/local/bin/node /checkchan/api/cron.js > /checkchan/data/app_data/cron.txt' > /etc/crontabs/root
+RUN echo '* * * * * /usr/local/bin/node /checkchan/api/cron.js > /checkchan/data/app_data/cron.txt' >> /etc/crontabs/root
+RUN echo '* * * * * /usr/bin/find /tmp -maxdepth 1 -type d -name 'puppeteer_dev*' -mtime +1 -exec rm -rf {} \; > /dev/null 2>&1' >> /etc/crontabs/root
 
 COPY SourceHanSans.ttf /usr/share/fonts/TTF/SourceHanSans.ttf
 
