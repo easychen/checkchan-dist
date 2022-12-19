@@ -40,9 +40,9 @@
 </ol>
 <h2>最新版本</h2>
 <ul>
-<li>插件·Chrome/Edge：2022.10.15.13.06 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
+<li>插件·Chrome/Edge：2022.12.19.14.05 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
 <li>Docker镜像(云端+远程桌面二合一)：2022.10.15.12.53 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2022.10.15.13.06</li>
+<li>文档：2022.12.19.14.04</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 <li>生态：RSSHub浏览器插件整合版（<a href="https://github.com/easychen/RSSHub-Radar-with-checkchan">源码</a> | <a href="https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip">下载</a>）</li>
 </ul>
@@ -157,9 +157,9 @@
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220818153012.png"><img src="image/20220818153012.png" alt="" style="max-width: 100%;"></a></p>
 <h4>通过 Docker-compose 启动</h4>
 <p>登录服务器（假设其IP为IPB），在要安装的目录下新建目录 <code class="notranslate">data</code>，并使其可写：</p>
-<div class="highlight highlight-source-shell"><pre>mkdir data <span class="pl-k">&amp;&amp;</span> chmod 0755 data</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir data <span class="pl-k">&amp;&amp;</span> chmod 0755 data</pre></div>
 <p>新建一个 <code class="notranslate">docker-compose.yml</code> 文件，将下边的内容按提示调整后粘贴保存：</p>
-<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>
 <span class="pl-ent">services</span>:
   <span class="pl-ent">chrome</span>:
     <span class="pl-ent">image</span>: <span class="pl-s">easychen/checkchan:latest</span>
@@ -186,7 +186,7 @@
 <p>将其中<code class="notranslate">&lt;这里是远程桌面的密码，写一个你自己想的&gt;</code>和 <code class="notranslate">&lt;这里是云端的API KEY，写一个你自己想的&gt;</code> 换成别人不知道的密码（下文称密码C和D）。注意不要包含<code class="notranslate">$</code>字符，替换完后也不再有两边的尖括号<code class="notranslate">&lt;&gt;</code>。</p>
 <p>如果不希望启动远程桌面，请将 <code class="notranslate">VNC=ON</code> 改为 <code class="notranslate">VNC=OFF</code>。</p>
 <p>保证Docker用户对此目录有写权限，并在同一目录下运行以下命令：</p>
-<div class="highlight highlight-source-shell"><pre>docker-compose up -d</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker-compose up -d</pre></div>
 <blockquote>
 <p>如提示docker服务未安装/找不到/未启动，可在 docker-compose 前加 sudo 再试</p>
 </blockquote>
@@ -199,7 +199,7 @@
 </ul>
 <h4>通过 Docker 启动</h4>
 <p>你也可以将 <code class="notranslate">docker-compose</code> 中的参数传给 docker 来启动：</p>
-<div class="highlight highlight-source-shell"><pre>docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e SNAP_URL_BASE=http://localhost:8088  -e CKC_PASSWD=123 -e TZ=Asia/Chongqing easychen/checkchan:latest</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 8088:80 -p 8080:8080 -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e API_KEY=123  -e VDEBUG=OFF -e VNC=ON -e SNAP_URL_BASE=http://localhost:8088  -e CKC_PASSWD=123 -e TZ=Asia/Chongqing easychen/checkchan:latest</pre></div>
 <p>请将上述命令中的123替换为你想要设定的密码、将<code class="notranslate">SNAP_URL_BASE</code>换成服务器的外网IP(如果想通过手机查看截图)。</p>
 <h4>群晖安装</h4>
 <p>只有<strong>支持Docker的群晖型号</strong>才能安装Check酱，除了可以直接通过命令行安装，也可以参考<a href="https://docs.qq.com/doc/DWm56dVN2UUVibk1C" rel="nofollow">GUI安装教程</a>。</p>
@@ -208,10 +208,10 @@
 <p>Check酱云端镜像更新后，你可以将正在运行的云端服务升级到最新版。方式如下：</p>
 <p>首先停现有的容器：</p>
 <p>通过 docker-compose 启动的运行：</p>
-<div class="highlight highlight-source-shell"><pre>docker-compose down</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker-compose down</pre></div>
 <p>通过 docker 直接启动的运行 <code class="notranslate">docker ps</code> 查询到容器id，通过 <code class="notranslate">docker stop 容器id</code> 停止。</p>
 <p>然后运行 docker pull 拉取最新版：</p>
-<div class="highlight highlight-source-shell"><pre>docker pull easychen/checkchan:latest</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull easychen/checkchan:latest</pre></div>
 <p>完成后再启动服务即可。</p>
 <h2>云端的使用</h2>
 <h3>将浏览器插件对接云端</h3>
@@ -290,16 +290,16 @@
 <p>在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 <code class="notranslate">http://localhost</code>，API KEY按上边 YML 中设置的输入即可。</p>
 <h3>移动版</h3>
 <p>可以添加环境变量，修改屏幕宽高限制，使其在手机上更好用:</p>
-<div class="highlight highlight-source-lisp"><pre>- WIN_WIDTH=<span class="pl-c1">414</span> 
+<div class="highlight highlight-source-lisp"><pre class="notranslate">- WIN_WIDTH=<span class="pl-c1">414</span> 
 - WIN_HEIGHT=<span class="pl-c1">896</span> 
 - XVFB_WHD=500x896x16</pre></div>
 <p>一个加到 docker 命令中的例子：</p>
-<div class="highlight highlight-source-shell"><pre>docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 easychen/checkchan:latest</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 easychen/checkchan:latest</pre></div>
 <h3>特别说明</h3>
 <p>容器日常消耗在 300M~500M。内存较大的运行环境会比较稳定，如果遇到问题可尝试加大内存。</p>
 <h3>可视化调试</h3>
 <p>使用同一个镜像中集成的云端可以对云端任务进行可视化调试，将 YML 文件中的 <code class="notranslate">VDEBUG</code> 设置为 <code class="notranslate">ON</code>，再重新启动容器即可看到云端监测网页的详细过程。</p>
-<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">environment</span>:
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">environment</span>:
   - <span class="pl-s"><span class="pl-pds">"</span>CKC_PASSWD=123<span class="pl-pds">"</span></span>
   - <span class="pl-s"><span class="pl-pds">"</span>VDEBUG=ON<span class="pl-pds">"</span></span></pre></div>
 

@@ -73,7 +73,7 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
     {
         return new Promise((resolve) => {
             const handle = setInterval( ()=>{ 
-                console.log( document.readyState );
+                console.log( "document.readyState →", document.readyState );
                 if( document.readyState == 'complete' )
                 {
                     clearInterval(handle);
@@ -81,6 +81,8 @@ async function ck_get_content( path,delay=3000, ignore_path = "",click_path = ""
                 }
             } , 1000 );
             if(ms) setTimeout(resolve, ms);
+            else setTimeout(resolve, 5000);
+            
         });
     }
 
@@ -225,7 +227,7 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
     if (request.action === "fetch")
     {
         (async () =>{
-            const tab = await chrome.tabs.create({"url":request.url,"active":request.tab_activity=='front',"pinned":true});
+            const tab = await chrome.tabs.create({"url":request.url,"active":false,"pinned":true});
 
             // console.log("request",request);
             if( request.ua )
