@@ -22,7 +22,7 @@ async function show_inspector( tabid,inspector )
                             favicon = nodeList[i].getAttribute("href");
                         }
                     }
-                    return favicon;        
+                    return favicon;
                 }
     
                 let icon_url = getFavicon() || "/favicon.ico";

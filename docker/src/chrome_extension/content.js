@@ -58,7 +58,7 @@ async function insert_content( host, url, pathname )
         const id = Array.isArray(pathname.match(reg)) ? pathname.match(reg)[1]:null;
         console.log( "id", id );
         if( !id ) return false;
-        const path = "[data-e2e='user-detail'] > div:nth-of-type(1) >  div:nth-of-type(2) >  div:nth-of-type(1) span:nth-of-type(2)";
+        const path = "[data-e2e='user-tab-count']";
         const button = document.createElement("button");
         button.innerHTML = "监测作品总数";
         button.style = button_base_style+"padding:5px;padding-left:10px;padding-right:10px;";
@@ -66,7 +66,7 @@ async function insert_content( host, url, pathname )
             
             const icon_url = "https://www.douyin.com/favicon.ico";
             
-            const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href)+'&icon='+encodeURIComponent(icon_url);
+            const url = 'index.html#/check/add?path='+encodeURIComponent(path)+'&title='+encodeURIComponent(window.document.title)+'&url='+encodeURIComponent(window.location.href)+'&icon='+encodeURIComponent(icon_url)+'&delay=1';
 
             const ret = await chrome.runtime.sendMessage({action: "redirect","url":url,"tabid":null},);
         }
