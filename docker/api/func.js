@@ -216,7 +216,8 @@ exports.send_notify = async ( title, desp, sendkey, channel = -1, short = false)
         if( short ) form.append( 'short',short ); 
         form.append( 'title',title ); 
         form.append( 'desp',desp.substring(0,10000) + "\r\n\r\n" + "来自云端@"+ ip.address() ); 
-        const response = await fetch( 'https://sctapi.ftqq.com/'+sendkey+'.send', {
+        const api = String(sendkey).startsWith('sctp') ? `https://${sendkey}.push.ft07.com/send` : `https://sctapi.ftqq.com/${sendkey}.send`
+        const response = await fetch( api, {
             method: 'POST', 
             body: form
         }  );
