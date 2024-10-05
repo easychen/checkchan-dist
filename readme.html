@@ -2,7 +2,7 @@
 <p><strong>Check酱是一个通用网页内容监控工具，可以监测网页内容变化，并发送异动到微信</strong></p>
 <p><a target="_blank" rel="noopener noreferrer" href="image/20220526194209.png"><img src="image/20220526194209.png" alt="" style="max-width: 100%;"></a></p>
 <h2>商店安装</h2>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>微软Edge</th>
@@ -15,13 +15,13 @@
 <td><a href="https://chrome.google.com/webstore/detail/check%E9%85%B1/deomglgnplnflcbljmehpafdnhdklcep" rel="nofollow"><img src="image/20220906224612.png" alt="" style="max-width: 100%;"></a></td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <p>点以上图标进入商店页面或者直接在商店搜索「Check酱」即可</p>
 <h2>官方视频教程</h2>
 <p><a href="https://www.bilibili.com/video/BV1K94y1m7tt" rel="nofollow"><img src="image/20220531151537.png" alt="" style="max-width: 100%;"></a></p>
 <p><a href="https://www.bilibili.com/video/BV1K94y1m7tt" rel="nofollow">详细版，近2小时</a></p>
 <h2>开源声明</h2>
-<p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> 浏览器插件不开源，docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：</p>
+<p><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 浏览器插件不开源，docker目录下的代码仅供安全核查和编译多平台镜像，采用附加条件的GPLV3授权：</p>
 <ol>
 <li><strong>不得修改或删除</strong>默认对接的Server酱通道。</li>
 <li>不得对接<strong>其他消息通道</strong>后再次发布。</li>
@@ -29,9 +29,9 @@
 </ol>
 <h2>最新版本</h2>
 <ul>
-<li>插件·Chrome/Edge：2023.04.12.23.57 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
-<li>Docker镜像(云端+远程桌面二合一)：2023.04.12.23.44 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
-<li>文档：2023.04.12.23.56</li>
+<li>插件·Chrome/Edge：2024.10.05.13.57 <a href="ckc.zip">下载</a> (<a href="https://github.com/easychen/checkchan-dist/raw/master/ckc.zip">Github下载地址，无需注册</a>)</li>
+<li>Docker镜像(云端+远程桌面二合一)：2024.10.05.13.29 <a href="https://hub.docker.com/repository/docker/easychen/checkchan" rel="nofollow">Docker Hub</a></li>
+<li>文档：2024.10.05.13.55</li>
 <li>更新日志：<a href="https://github.com/easychen/checkchan-dist/commits/main">GitHub</a></li>
 <li>生态：RSSHub浏览器插件整合版（<a href="https://github.com/easychen/RSSHub-Radar-with-checkchan">源码</a> | <a href="https://github.com/easychen/RSSHub-Radar-with-checkchan/releases/download/main/1.7.0.with-checkchan.zip">下载</a>）</li>
 </ul>
@@ -134,7 +134,7 @@
 <li>远程桌面：在Docker中封装了Chrome浏览器，可以通过VNC和Web界面像在电脑上一样使用。</li>
 </ul>
 <blockquote>
-<p><g-emoji class="g-emoji" alias="warning" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png">⚠️</g-emoji> 特别说明：因为云端的网络、环境都和本机不同，所以并不保证本机能运行的任务都能在云端运行成功，一些复杂网页和有较多动态效果的网页可能失败。</p>
+<p><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 特别说明：因为云端的网络、环境都和本机不同，所以并不保证本机能运行的任务都能在云端运行成功，一些复杂网页和有较多动态效果的网页可能失败。</p>
 </blockquote>
 <h3>安装</h3>
 <blockquote>
@@ -279,9 +279,9 @@
 <p>在远程桌面中，可以直接连接同一个容器内的云端，服务器地址填 <code class="notranslate">http://localhost</code>，API KEY按上边 YML 中设置的输入即可。</p>
 <h3>移动版</h3>
 <p>可以添加环境变量，修改屏幕宽高限制，使其在手机上更好用:</p>
-<div class="highlight highlight-source-lisp"><pre class="notranslate">- WIN_WIDTH=<span class="pl-c1">414</span> 
-- WIN_HEIGHT=<span class="pl-c1">896</span> 
-- XVFB_WHD=500x896x16</pre></div>
+<div class="highlight highlight-text-md"><pre class="notranslate"><span class="pl-v">-</span> WIN_WIDTH=414 
+<span class="pl-v">-</span> WIN_HEIGHT=896 
+<span class="pl-v">-</span> XVFB_WHD=500x896x16</pre></div>
 <p>一个加到 docker 命令中的例子：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 5900:5900 -v <span class="pl-smi">${PWD}</span>/data:/checkchan/data -e CKC_PASSWD=123 -e WIN_WIDTH=414 -e WIN_HEIGHT=896 -e XVFB_WHD=500x896x16 easychen/checkchan:latest</pre></div>
 <h3>特别说明</h3>

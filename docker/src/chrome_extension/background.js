@@ -219,7 +219,7 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
             // 不传递favicon了
             await chrome.tabs.update(that_tab.id, {"url":request.url,"active":true});
             // 强制刷新时hash值生效
-            await chrome.tabs.reload(that_tab.id);
+            // await chrome.tabs.reload(that_tab.id);
             sendResponse({"message":"done",request});
         })();
         return true;
@@ -267,10 +267,10 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
     return true;
 });
 
-chrome.action.onClicked.addListener(function(activeTab)
-{
-    tab_init();
-});
+// chrome.action.onClicked.addListener(function(activeTab)
+// {
+//     tab_init();
+// });
 
 chrome.runtime.onInstalled.addListener(function (details)
 {
@@ -675,3 +675,229 @@ function buildUrl(secure, domain, path) {
     }
     return `http${secure ? 's' : ''}://${domain}${path}`;
   }
+
+// 添加动态识别url并提取的部分代码
+
+let tabData = {}; // key: tabId, value: data (e.g., url to redirect to)
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  if (changeInfo.status == 'complete') {
+    processTab(tabId, tab);
+  }
+});
+
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+  chrome.tabs.get(activeInfo.tabId, function (tab) {
+    processTab(activeInfo.tabId, tab);
+  });
+});
+
+chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
+  delete tabData[tabId];
+});
+
+chrome.action.onClicked.addListener(function (tab) {
+    const tabId = tab.id;
+    if (tabData[tabId]) {
+      const data = tabData[tabId];
+      if (data.action === 'redirect') {
+        // Update the current tab's URL instead of creating a new tab
+        // 如果 tabId 存在，则update，否则create
+        if( chrome.tabs.get( tabId ))
+        {
+            chrome.tabs.update(tabId, { url: data.url, active: true });
+        }else
+        {
+            chrome.tabs.create({ url: data.url, active: true });
+        }
+        // Optionally, clear the badge
+        chrome.action.setBadgeText({ text: '', tabId: tabId });
+        delete tabData[tabId];
+      }
+    } else {
+      // No action for this tab
+      tab_init();
+    }
+  });
+  
+
+function processTab(tabId, tab) {
+  const url = tab.url;
+  if (!url) return;
+  if( !url.startsWith('http') ) return;
+
+  const urlObj = new URL(url);
+  const host = urlObj.host;
+  const pathname = urlObj.pathname;
+
+  insert_content(host, url, pathname, tabId, tab);
+}
+
+async function insert_content(host, url, pathname, tabId, tab) {
+  let actionData = null;
+
+  if (host === 'item.jd.com') {
+    const reg = /\/(\d+).html/;
+    const match = pathname.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path = `.price.J-p-${id}`;
+    const icon_url = 'https://www.jd.com/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url);
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'www.amazon.cn') {
+    const reg = /\/dp\/(.+?)$/;
+    const match = pathname.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path = `#corePriceDisplay_desktop_feature_div  span.a-offscreen`;
+    const icon_url = 'https://www.amazon.cn/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url);
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'weixin.sogou.com' && pathname === '/weixin') {
+    const path = 'dd > a:nth-child(1)';
+    const icon_url = 'https://www.sogou.com/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url);
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'www.douyin.com') {
+    const reg = /\/user\/(.+)/;
+    const match = pathname.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path = "[data-e2e='user-tab-count']";
+    const icon_url = 'https://www.douyin.com/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url) +
+      '&delay=1';
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'm.weibo.cn') {
+    const reg = /\/profile\/(.+)/;
+    const match = pathname.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path = '.wb-item:nth-of-type(1)';
+    const ignore_path = '.wb-item .m-text-cut,.wb-item .f-footer-ctrl,.wb-item .card-video';
+    const icon_url = 'https://m.weibo.cn/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url) +
+      '&ignore_path=' +
+      encodeURIComponent(ignore_path);
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'space.bilibili.com') {
+    const reg = /\/(\d+)\/video/;
+    const match = pathname.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path = 'div#submit-video-list > ul:nth-of-type(2) > li:nth-of-type(1)';
+    const ignore_path = 'div#submit-video-list > ul:nth-of-type(2) > li:nth-of-type(1) .meta';
+    const icon_url = 'https://space.bilibili.com/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url) +
+      '&ignore_path=' +
+      encodeURIComponent(ignore_path);
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'message.bilibili.com') {
+    const reg = /#\/(reply)/;
+    const match = url.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path =
+      'div#link-message-container > div > div:nth-of-type(2) > div:nth-of-type(2) > div > div > div > div > div > div .center-box';
+    const ignore_path =
+      'div#link-message-container > div > div:nth-of-type(2) > div:nth-of-type(2) > div > div > div > div > div > div .action-field, div#link-message-container > div > div:nth-of-type(2) > div:nth-of-type(2) > div > div > div > div > div > div textarea';
+    const icon_url = 'https://www.bilibili.com/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url) +
+      '&ignore_path=' +
+      encodeURIComponent(ignore_path);
+    actionData = { action: 'redirect', url: constructed_url };
+  } else if (host === 'www.bilibili.com') {
+    const reg = /bangumi\/play\/(.+)/;
+    const match = pathname.match(reg);
+    const id = Array.isArray(match) ? match[1] : null;
+    console.log('id', id);
+    if (!id) return false;
+    const path = '.ep-list-wrapper .ep-item:last-child';
+    const ignore_path = '.ep-list-wrapper .ep-item:last-child .badge';
+    const icon_url = 'https://space.bilibili.com/favicon.ico';
+    const constructed_url =
+      'index.html#/check/add?path=' +
+      encodeURIComponent(path) +
+      '&title=' +
+      encodeURIComponent(tab.title) +
+      '&url=' +
+      encodeURIComponent(url) +
+      '&icon=' +
+      encodeURIComponent(icon_url) +
+      '&ignore_path=' +
+      encodeURIComponent(ignore_path);
+    actionData = { action: 'redirect', url: constructed_url };
+  }
+
+  if (actionData) {
+    tabData[tabId] = actionData;
+    chrome.action.setBadgeText({ text: '+', tabId: tabId });
+  } else {
+    // No action for this tab, clear any previous data
+    delete tabData[tabId];
+    chrome.action.setBadgeText({ text: '', tabId: tabId });
+  }
+}

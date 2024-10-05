@@ -1,3 +1,9 @@
+# 公告
+
+🎈 最新版取消了「页面监测按钮」，改为直接点击插件图标自动生成监测信息。当页面支持自动生成式，插件图标右下角会显示「+」号。
+
+🎈 觉得本插件有用的同学可以在[微软商店](https://microsoftedge.microsoft.com/addons/detail/check%E9%85%B1/almpackhamocjhnlbhdbcnlbfidnadji)或者[chrome商店](https://chrome.google.com/webstore/detail/check%E9%85%B1/deomglgnplnflcbljmehpafdnhdklcep)打个五星评价，几千人用的插件好评只有个位数不利于促进作者维护更新。
+
 # 教程
 
 | 📼 新版使用 | 📼 完全教程 | 📼 基础知识补全教程 |

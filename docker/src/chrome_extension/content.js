@@ -10,7 +10,7 @@ async function main()
     await insert_content( host, url, pathname );
 }
 
-main();
+// main();
 
 async function insert_content( host, url, pathname )
 {
